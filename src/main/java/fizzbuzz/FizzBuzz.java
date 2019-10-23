@@ -1,4 +1,4 @@
-package test;
+package fizzbuzz;
 
 public class FizzBuzz {
 
