@@ -1,9 +1,10 @@
 package phonenumber;
 
+import java.util.Collection;
 import java.util.Map;
 
 public interface PhoneNumberCheckable {
 
-    boolean isConsistent(final Map<String, String> phoneNumbers);
+    boolean isConsistent(final Collection<String> phoneNumbers);
 
 }
