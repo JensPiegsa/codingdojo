@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class CheckPhoneNumber {
+public class CheckPhoneNumber implements PhoneNumberCheckable {
 
+	@Override
 	public boolean isConsistent(final Map<String, String> phoneNumbers) {
 
 		Objects.requireNonNull(phoneNumbers);
