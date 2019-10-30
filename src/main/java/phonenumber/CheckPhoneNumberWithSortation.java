@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 public class CheckPhoneNumberWithSortation implements PhoneNumberCheckable {
 
-    @Override
     public boolean isConsistent(Map<String, String> phoneNumbers) {
         Objects.requireNonNull(phoneNumbers);
 
@@ -32,4 +31,8 @@ public class CheckPhoneNumberWithSortation implements PhoneNumberCheckable {
         return input.replace(" ", "");
     }
 
+    @Override
+    public boolean isConsistent(Collection<String> phoneNumbers) {
+        return false;
+    }
 }
