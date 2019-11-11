@@ -62,6 +62,7 @@ public class Board {
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
+		s.append("\n");
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				Letter l = board[x][y];
