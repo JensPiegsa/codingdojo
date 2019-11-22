@@ -61,8 +61,8 @@ class GameTest {
 		assertThrows(IllegalArgumentException.class, () -> game.place(Letter.O, new Point(0, 0)));
 	}
 
-	@Test @DisplayName("cannont place outside Board")
-	void cannontPlaceOutsideBoard() {
+	@Test @DisplayName("cannot place outside Board")
+	void cannotPlaceOutsideBoard() {
 
 		Game game = new Game();
 
@@ -70,8 +70,8 @@ class GameTest {
 		
 	}
 
-	@Test @DisplayName("player x horizontal tripple")
-	void playerXHorizontalTripple() {
+	@Test @DisplayName("player x horizontal triple")
+	void playerXHorizontalTriple() {
 		Game game = new Game();
 		game.place(Letter.X, new Point(0, 0));
 		game.place(Letter.O, new Point(0, 1));
@@ -81,8 +81,8 @@ class GameTest {
 		assertEquals(GameResult.X_Win, game.place(Letter.X, new Point(2, 0)));
 	}
 
-	@Test @DisplayName("player o vertical tripple")
-	void playerOVerticalTripple() {
+	@Test @DisplayName("player o vertical triple")
+	void playerOVerticalTriple() {
 		Game game = new Game();
 		game.place(Letter.X, new Point(0, 0));
 		game.place(Letter.O, new Point(1, 0));
@@ -125,6 +125,7 @@ class GameTest {
 		game.place(Letter.O, new Point(1, 2));
 
 		String expected =
+						"\n" +
 						"_ _ X\n" +
 						"O X _\n" +
 						"_ O _";
