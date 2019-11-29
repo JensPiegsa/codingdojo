@@ -4,6 +4,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,6 +19,14 @@ class RomanNumeralsTest {
 	void returnsExpectedStringForGivenLong(final long arabicNumber, final String expectedRomanNumber) {
 		final String romanNumber = new RomanNumerals().toRomanNumber(arabicNumber);
 		then(romanNumber).isEqualTo(expectedRomanNumber);
+	}
+
+	@Disabled("unfinished")
+	@ParameterizedTest(name = "{1} -> {0}") @DisplayName("returns expected long for given String.")
+	@MethodSource("webData")
+	void returnsExpectedNumberForGivenString(final long expectedArabicNumber, final String romanNumber) {
+		final long arabicNumber = new RomanNumerals().toNumber(romanNumber);
+		then(arabicNumber).isEqualTo(expectedArabicNumber);
 	}
 
 	private static Stream<Arguments> testData() {
