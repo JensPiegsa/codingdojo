@@ -32,7 +32,7 @@ public class ChristmasTree {
                 c = (c + 1) % chars.length;
             }
 
-            sb.deleteCharAt(sb.length()-1);
+            sb.deleteCharAt(sb.length() - 1);
             sb.append("\n");
         }
 
@@ -56,7 +56,7 @@ public class ChristmasTree {
 
     private String spaces(int count) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0 ; i<count; i++) {
+        for (int i = 0; i < count; i++) {
             sb.append(" ");
         }
 
