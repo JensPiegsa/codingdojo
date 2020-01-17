@@ -7,7 +7,7 @@ class GildedRose {
         this.items = items;
     }
 
-    public void updateQuality() {
+    public void updateQualitiesAndSellIns() {
         for (int i = 0; i < items.length; i++) {
             Item item = items[i];
             updateItemQuality(item);
