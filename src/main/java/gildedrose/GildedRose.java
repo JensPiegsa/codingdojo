@@ -12,17 +12,6 @@ class GildedRose {
             Item item = items[i];
             updateItemQuality(item);
             updateItemSellIn(item);
-            postUpdateItemQuality(item);
-        }
-    }
-
-    private void postUpdateItemQuality(Item item) {
-        if (item.sellIn < 0) {
-            if (isAgedBrie(item)) {
-                increaseQualityBy(item,1);
-            } else if (isBackstagePass(item)) {
-                item.quality = 0;
-            } else decreaseQualityByOne(item);
         }
     }
 
@@ -33,28 +22,64 @@ class GildedRose {
     }
 
     private void updateItemQuality(Item item) {
-        if (isAgedBrie(item)
-                || isBackstagePass(item)) {
-            if (canIncreaseQuality(item)) {
-                increaseQualityBy(item,1);
-                if (isBackstagePass(item)) {
-                    if (item.sellIn < 6) {
-                        increaseQualityBy(item,2);
-                    }
-                    else if (item.sellIn < 11) {
-                        increaseQualityBy(item,1);
-                    }
-                }
-            }
+        if (isAgedBrie(item)) {
+            updateQualityAgedBrie(item);
+
+        } else if (isBackstagePass(item)) {
+            updateQualityBackstagePasses(item);
+
+        } else if (isConjured(item)) {
+            updateQualityConjured(item);
+
         } else {
-            decreaseQualityByOne(item);
+            updateQualityDefault(item);
         }
     }
 
-    private void decreaseQualityByOne(Item item) {
-        if (item.quality > 0 && !isLegendary(item)) {
-            item.quality = item.quality - 1;
+    private void updateQualityConjured(Item item) {
+        if (item.sellIn <= 0) {
+            decreaseQualityBy(item, 4);
+        } else {
+            decreaseQualityBy(item, 2);
         }
+    }
+
+    private boolean isConjured(Item item) {
+        return item.name.equals("Conjured");
+    }
+
+    private void updateQualityDefault(Item item) {
+        decreaseQuality(item);
+        if (item.sellIn <= 0)
+            decreaseQuality(item);
+    }
+
+    private void updateQualityBackstagePasses(Item item) {
+        if (item.sellIn <= 0) {
+            item.quality = 0;
+        } else if (item.sellIn <= 5) {
+            increaseQualityBy(item, 3);
+        } else if (item.sellIn <= 10) {
+            increaseQualityBy(item, 2);
+        } else {
+            increaseQualityBy(item, 1);
+        }
+    }
+
+    private void updateQualityAgedBrie(Item item) {
+        increaseQualityBy(item, 1);
+        if (item.sellIn <= 0)
+            increaseQualityBy(item, 1);
+    }
+
+    private void decreaseQualityBy(Item item, int number) {
+        if (!isLegendary(item)) {
+            item.quality = Math.max(0, item.quality - number);
+        }
+    }
+
+    private void decreaseQuality(Item item) {
+        decreaseQualityBy(item, 1);
     }
 
     private boolean canIncreaseQuality(Item item) {
@@ -73,10 +98,9 @@ class GildedRose {
         return item.name.equals("Aged Brie");
     }
 
-
     private void increaseQualityBy(Item item, int number) {
         if (canIncreaseQuality(item)) {
-            item.quality = item.quality + number;
+            item.quality = Math.min(50, item.quality + number);
         }
     }
 }
