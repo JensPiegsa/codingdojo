@@ -19,14 +19,14 @@ public class PrimeTest {
 
 	@DisplayName("return true for known primes")
 	@ParameterizedTest(name = "return true for {0}")
-	@CsvSource({"3", "5"})
+	@CsvSource({"2", "3", "5"})
 	public void testPrime(int i) {
 		assertTrue(Prime.isPrime(i));
 	}
 
 	@DisplayName("return false for known non-primes")
 	@ParameterizedTest(name = "return false for {0}")
-	@CsvSource({"2", "4"})
+	@CsvSource({"4", "6"})
 	public void testNonPrime(int i) {
 		assertFalse(Prime.isPrime(i));
 	}
