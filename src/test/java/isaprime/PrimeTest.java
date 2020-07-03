@@ -16,15 +16,10 @@ public class PrimeTest {
 	public void testIntSmallerThanOne(int i) {
 		assertFalse(Prime.isPrime(i));
 	}
-	
-	@Test @DisplayName("test int two")
-	void testIntTwo() {
-		assertTrue(Prime.isPrime(2));
-	}
 
 	@DisplayName("return true for known primes")
 	@ParameterizedTest(name = "return true for {0}")
-	@CsvSource({"3"})
+	@CsvSource({"3", "5"})
 	public void testPrime(int i) {
 		assertTrue(Prime.isPrime(i));
 	}
@@ -35,6 +30,4 @@ public class PrimeTest {
 	public void testNonPrime(int i) {
 		assertFalse(Prime.isPrime(i));
 	}
-
-
 }
