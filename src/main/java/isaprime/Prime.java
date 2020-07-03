@@ -1,18 +1,21 @@
 package isaprime;
 
 public class Prime {
-	public static boolean isPrime(int num) {
-		System.out.println("isPrime(" + num + "):");
-		int index = num;
-		boolean isPrime = true;
-		while (index > 2) {
-			index--;
-			System.out.println("num: " + num + " index: " + index);
-			if (num % index == 0) {
-				isPrime = false;
-				break;
-			}
-		}
-		return isPrime;
-	}
+    public static boolean isPrime(int number) {
+        if (number <= 1) {
+            return false;
+        }
+        int potentialDivisor = number - 1;
+        while (potentialDivisor > 1) {
+            if (isDivisible(number, potentialDivisor)) {
+                return false;
+            }
+            potentialDivisor--;
+        }
+        return true;
+    }
+
+    private static boolean isDivisible(int number, int potentialDivisor) {
+        return number % potentialDivisor == 0;
+    }
 }
