@@ -40,12 +40,17 @@ public class BankOcr {
 		final String thirdLine = bufferedReader.readLine();
 		bufferedReader.readLine();
 
-		String accountNumber = parseNextAccountNumber(firstLine,secondLine,thirdLine);
+		final String accountNumber = parseNextAccountNumber(firstLine,secondLine,thirdLine);
 
 		return accountNumber;
 	}
 
 	private String parseNextAccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
+		
 		return "123456789";
+	}
+
+	public Digit parseDigit(final int position, final String firstLine, final String secondLine, final String thirdLine) {
+		return new Digit();
 	}
 }

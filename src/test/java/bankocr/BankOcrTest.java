@@ -11,19 +11,30 @@ import org.junit.jupiter.api.Test;
 
 public class BankOcrTest {
 
+	// when
+	private BankOcr bankOcr = new BankOcr();
+
 	@Test @DisplayName("readNumbers")
 	void readNumbers() {
 		// given
 		final Path path = getTestResource("AccountNr.txt");
 
-		// when
-		final List<String> accountNumbers = new BankOcr().parse(path);
+		final List<String> accountNumbers = bankOcr.parse(path);
 
 
 		// then
 		then(accountNumbers).containsExactly("123456789","023456789");
 	}
 
+	@Test @DisplayName("test digit")
+	void testDigit() {
+		
+		final Digit digit = bankOcr.parseDigit(0,
+				" _ ",
+				"| |",
+				"|_|");
+		then(digit.getInt()).isEqualTo(0);
+	}
 
 
 	private Path getTestResource(final String filename) {
