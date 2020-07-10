@@ -51,6 +51,10 @@ public class BankOcr {
 	}
 
 	public Digit parseDigit(final int position, final String firstLine, final String secondLine, final String thirdLine) {
-		return new Digit();
+
+		int i = position*3;
+		return new Digit(firstLine.substring(i, i+4),
+				secondLine.substring(i, i+4),
+				thirdLine.substring(i, i+4));
 	}
 }

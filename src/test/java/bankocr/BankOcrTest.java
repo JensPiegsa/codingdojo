@@ -26,14 +26,24 @@ public class BankOcrTest {
 		then(accountNumbers).containsExactly("123456789","023456789");
 	}
 
-	@Test @DisplayName("test digit")
-	void testDigit() {
+	@Test @DisplayName("test digit zero")
+	void testDigitZero() {
 		
 		final Digit digit = bankOcr.parseDigit(0,
 				" _ ",
 				"| |",
 				"|_|");
 		then(digit.getInt()).isEqualTo(0);
+	}
+
+	@Test @DisplayName("test digit one")
+	void testDigitOne() {
+
+		final Digit digit = bankOcr.parseDigit(0,
+				"   ",
+				"  |",
+				"  |");
+		then(digit.getInt()).isEqualTo(1);
 	}
 
 
