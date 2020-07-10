@@ -9,9 +9,9 @@ produces a file with a number of entries which each look like
 this:
 
 ```
- _     _  _     _  _  _  _  _ 
-| |  | _| _||_||_ |_   ||_||_|
-|_|  ||_  _|  | _||_|  ||_| _|
+    _  _     _  _  _  _  _ 
+  | _| _||_||_ |_   ||_||_|
+  ||_  _|  | _||_|  ||_| _|
 ```
 
 Each entry is 4 lines long, and each line has 27 characters. The
