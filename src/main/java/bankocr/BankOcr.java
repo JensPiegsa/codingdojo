@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankOcr {
-	
+
 	public List<String> parse(final Path path) {
 
 		final ArrayList<String> accountNumbers = new ArrayList<>();
-		
+
 		try (final BufferedReader bufferedReader = Files.newBufferedReader(path)) {
 
 			boolean more = true;
@@ -40,21 +40,21 @@ public class BankOcr {
 		final String thirdLine = bufferedReader.readLine();
 		bufferedReader.readLine();
 
-		final String accountNumber = parseNextAccountNumber(firstLine,secondLine,thirdLine);
+		final String accountNumber = parseNextAccountNumber(firstLine, secondLine, thirdLine);
 
 		return accountNumber;
 	}
 
 	private String parseNextAccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
-		
+
 		return "123456789";
 	}
 
-	public Digit parseDigit(final int position, final String firstLine, final String secondLine, final String thirdLine) {
+	Digit parseDigit(final int position, final String firstLine, final String secondLine, final String thirdLine) {
 
-		int i = position*3;
-		return new Digit(firstLine.substring(i, i+4),
-				secondLine.substring(i, i+4),
-				thirdLine.substring(i, i+4));
+		int i = position * 3;
+		return new Digit(firstLine.substring(i, i + 3),
+				secondLine.substring(i, i + 3),
+				thirdLine.substring(i, i + 3));
 	}
 }
