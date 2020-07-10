@@ -2,7 +2,9 @@ package bankocr;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+import java.io.BufferedReader;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -46,6 +48,18 @@ public class BankOcrTest {
 		then(digit.getInt()).isEqualTo(1);
 	}
 
+	@Test @DisplayName("test all digits")
+	void testAllDigits() {
+
+		for(int i = 0; i <= 9; i++) {
+
+			final Digit digit = bankOcr.parseDigit(i,
+					" _     _  _     _  _  _  _  _ ",
+					"| |  | _| _||_||_ |_   ||_||_|",
+					"|_|  ||_  _|  | _||_|  ||_| _|");
+			then(digit.getInt()).isEqualTo(i);
+		}
+	}
 
 	private Path getTestResource(final String filename) {
 		try {
