@@ -21,8 +21,10 @@ public class BankOcrTest {
 
 
 		// then
-		then(accountNumbers).containsExactly("123456789");
+		then(accountNumbers).containsExactly("123456789","023456789");
 	}
+
+
 
 	private Path getTestResource(final String filename) {
 		try {

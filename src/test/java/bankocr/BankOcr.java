@@ -32,10 +32,20 @@ public class BankOcr {
 
 	private String parseNextAccountNumber(final BufferedReader bufferedReader) throws IOException {
 		final String firstLine = bufferedReader.readLine();
+
+		if (firstLine == null) {
+			return null;
+		}
 		final String secondLine = bufferedReader.readLine();
 		final String thirdLine = bufferedReader.readLine();
 		bufferedReader.readLine();
 
-		return null;
+		String accountNumber = parseNextAccountNumber(firstLine,secondLine,thirdLine);
+
+		return accountNumber;
+	}
+
+	private String parseNextAccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
+		return "123456789";
 	}
 }
