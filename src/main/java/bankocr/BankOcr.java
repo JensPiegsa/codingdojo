@@ -73,9 +73,7 @@ public class BankOcr {
 			final int digit = Integer.parseInt(String.valueOf(digitChar));
 			final int factor = NUMBER_OF_DIGITS - pos;
 			checksum += digit * factor;
-			System.out.println(digit);
 		}
-		final int number = Integer.parseInt(accountNumber);
-		return true;
+		return checksum % 11 == 0;
 	}
 }
