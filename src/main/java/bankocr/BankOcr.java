@@ -59,7 +59,7 @@ public class BankOcr {
 
 	Digit parseDigit(final int position, final String... lines) {
 
-		int i = position * DIGIT_WIDTH;
+		final int i = position * DIGIT_WIDTH;
 		return new Digit(lines[0].substring(i, i + DIGIT_WIDTH),
 				lines[1].substring(i, i + DIGIT_WIDTH),
 				lines[2].substring(i, i + DIGIT_WIDTH));
@@ -67,10 +67,15 @@ public class BankOcr {
 
 	public boolean isValidAccountNumber(final String accountNumber) {
 		
-		for (int pos = 0; pos < NUMBER_OF_DIGITS; pos++) {
-			
+		int checksum = 0;
+		for (int pos = NUMBER_OF_DIGITS - 1; pos >= 0; pos--) {
+			final char digitChar = accountNumber.charAt(pos);
+			final int digit = Integer.parseInt(String.valueOf(digitChar));
+			final int factor = NUMBER_OF_DIGITS - pos;
+			checksum += digit * factor;
+			System.out.println(digit);
 		}
-		int number = Integer.parseInt(accountNumber);
+		final int number = Integer.parseInt(accountNumber);
 		return true;
 	}
 }
