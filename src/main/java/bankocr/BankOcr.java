@@ -7,11 +7,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("StringConcatenationInLoop")
 public class BankOcr {
+
+	public static final int numberOfDigits = 9;
 
 	public List<String> parse(final Path path) {
 
-		final ArrayList<String> accountNumbers = new ArrayList<>();
+		final List<String> accountNumbers = new ArrayList<>();
 
 		try (final BufferedReader bufferedReader = Files.newBufferedReader(path)) {
 
@@ -40,18 +43,15 @@ public class BankOcr {
 		final String thirdLine = bufferedReader.readLine();
 		bufferedReader.readLine();
 
-		final String accountNumber = parseNextAccountNumber(firstLine, secondLine, thirdLine);
-
-		return accountNumber;
+		return parseNextAccountNumber(firstLine, secondLine, thirdLine);
 	}
 
 	private String parseNextAccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
 
 		String accountNr = "";
-		for (int pos = 0; pos < 9; pos++) {
-			System.out.println("Pos: " + pos);
+		for (int pos = 0; pos < numberOfDigits; pos++) {
 			final Digit actualDigit = parseDigit(pos, firstLine, secondLine, thirdLine);
-			accountNr = accountNr + actualDigit.getInt();
+			accountNr += actualDigit.getInt();
 		}
 		return accountNr;
 	}
