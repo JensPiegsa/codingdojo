@@ -64,4 +64,13 @@ public class BankOcr {
 				lines[1].substring(i, i + DIGIT_WIDTH),
 				lines[2].substring(i, i + DIGIT_WIDTH));
 	}
+
+	public boolean isValidAccountNumber(final String accountNumber) {
+		
+		for (int pos = 0; pos < NUMBER_OF_DIGITS; pos++) {
+			
+		}
+		int number = Integer.parseInt(accountNumber);
+		return true;
+	}
 }

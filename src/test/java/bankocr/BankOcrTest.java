@@ -60,4 +60,19 @@ public class BankOcrTest {
 			throw new IllegalArgumentException("test resource not found", e);
 		}
 	}
+	
+	//account number: 3  4  5  8  8  2  8  6  5
+	//position names: d9 d8 d7 d6 d5 d4 d3 d2 d1
+	// (d1+2*d2+3*d3 +..+9*d9) mod 11 = 0
+	@Test @DisplayName("checksum for account number is valid")
+	void checksumForAccountNumberIsValid() {
+		// given
+		String accountNumber = "345882865";
+		
+		// when
+		boolean validAccountNumber = bankOcr.isValidAccountNumber(accountNumber);
+		
+		// then
+		then(validAccountNumber).isTrue();
+	}
 }
