@@ -2,9 +2,7 @@ package bankocr;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import java.io.BufferedReader;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -22,7 +20,6 @@ public class BankOcrTest {
 		final Path path = getTestResource("AccountNr.txt");
 
 		final List<String> accountNumbers = bankOcr.parse(path);
-
 
 		// then
 		then(accountNumbers).containsExactly("123456789","023456789");

@@ -47,7 +47,13 @@ public class BankOcr {
 
 	private String parseNextAccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
 
-		return "123456789";
+		String accountNr = "";
+		for (int pos = 0; pos < 9; pos++) {
+			System.out.println("Pos: " + pos);
+			final Digit actualDigit = parseDigit(pos, firstLine, secondLine, thirdLine);
+			accountNr = accountNr + actualDigit.getInt();
+		}
+		return accountNr;
 	}
 
 	Digit parseDigit(final int position, final String firstLine, final String secondLine, final String thirdLine) {
