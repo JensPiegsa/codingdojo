@@ -10,7 +10,8 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInLoop")
 public class BankOcr {
 
-	public static final int numberOfDigits = 9;
+	public static final int NUMBER_OF_DIGITS = 9;
+	public static final int DIGIT_WIDTH = 3;
 
 	public List<String> parse(final Path path) {
 
@@ -46,21 +47,21 @@ public class BankOcr {
 		return parseNextAccountNumber(firstLine, secondLine, thirdLine);
 	}
 
-	private String parseNextAccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
+	private String parseNextAccountNumber(final String... lines) {
 
 		String accountNr = "";
-		for (int pos = 0; pos < numberOfDigits; pos++) {
-			final Digit actualDigit = parseDigit(pos, firstLine, secondLine, thirdLine);
+		for (int pos = 0; pos < NUMBER_OF_DIGITS; pos++) {
+			final Digit actualDigit = parseDigit(pos, lines);
 			accountNr += actualDigit.getInt();
 		}
 		return accountNr;
 	}
 
-	Digit parseDigit(final int position, final String firstLine, final String secondLine, final String thirdLine) {
+	Digit parseDigit(final int position, final String... lines) {
 
-		int i = position * 3;
-		return new Digit(firstLine.substring(i, i + 3),
-				secondLine.substring(i, i + 3),
-				thirdLine.substring(i, i + 3));
+		int i = position * DIGIT_WIDTH;
+		return new Digit(lines[0].substring(i, i + DIGIT_WIDTH),
+				lines[1].substring(i, i + DIGIT_WIDTH),
+				lines[2].substring(i, i + DIGIT_WIDTH));
 	}
 }
