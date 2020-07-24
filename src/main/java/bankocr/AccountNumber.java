@@ -1,7 +1,10 @@
 package bankocr;
 
 public class AccountNumber {
-
+	
+	static final int NUMBER_OF_DIGITS = 9;
+	static final int DIGIT_WIDTH = 3;
+	
 	private final String accountNumberString;
 
 	public AccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
@@ -18,4 +21,11 @@ public class AccountNumber {
 		return accountNr;
 	}
 
+	static Digit parseColumnAsDigit(final int columnIndex, final String... lines) {
+
+		final int charIndex = columnIndex * DIGIT_WIDTH;
+		return new Digit(lines[0].substring(charIndex, charIndex + DIGIT_WIDTH),
+				lines[1].substring(charIndex, charIndex + DIGIT_WIDTH),
+				lines[2].substring(charIndex, charIndex + DIGIT_WIDTH));
+	}
 }

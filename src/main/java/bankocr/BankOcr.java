@@ -10,8 +10,8 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInLoop")
 public class BankOcr {
 
+	@Deprecated
 	public static final int NUMBER_OF_DIGITS = 9;
-	public static final int DIGIT_WIDTH = 3;
 
 	public List<AccountNumber> parse(final Path path) {
 
@@ -47,13 +47,7 @@ public class BankOcr {
 		return new AccountNumber(firstLine, secondLine, thirdLine);
 	}
 
-	Digit parseColumnAsDigit(final int columnIndex, final String... lines) {
-
-		final int charIndex = columnIndex * DIGIT_WIDTH;
-		return new Digit(lines[0].substring(charIndex, charIndex + DIGIT_WIDTH),
-				lines[1].substring(charIndex, charIndex + DIGIT_WIDTH),
-				lines[2].substring(charIndex, charIndex + DIGIT_WIDTH));
-	}
+	
 
 	public boolean isValidAccountNumber(final String accountNumber) {
 		

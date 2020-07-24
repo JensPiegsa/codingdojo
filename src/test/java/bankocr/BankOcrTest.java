@@ -25,18 +25,7 @@ public class BankOcrTest {
 		then(accountNumbers).extracting(AccountNumber::toString).containsExactly("123456789","023456789");
 	}
 
-	@Test @DisplayName("test all digits")
-	void testAllDigits() {
-
-		for(int columnIndex = 0; columnIndex <= 9; columnIndex++) {
-
-			final Digit digit = bankOcr.parseColumnAsDigit(columnIndex,
-					" _     _  _     _  _  _  _  _ ",
-					"| |  | _| _||_||_ |_   ||_||_|",
-					"|_|  ||_  _|  | _||_|  ||_| _|");
-			then(digit.getInt()).isEqualTo(columnIndex);
-		}
-	}
+	
 
 	private Path getTestResource(final String filename) {
 		try {
