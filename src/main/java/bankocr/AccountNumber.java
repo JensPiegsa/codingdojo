@@ -1,5 +1,6 @@
 package bankocr;
 
+@SuppressWarnings("StringConcatenationInLoop")
 public class AccountNumber {
 
     static final int NUMBER_OF_DIGITS = 9;
