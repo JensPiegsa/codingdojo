@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("StringConcatenationInLoop")
 public class BankOcr {
 
 	public List<AccountNumber> parse(final Path path) {
