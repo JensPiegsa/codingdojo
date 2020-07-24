@@ -5,12 +5,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 @DisplayName("A Digit")
+@TestMethodOrder(OrderAnnotation.class)
 class DigitTest {
 
-	@Test @DisplayName("test digit zero")
+	@Test @DisplayName("test digit zero") @Order(1)
 	void testDigitZero() {
 
 		final Digit digit = new Digit(
@@ -20,17 +25,17 @@ class DigitTest {
 		then(digit.getInt()).isEqualTo(0);
 	}
 
-	@Test @DisplayName("test digit one")
+	@Test @DisplayName("test digit one") @Order(2)
 	void testDigitOne() {
 
 		final Digit digit = new Digit(
 				"   ",
 				"  |",
 				"  |");
-		then(digit.getInt()).isEqualTo(1);
+		then(digit.getInt()).isEqualTo(1); 
 	}
 
-	@Test @DisplayName("test digit two")
+	@Test @DisplayName("test digit two") @Order(3)
 	void testDigitTwo() {
 
 		final Digit digit = new Digit(
@@ -40,7 +45,7 @@ class DigitTest {
 		then(digit.getInt()).isEqualTo(2);
 	}
 
-	@Test @DisplayName("test digit three")
+	@Test @DisplayName("test digit three") @Order(4)
 	void testDigitThree() {
 
 		final Digit digit = new Digit(
@@ -50,7 +55,7 @@ class DigitTest {
 		then(digit.getInt()).isEqualTo(3);
 	}
 
-	@Test @DisplayName("test digit four")
+	@Test @DisplayName("test digit four") @Order(5)
 	void testDigitFour() {
 
 		final Digit digit = new Digit(
@@ -60,6 +65,56 @@ class DigitTest {
 		then(digit.getInt()).isEqualTo(4);
 	}
 
+	@Test @DisplayName("test digit five") @Order(6)
+	void testDigitFive() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"|_ ",
+				" _|");
+		then(digit.getInt()).isEqualTo(5);
+	}
+
+	@Test @DisplayName("test digit six") @Order(7)
+	void testDigitSix() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"|_ ",
+				"|_|");
+		then(digit.getInt()).isEqualTo(6);
+	}
+
+	@Test @DisplayName("test digit seven") @Order(8)
+	void testDigitSeven() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"  |",
+				"  |");
+		then(digit.getInt()).isEqualTo(7);
+	}
+
+	@Test @DisplayName("test digit eight") @Order(9)
+	void testDigitEight() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"|_|",
+				"|_|");
+		then(digit.getInt()).isEqualTo(8);
+	}
+
+	@Test @DisplayName("test digit nine") @Order(10)
+	void testDigitNine() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"|_|",
+				" _|");
+		then(digit.getInt()).isEqualTo(9);
+	}
+	
 	@Disabled
 	@Test @DisplayName("test all digits")
 	void testAllDigits() {
@@ -67,9 +122,9 @@ class DigitTest {
 		for(int i = 0; i <= 9; i++) {
 
 			final Digit digit = new Digit(
-					" _     _  _     _  _  _  _  _ ",
-					"| |  | _| _||_||_ |_   ||_||_|",
-					"|_|  ||_  _|  | _||_|  ||_| _|");
+					" _     _  _     _  _  _  _ ",
+					"| |  | _| _||_||_ |_   ||_|",
+					"|_|  ||_  _|  | _||_|  ||_|");
 			then(digit.getInt()).isEqualTo(i);
 		}
 	}
