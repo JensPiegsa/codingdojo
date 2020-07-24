@@ -51,18 +51,18 @@ public class BankOcr {
 
 		String accountNr = "";
 		for (int pos = 0; pos < NUMBER_OF_DIGITS; pos++) {
-			final Digit actualDigit = parseDigit(pos, lines);
+			final Digit actualDigit = parseColumnAsDigit(pos, lines);
 			accountNr += actualDigit.getInt();
 		}
 		return accountNr;
 	}
 
-	Digit parseDigit(final int position, final String... lines) {
+	Digit parseColumnAsDigit(final int columnIndex, final String... lines) {
 
-		final int i = position * DIGIT_WIDTH;
-		return new Digit(lines[0].substring(i, i + DIGIT_WIDTH),
-				lines[1].substring(i, i + DIGIT_WIDTH),
-				lines[2].substring(i, i + DIGIT_WIDTH));
+		final int charIndex = columnIndex * DIGIT_WIDTH;
+		return new Digit(lines[0].substring(charIndex, charIndex + DIGIT_WIDTH),
+				lines[1].substring(charIndex, charIndex + DIGIT_WIDTH),
+				lines[2].substring(charIndex, charIndex + DIGIT_WIDTH));
 	}
 
 	public boolean isValidAccountNumber(final String accountNumber) {

@@ -114,18 +114,4 @@ class DigitTest {
 				" _|");
 		then(digit.getInt()).isEqualTo(9);
 	}
-	
-	@Disabled
-	@Test @DisplayName("test all digits")
-	void testAllDigits() {
-
-		for(int i = 0; i <= 9; i++) {
-
-			final Digit digit = new Digit(
-					" _     _  _     _  _  _  _ ",
-					"| |  | _| _||_||_ |_   ||_|",
-					"|_|  ||_  _|  | _||_|  ||_|");
-			then(digit.getInt()).isEqualTo(i);
-		}
-	}
 }

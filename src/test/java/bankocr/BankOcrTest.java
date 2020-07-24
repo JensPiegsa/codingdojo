@@ -25,36 +25,16 @@ public class BankOcrTest {
 		then(accountNumbers).containsExactly("123456789","023456789");
 	}
 
-	@Test @DisplayName("test digit zero")
-	void testDigitZero() {
-		
-		final Digit digit = bankOcr.parseDigit(0,
-				" _ ",
-				"| |",
-				"|_|");
-		then(digit.getInt()).isEqualTo(0);
-	}
-
-	@Test @DisplayName("test digit one")
-	void testDigitOne() {
-
-		final Digit digit = bankOcr.parseDigit(0,
-				"   ",
-				"  |",
-				"  |");
-		then(digit.getInt()).isEqualTo(1);
-	}
-
 	@Test @DisplayName("test all digits")
 	void testAllDigits() {
 
-		for(int i = 0; i <= 9; i++) {
+		for(int columnIndex = 0; columnIndex <= 9; columnIndex++) {
 
-			final Digit digit = bankOcr.parseDigit(i,
+			final Digit digit = bankOcr.parseColumnAsDigit(columnIndex,
 					" _     _  _     _  _  _  _  _ ",
 					"| |  | _| _||_||_ |_   ||_||_|",
 					"|_|  ||_  _|  | _||_|  ||_| _|");
-			then(digit.getInt()).isEqualTo(i);
+			then(digit.getInt()).isEqualTo(columnIndex);
 		}
 	}
 
