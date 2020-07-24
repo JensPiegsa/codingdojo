@@ -22,7 +22,7 @@ public class BankOcrTest {
 	void readNumbers() {
 		final Path path = getTestResource("AccountNr.txt");
 		final List<AccountNumber> accountNumbers = bankOcr.parse(path);
-		then(accountNumbers).asString("123456789","023456789");
+		then(accountNumbers).extracting(AccountNumber::toString).containsExactly("123456789","023456789");
 	}
 
 	@Test @DisplayName("test all digits")

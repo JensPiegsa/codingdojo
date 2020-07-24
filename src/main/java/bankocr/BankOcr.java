@@ -15,13 +15,13 @@ public class BankOcr {
 
 	public List<AccountNumber> parse(final Path path) {
 
-		final List<String> accountNumbers = new ArrayList<>();
+		final List<AccountNumber> accountNumbers = new ArrayList<>();
 
 		try (final BufferedReader bufferedReader = Files.newBufferedReader(path)) {
 
 			boolean more = true;
 			while (more) {
-				final String accountNumber = parseNextAccountNumber(bufferedReader);
+				final AccountNumber accountNumber = parseNextAccountNumber(bufferedReader);
 				more = accountNumber != null;
 				if (more) {
 					accountNumbers.add(accountNumber);
@@ -34,7 +34,7 @@ public class BankOcr {
 		return accountNumbers;
 	}
 
-	private String parseNextAccountNumber(final BufferedReader bufferedReader) throws IOException {
+	private AccountNumber parseNextAccountNumber(final BufferedReader bufferedReader) throws IOException {
 		final String firstLine = bufferedReader.readLine();
 
 		if (firstLine == null) {
@@ -44,17 +44,7 @@ public class BankOcr {
 		final String thirdLine = bufferedReader.readLine();
 		bufferedReader.readLine();
 
-		return parseNextAccountNumber(firstLine, secondLine, thirdLine);
-	}
-
-	private String parseNextAccountNumber(final String... lines) {
-
-		String accountNr = "";
-		for (int pos = 0; pos < NUMBER_OF_DIGITS; pos++) {
-			final Digit actualDigit = parseColumnAsDigit(pos, lines);
-			accountNr += actualDigit.getInt();
-		}
-		return accountNr;
+		return new AccountNumber(firstLine, secondLine, thirdLine);
 	}
 
 	Digit parseColumnAsDigit(final int columnIndex, final String... lines) {
