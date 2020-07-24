@@ -21,8 +21,8 @@ public class BankOcrTest {
 	@Test @DisplayName("readNumbers")
 	void readNumbers() {
 		final Path path = getTestResource("AccountNr.txt");
-		final List<String> accountNumbers = bankOcr.parse(path);
-		then(accountNumbers).containsExactly("123456789","023456789");
+		final List<AccountNumber> accountNumbers = bankOcr.parse(path);
+		then(accountNumbers).asString("123456789","023456789");
 	}
 
 	@Test @DisplayName("test all digits")

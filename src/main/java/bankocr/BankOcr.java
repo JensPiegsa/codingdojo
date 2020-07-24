@@ -13,7 +13,7 @@ public class BankOcr {
 	public static final int NUMBER_OF_DIGITS = 9;
 	public static final int DIGIT_WIDTH = 3;
 
-	public List<String> parse(final Path path) {
+	public List<AccountNumber> parse(final Path path) {
 
 		final List<String> accountNumbers = new ArrayList<>();
 
