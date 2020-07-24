@@ -11,6 +11,11 @@ import org.junit.jupiter.api.Test;
 
 public class BankOcrTest {
 
+	// room for improvement:
+	// TODO move digit test(s) to DigitTest
+	// TODO refactoring: extract class AccountNumber
+	// TODO move account number tests to AccountNumberTest
+	
 	private final BankOcr bankOcr = new BankOcr();
 
 	@Test @DisplayName("readNumbers")
