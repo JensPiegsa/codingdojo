@@ -2,16 +2,21 @@ package bankocr;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BankOcr {
 
-	public BankOcr(Path logFile) {
+	private final Path logFile;
 
+	public BankOcr(final Path logFile) {
+		this.logFile = logFile;
 	}
 
 	public List<AccountNumber> parse(final Path path) {
@@ -22,10 +27,12 @@ public class BankOcr {
 
 			boolean more = true;
 			while (more) {
-				final Optional<AccountNumber> accountNumber = parseNextAccountNumber(bufferedReader);
-				more = accountNumber.isPresent();
+				final Optional<AccountNumber> optionalAccountNumber = parseNextAccountNumber(bufferedReader);
+				more = optionalAccountNumber.isPresent();
 				if (more) {
-					accountNumbers.add(accountNumber.get());
+					final AccountNumber accountNumber = optionalAccountNumber.get();
+					accountNumbers.add(accountNumber);
+					logToFile(accountNumber);
 				}
 			}
 
@@ -33,6 +40,14 @@ public class BankOcr {
 			throw new IllegalArgumentException(e);
 		}
 		return accountNumbers;
+	}
+
+	private void logToFile(final AccountNumber accountNumber) {
+		try {
+			Files.write(logFile, accountNumber.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Optional<AccountNumber> parseNextAccountNumber(final BufferedReader bufferedReader) throws IOException {
