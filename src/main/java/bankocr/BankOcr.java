@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -44,7 +43,8 @@ public class BankOcr {
 
 	private void logToFile(final AccountNumber accountNumber) {
 		try {
-			Files.write(logFile, accountNumber.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+			final String logLine = accountNumber.debug() + "\n";
+			Files.write(logFile, logLine.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

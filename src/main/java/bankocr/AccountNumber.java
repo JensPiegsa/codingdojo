@@ -50,4 +50,8 @@ public class AccountNumber {
     public String toString() {
         return accountNumberString;
     }
+
+    public String debug() {
+        return toString();
+    }
 }
