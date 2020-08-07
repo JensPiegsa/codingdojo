@@ -1,25 +1,25 @@
 package bankocr;
 
-import static org.assertj.core.api.BDDAssertions.then;
-
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.contentOf;
+import static org.assertj.core.api.BDDAssertions.then;
+
 public class BankOcrTest {
 
-	private final BankOcr bankOcr = new BankOcr();
-	
 	@TempDir Path logDirectory;
 
 	@Test @DisplayName("readNumbers")
 	void readNumbers() {
 		final Path path = getTestResource("AccountNr.txt");
+		final BankOcr bankOcr = new BankOcr(logDirectory.resolve("bankOcr.log"));
 		final List<AccountNumber> accountNumbers = bankOcr.parse(path);
 		then(accountNumbers).extracting(AccountNumber::toString).containsExactly("123456789","023456789");
 	}
@@ -38,8 +38,13 @@ public class BankOcrTest {
 		final Path path = getTestResource("ValidAndInvalidAccountNr.txt");
 
 		// when
+		final Path logFile = logDirectory.resolve("bankOcr.log");
+		final BankOcr bankOcr = new BankOcr(logFile);
 		final List<AccountNumber> accountNumbers = bankOcr.parse(path);
 		
 		// then
+		then(contentOf(logFile.toFile())).isEqualTo(
+				"123456789\n" +
+				"023456789");
 	}
 }

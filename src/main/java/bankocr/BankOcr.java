@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public class BankOcr {
 
+	public BankOcr(Path logFile) {
+
+	}
+
 	public List<AccountNumber> parse(final Path path) {
 
 		final List<AccountNumber> accountNumbers = new ArrayList<>();
