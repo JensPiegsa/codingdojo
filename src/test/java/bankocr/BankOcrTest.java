@@ -45,7 +45,8 @@ public class BankOcrTest {
 		// then
 		then(contentOf(logFile.toFile())).isEqualTo(
 				"123456789\n" +
-				"023456789\n");
+				"023456780 ERR\n" +
+				"0??456780 ILL\n");
 	}
 	
 	

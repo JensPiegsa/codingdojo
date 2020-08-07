@@ -28,14 +28,14 @@ class AccountNumberTest {
 	@Test @DisplayName("checksum for account number is valid")
 	void checksumForAccountNumberIsValid() {
 		final AccountNumber accountNumber = new AccountNumber("345882865");
-		final boolean validAccountNumber = accountNumber.isValid();
+		final boolean validAccountNumber = accountNumber.isChecksumValid();
 		then(validAccountNumber).isTrue();
 	}
 
 	@Test @DisplayName("checksum for account number is invalid")
 	void checksumForAccountNumberIsInvalid() {
 		final AccountNumber accountNumber = new AccountNumber("345882866");
-		final boolean validAccountNumber = accountNumber.isValid();
+		final boolean validAccountNumber = accountNumber.isChecksumValid();
 		then(validAccountNumber).isFalse();
 	}
 	

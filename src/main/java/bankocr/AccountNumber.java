@@ -21,13 +21,21 @@ public class AccountNumber {
         String accountNr = "";
         for (int pos = 0; pos < NUMBER_OF_DIGITS; pos++) {
             final Digit actualDigit = parseColumnAsDigit(pos, lines);
-            accountNr += actualDigit.getInt();
+            final int anInt = actualDigit.getInt();
+            accountNr += anInt == -1 ? "?" : anInt;
         }
         return accountNr;
     }
 
     public boolean isValid() {
+        return isParsable() && isChecksumValid();
+    }
 
+    private boolean isParsable() {
+        return false;
+    }
+
+    private boolean isChecksumValid() {
         int checksum = 0;
         for (int pos = NUMBER_OF_DIGITS - 1; pos >= 0; pos--) {
             final char digitChar = accountNumberString.charAt(pos);
@@ -52,6 +60,7 @@ public class AccountNumber {
     }
 
     public String debug() {
-        return toString();
+        final String suffix = isChecksumValid() ? "" : " ERR";
+        return toString() + suffix;
     }
 }
