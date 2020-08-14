@@ -22,11 +22,26 @@ public class SolutionTest {
 	More examples in the test cases.
 	 */
 	
-	@Test @DisplayName("test")
-	void test() {
+	@Test @DisplayName("test10")
+	void test10() {
 		assertThat(Solution.solve(10L)).isEqualTo(9L);
 	}
-	
+
+	@Test @DisplayName("test1")
+	void test1() {
+		assertThat(Solution.solve(1L)).isEqualTo(1L);
+	}
+
+	@Test @DisplayName("test2")
+	void test2() {
+		assertThat(Solution.solve(2L)).isEqualTo(2L);
+	}
+
+	@Test @DisplayName("test18")
+	void test18() {
+		assertThat(Solution.solve(18L)).isEqualTo(18L);
+	}
+
 	@Test
 	public void basicTests() {
 		assertEquals(1L, Solution.solve(1L));
