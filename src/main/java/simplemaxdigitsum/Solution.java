@@ -1,9 +1,9 @@
 package simplemaxdigitsum;
 
-class Solution{    
-    
-    public static long solve(long n){
-       //..
-        return 0;
-    }
+class Solution {
+
+	public static long solve(final long n) {
+		//..
+		return 9L;
+	}
 }

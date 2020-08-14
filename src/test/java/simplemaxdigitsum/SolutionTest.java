@@ -1,10 +1,10 @@
 package simplemaxdigitsum;
 
-import org.junit.Test;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class SolutionTest {
 
@@ -21,6 +21,12 @@ public class SolutionTest {
 	
 	More examples in the test cases.
 	 */
+	
+	@Test @DisplayName("test")
+	void test() {
+		assertThat(Solution.solve(10L)).isEqualTo(9L);
+	}
+	
 	@Test
 	public void basicTests() {
 		assertEquals(1L, Solution.solve(1L));
