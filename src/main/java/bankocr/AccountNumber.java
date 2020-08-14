@@ -35,7 +35,7 @@ public class AccountNumber {
         return false;
     }
 
-    private boolean isChecksumValid() {
+    boolean isChecksumValid() {
         int checksum = 0;
         for (int pos = NUMBER_OF_DIGITS - 1; pos >= 0; pos--) {
             final char digitChar = accountNumberString.charAt(pos);
