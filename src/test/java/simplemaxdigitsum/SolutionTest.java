@@ -42,6 +42,21 @@ public class SolutionTest {
 		assertThat(Solution.solve(18L)).isEqualTo(18L);
 	}
 
+	@Test @DisplayName("test digitSum(10)")
+	void testDigitSumOf10() {
+		assertThat(Solution.digitSum(10L)).isEqualTo(1L);
+	}
+
+	@Test @DisplayName("test digitSum(22)")
+	void testDigitSumOf22() {
+		assertThat(Solution.digitSum(22L)).isEqualTo(4L);
+	}
+
+	@Test @DisplayName("test digitSum(35)")
+	void testDigitSumOf35() {
+		assertThat(Solution.digitSum(35L)).isEqualTo(8L);
+	}
+
 	@Test
 	public void basicTests() {
 		assertEquals(1L, Solution.solve(1L));
