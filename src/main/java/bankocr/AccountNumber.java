@@ -32,7 +32,7 @@ public class AccountNumber {
     }
 
     private boolean isParsable() {
-        return false;
+        return !accountNumberString.contains("?");
     }
 
     boolean isChecksumValid() {
@@ -60,7 +60,13 @@ public class AccountNumber {
     }
 
     public String debug() {
-        final String suffix = isChecksumValid() ? "" : " ERR";
+        final String suffix;
+        final boolean parsable = isParsable();
+        if(parsable) {
+            suffix = isChecksumValid() ? "" : " ERR";
+        } else {
+            suffix = " ILL";
+        }
         return toString() + suffix;
     }
 }
