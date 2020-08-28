@@ -15,6 +15,17 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class DigitTest {
 
+
+	@Test @DisplayName("test broken digit") @Order(0)
+	void testBrokenDigit() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"  |",
+				" _|");
+		then(digit.getInt()).isEqualTo(-1);
+	}
+
 	@Test @DisplayName("test digit zero") @Order(1)
 	void testDigitZero() {
 
