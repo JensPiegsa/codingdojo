@@ -126,14 +126,34 @@ class DigitTest {
 	}
 
 
-	@Test @DisplayName("test broken digit may be a 7.") @Order(11)
-	void testBrokenDigitMayBeASeven() {
+	@Test @DisplayName("test broken digit may be a 7 or 3.") @Order(11)
+	void testBrokenDigitMayBeASevenOrThree() {
 
 		final Digit digit = new Digit(
 				" _ ",
 				"  |",
 				" _|");
-		then(digit.getPossibleValues()).contains(7);
+		then(digit.getPossibleValues()).containsOnly(7,3);
+	}
+
+	@Test @DisplayName("test broken digit may be a 1.") @Order(12)
+	void testBrokenDigitMayBeAOne() {
+
+		final Digit digit = new Digit(
+				"   ",
+				"   ",
+				"  |");
+		then(digit.getPossibleValues()).containsOnly(1);
+	}
+
+	@Test @DisplayName("test broken digit may be a 1 or 7.") @Order(13)
+	void testBrokenDigitMayBeAOneOrSeven() {
+
+		final Digit digit = new Digit(
+				"   ",
+				"  |",
+				"  |");
+		then(digit.getPossibleValues()).containsOnly(1,7);
 	}
 	
 }
