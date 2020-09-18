@@ -1,5 +1,8 @@
 package bankocr;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Digit {
 	
 	private static final String[][] digits = {
@@ -42,8 +45,8 @@ public class Digit {
 			{" _ ",
 			 "|_|",
 			 " _|"}
-
 	};
+	
 	private int intValue = -1;
 
 	public Digit(final String firstLine, final String secondLine, final String thirdLine) {
@@ -56,7 +59,12 @@ public class Digit {
 		}
 	}
 
+	@Deprecated
 	public int getInt() {
 		return intValue;
+	}
+
+	public List<Integer> getPossibleValues() {
+		return Collections.singletonList(7);
 	}
 }

@@ -14,8 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @DisplayName("A Digit")
 @TestMethodOrder(OrderAnnotation.class)
 class DigitTest {
-
-
+	
 	@Test @DisplayName("test broken digit") @Order(0)
 	void testBrokenDigit() {
 
@@ -125,4 +124,16 @@ class DigitTest {
 				" _|");
 		then(digit.getInt()).isEqualTo(9);
 	}
+
+
+	@Test @DisplayName("test broken digit may be a 7.") @Order(11)
+	void testBrokenDigitMayBeASeven() {
+
+		final Digit digit = new Digit(
+				" _ ",
+				"  |",
+				" _|");
+		then(digit.getPossibleValues()).contains(7);
+	}
+	
 }
