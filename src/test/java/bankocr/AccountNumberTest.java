@@ -2,6 +2,10 @@ package bankocr;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+import java.nio.file.Path;
+
+import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -39,5 +43,30 @@ class AccountNumberTest {
 		then(validAccountNumber).isFalse();
 	}
 	
+	@Test @DisplayName("check account number length")
+	void checkAccountNumberLength() {
+		// given
+		String lineOne = " _     _  _     _  _  _  _  _ ";
+		String lineTwo = "| |  | _|  ||_||_ |_   ||_||_|";
+		String lineThr = "|_|  ||_  _|  | _||_|  ||_| _|";
+		
+		// when
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new AccountNumber(lineOne, lineTwo, lineThr));
+	}
 	
+	@Test @DisplayName("test")
+	void test() {
+		// given
+		String lineOne = "    _  _     _  _  _  _  _ ";
+		String lineTwo = "  | _|  ||_||_ |_   ||_||_|";
+		String lineThr = "  ||_  _|  | _||_|  ||_| _|";
+		
+		final AccountNumber accountNumber = new AccountNumber(lineOne, lineTwo, lineThr);
+		
+		// when
+		final String actual = accountNumber.toString();
+
+		// then
+		then(actual).isEqualTo("123456789");
+	}
 }

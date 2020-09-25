@@ -9,6 +9,10 @@ public class AccountNumber {
     private final String accountNumberString;
 
     public AccountNumber(final String firstLine, final String secondLine, final String thirdLine) {
+        
+        if (firstLine.length() != NUMBER_OF_DIGITS*DIGIT_WIDTH) {
+            throw new IllegalArgumentException("Should contain 9 digits");
+        }
         accountNumberString = parseNextAccountNumber(firstLine, secondLine, thirdLine);
     }
 
