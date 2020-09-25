@@ -36,6 +36,12 @@ public class AccountNumber {
     }
 
     boolean isChecksumValid() {
+        int checksum = calculateChecksum();
+        final boolean isValid = checksum % 11 == 0;
+        return isValid;
+    }
+
+    private int calculateChecksum() {
         int checksum = 0;
         for (int pos = NUMBER_OF_DIGITS - 1; pos >= 0; pos--) {
             final char digitChar = accountNumberString.charAt(pos);
@@ -43,7 +49,7 @@ public class AccountNumber {
             final int factor = NUMBER_OF_DIGITS - pos;
             checksum += digit * factor;
         }
-        return checksum % 11 == 0;
+        return checksum;
     }
 
     static Digit parseColumnAsDigit(final int columnIndex, final String... lines) {

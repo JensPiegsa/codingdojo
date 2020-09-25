@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Digit {
-	
+
 	private static final String[][] digits = {
 			{" _ ",
 			 "| |",
@@ -48,6 +48,8 @@ public class Digit {
 			 " _|"}
 	};
 	
+	private static final int MAXIMUM_ERROR = 1;
+
 	private int intValue = -1;
 	private final ArrayList<Integer> possibleValues;
 
@@ -64,18 +66,21 @@ public class Digit {
 		}
 	}
 
-	private boolean matchesWeakly(String[] digit, String[] lines) {
+	/**
+	 * compare two digits character-wise and allowing one error at maximum
+	 */
+	private boolean matchesWeakly(String[] expectedDigit, String[] actualDigit) {
 		int errorCount = 0;
 		for(int row = 0; row < 3; row++){
 			for(int column = 0; column < 3; column++){
-				char expectedChar = digit[row].charAt(column);
-				char actualChar = lines[row].charAt(column);
+				char expectedChar = expectedDigit[row].charAt(column);
+				char actualChar = actualDigit[row].charAt(column);
 				if(expectedChar != actualChar){
 					errorCount++;
 				}
 			}
 		}
-		return errorCount <= 1;
+		return errorCount <= MAXIMUM_ERROR;
 	}
 
 	private boolean matchesPerfectly(String[] digit, String[] lines) {
