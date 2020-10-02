@@ -1,8 +1,12 @@
 package bankocr;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
@@ -54,8 +58,8 @@ class AccountNumberTest {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new AccountNumber(lineOne, lineTwo, lineThr));
 	}
 	
-	@Test @DisplayName("test")
-	void test() {
+	@Test @DisplayName("acceptance test for error correction")
+	void acceptanceTestForErrorCorrection() {
 		// given
 		String lineOne = "    _  _     _  _  _  _  _ ";
 		String lineTwo = "  | _|  ||_||_ |_   ||_||_|";
@@ -68,5 +72,31 @@ class AccountNumberTest {
 
 		// then
 		then(actual).isEqualTo("123456789");
+	}
+	
+	@Test @DisplayName("test simple permutate")
+	void testSimplePermutate() {
+		// given
+		final List<List<Integer>> combinations = singletonList(singletonList(1));
+		
+		// when
+		final List<String> actual = AccountNumber.permutate(combinations);
+
+		// then
+		then(actual).containsExactly("1");
+	}
+
+	@Test @DisplayName("test permutate")
+	void testPermutate() {
+		// given
+		final List<Integer> candidateForDigitPositionZero = asList(1, 2);
+		final List<Integer> candidateForDigitPositionOne = asList(8, 9);
+		final List<List<Integer>> combinations = asList(candidateForDigitPositionZero, candidateForDigitPositionOne);
+
+		// when
+		final List<String> actual = AccountNumber.permutate(combinations);
+
+		// then
+		then(actual).containsExactlyInAnyOrder("18", "19", "28", "29");
 	}
 }

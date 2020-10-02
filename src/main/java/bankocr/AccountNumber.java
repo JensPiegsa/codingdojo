@@ -1,7 +1,13 @@
 package bankocr;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("StringConcatenationInLoop")
 public class AccountNumber {
@@ -41,8 +47,23 @@ public class AccountNumber {
         return accountNr;
     }
 
-    List<String> permutate(final List<List<Integer>> combinations) {
-        return null;
+    static List<String> permutate(final List<List<Integer>> combinations) {
+        return permutateRecursively(singletonList(""), combinations);
+    }
+
+    private static List<String> permutateRecursively(final List<String> head, final List<List<Integer>> tail) {
+        if (tail.isEmpty()) {
+            return head;
+        }
+
+        List<String> newHead = head.stream()
+                .map(headElement -> tail.get(0).stream()
+                        .map(integer -> headElement + integer)
+                        .collect(toList()))
+                .flatMap(List::stream)
+                .collect(toList());
+        
+        return permutateRecursively(newHead, tail.subList(1, tail.size()));
     }
 
     public boolean isValid() {
