@@ -1,21 +1,25 @@
 package parallelchange.field;
 
 public class ShoppingCart {
-	private int price;
+	private int totalPrice;
+	private int productCount = 0;
+	private boolean hasDiscount = false;
 
 	public void add(int price) {
-		this.price = price;
+		totalPrice += price;
+		productCount++;
+		hasDiscount |=  price >= 100;
 	}
 
 	public int calculateTotalPrice() {
-		return price;
+		return totalPrice;
 	}
 
 	public boolean hasDiscount() {
-		return price >= 100;
+		return hasDiscount;
 	}
 
 	public int numberOfProducts() {
-		return 1;
+		return productCount;
 	}
 }

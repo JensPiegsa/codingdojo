@@ -1,6 +1,5 @@
 package parallelchange.method;
 
-import com.pduda.method.AuthenticationService;
 import org.junit.Assert;
 import org.junit.Test;
 
