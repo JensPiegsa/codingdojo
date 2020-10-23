@@ -2,6 +2,7 @@ package codesmells.tictactoe;
 
 public class Game {
     public static final char EMPTY_SYMBOL = ' ';
+    public static final char O_SYMBOL = 'O';
 
     private char lastSymbol = EMPTY_SYMBOL;
     private Board board = new Board();
@@ -10,7 +11,7 @@ public class Game {
         //if first move
         if (lastSymbol == EMPTY_SYMBOL) {
             //if player is X
-            if (symbol == 'O') {
+            if (symbol == O_SYMBOL) {
                 throw new Exception("Invalid first player");
             }
         }
@@ -29,46 +30,25 @@ public class Game {
     }
 
     public char getWinner() {
-        //if the positions in first row are taken
-        if (board.isPositionOccupied(0, 0) &&
-                board.isPositionOccupied(0, 1) &&
-                board.isPositionOccupied(0, 2)) {
-            //if first row is full with same symbol
-            if (board.getSymbol(0, 0) ==
-                    board.getSymbol(0, 1) &&
-                    board.getSymbol(0, 2) == board.getSymbol(0, 1)) {
-                return board.getSymbol(0, 0);
-            }
-        }
-
-        //if the positions in first row are taken
-        if (board.isPositionOccupied(1, 0) &&
-                board.isPositionOccupied(1, 1) &&
-                board.isPositionOccupied(1, 2)) {
-            //if middle row is full with same symbol
-            if (board.getSymbol(1, 0) ==
-                    board.getSymbol(1, 1) &&
-                    board.getSymbol(1, 2) ==
-                            board.getSymbol(1, 1)) {
-                return board.getSymbol(1, 0);
-            }
-        }
-
-        //if the positions in first row are taken
-        if (board.isPositionOccupied(2, 0) &&
-                board.isPositionOccupied(2, 1) &&
-                board.isPositionOccupied(2, 2)) {
-            //if middle row is full with same symbol
-            if (board.getSymbol(2, 0) ==
-                    board.getSymbol(2, 1) &&
-                    board.getSymbol(2, 2) ==
-                            board.getSymbol(2, 1)) {
-                return board.getSymbol(2, 0);
-            }
-        }
-
+        if (isRowOccupied(0)) return board.getSymbol(0, 0);
+        if (isRowOccupied(1)) return board.getSymbol(1, 0);
+        if (isRowOccupied(2)) return board.getSymbol(2, 0);
         return EMPTY_SYMBOL;
     }
 
-}
+    private boolean isRowOccupied(int columnIndex) {
+        return isColumnOccupied(columnIndex) && doesColumnHaveSameSymbol(columnIndex);
+    }
 
+    private boolean doesColumnHaveSameSymbol(int columnIndex) {
+        return board.getSymbol(columnIndex, 0) ==
+                board.getSymbol(columnIndex, 1) &&
+                board.getSymbol(columnIndex, 2) == board.getSymbol(columnIndex, 1);
+    }
+
+    private boolean isColumnOccupied(int columnIndex) {
+        return board.isPositionOccupied(columnIndex, 0) &&
+                board.isPositionOccupied(columnIndex, 1) &&
+                board.isPositionOccupied(columnIndex, 2);
+    }
+}

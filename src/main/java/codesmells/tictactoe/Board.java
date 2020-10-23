@@ -9,7 +9,7 @@ public class Board {
     public Board() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                Tile tile = new Tile(i,j, ' ');
+                Tile tile = new Tile(i,j, Game.EMPTY_SYMBOL);
                 plays.add(tile);
             }
         }
@@ -25,11 +25,11 @@ public class Board {
     }
 
     public void AddTileAt(char symbol, int x, int y) {
-        getTileAt(x, y).symbol = symbol;
+        getTileAt(x, y).setSymbol(symbol);
     }
 
     char getSymbol(int x, int y) {
-        return getTileAt(x, y).symbol;
+        return getTileAt(x, y).getSymbol();
     }
 
     boolean isPositionOccupied(int x, int y) {
