@@ -30,7 +30,8 @@ We created a very smelly implementation of TicTacToe. There are quite a few code
     * Board.java & Game.java for Symbol
  * [x] Lazy class
     * Tile.java
- * [ ] Dead code
+ * [x] Dead code
+    * Board.java in AddTileAt() newTile is never used
  * [x] Magic value
     * Game.java
 

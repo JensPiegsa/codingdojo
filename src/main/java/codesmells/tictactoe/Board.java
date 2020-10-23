@@ -4,23 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private List<Tile> _plays = new ArrayList<>();
+    private List<Tile> plays = new ArrayList<>();
 
     public Board() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                Tile tile = new Tile();
-                tile.X = i;
-                tile.Y = j;
-                tile.Symbol = ' ';
-                _plays.add(tile);
+                Tile tile = new Tile(i,j, ' ');
+                plays.add(tile);
             }
         }
     }
 
-    public Tile getSymbolAt(int x, int y) {
-        for (Tile t : _plays) {
-            if (t.X == x && t.Y == y) {
+    public Tile getTileAt(int x, int y) {
+        for (Tile t : plays) {
+            if (t.x == x && t.y == y) {
                 return t;
             }
         }
@@ -28,11 +25,14 @@ public class Board {
     }
 
     public void AddTileAt(char symbol, int x, int y) {
-        Tile newTile = new Tile();
-        newTile.X = x;
-        newTile.Y = y;
-        newTile.Symbol = symbol;
+        getTileAt(x, y).symbol = symbol;
+    }
 
-        getSymbolAt(x, y).Symbol = symbol;
+    char getSymbol(int x, int y) {
+        return getTileAt(x, y).symbol;
+    }
+
+    boolean isPositionOccupied(int x, int y) {
+        return getSymbol(x, y) != Game.EMPTY_SYMBOL;
     }
 }
