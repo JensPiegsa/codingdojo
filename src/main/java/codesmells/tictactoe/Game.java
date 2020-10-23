@@ -1,12 +1,13 @@
 package codesmells.tictactoe;
 
 public class Game {
-    private char _lastSymbol = ' ';
+    public static final char EMPTY_SYMBOL = ' ';
+    private char _lastSymbol = EMPTY_SYMBOL;
     private Board _board = new Board();
 
     public void Play(char symbol, int x, int y) throws Exception {
         //if first move
-        if (_lastSymbol == ' ') {
+        if (_lastSymbol == EMPTY_SYMBOL) {
             //if player is X
             if (symbol == 'O') {
                 throw new Exception("Invalid first player");
@@ -17,7 +18,7 @@ public class Game {
             throw new Exception("Invalid next player");
         }
         //if not first move but play on an already played tile
-        else if (_board.TileAt(x, y).Symbol != ' ') {
+        else if (getSymbol(x, y) != EMPTY_SYMBOL) {
             throw new Exception("Invalid position");
         }
 
@@ -26,46 +27,50 @@ public class Game {
         _board.AddTileAt(symbol, x, y);
     }
 
-    public char Winner() {
+    public char getWinner() {
         //if the positions in first row are taken
-        if (_board.TileAt(0, 0).Symbol != ' ' &&
-                _board.TileAt(0, 1).Symbol != ' ' &&
-                _board.TileAt(0, 2).Symbol != ' ') {
+        if (getSymbol(0, 0) != EMPTY_SYMBOL &&
+                getSymbol(0, 1) != EMPTY_SYMBOL &&
+                getSymbol(0, 2) != EMPTY_SYMBOL) {
             //if first row is full with same symbol
-            if (_board.TileAt(0, 0).Symbol ==
-                    _board.TileAt(0, 1).Symbol &&
-                    _board.TileAt(0, 2).Symbol == _board.TileAt(0, 1).Symbol) {
-                return _board.TileAt(0, 0).Symbol;
+            if (getSymbol(0, 0) ==
+                    getSymbol(0, 1) &&
+                    getSymbol(0, 2) == getSymbol(0, 1)) {
+                return getSymbol(0, 0);
             }
         }
 
         //if the positions in first row are taken
-        if (_board.TileAt(1, 0).Symbol != ' ' &&
-                _board.TileAt(1, 1).Symbol != ' ' &&
-                _board.TileAt(1, 2).Symbol != ' ') {
+        if (getSymbol(1, 0) != EMPTY_SYMBOL &&
+                getSymbol(1, 1) != EMPTY_SYMBOL &&
+                getSymbol(1, 2) != EMPTY_SYMBOL) {
             //if middle row is full with same symbol
-            if (_board.TileAt(1, 0).Symbol ==
-                    _board.TileAt(1, 1).Symbol &&
-                    _board.TileAt(1, 2).Symbol ==
-                            _board.TileAt(1, 1).Symbol) {
-                return _board.TileAt(1, 0).Symbol;
+            if (getSymbol(1, 0) ==
+                    getSymbol(1, 1) &&
+                    getSymbol(1, 2) ==
+                            getSymbol(1, 1)) {
+                return getSymbol(1, 0);
             }
         }
 
         //if the positions in first row are taken
-        if (_board.TileAt(2, 0).Symbol != ' ' &&
-                _board.TileAt(2, 1).Symbol != ' ' &&
-                _board.TileAt(2, 2).Symbol != ' ') {
+        if (getSymbol(2, 0) != EMPTY_SYMBOL &&
+                getSymbol(2, 1) != EMPTY_SYMBOL &&
+                getSymbol(2, 2) != EMPTY_SYMBOL) {
             //if middle row is full with same symbol
-            if (_board.TileAt(2, 0).Symbol ==
-                    _board.TileAt(2, 1).Symbol &&
-                    _board.TileAt(2, 2).Symbol ==
-                            _board.TileAt(2, 1).Symbol) {
-                return _board.TileAt(2, 0).Symbol;
+            if (getSymbol(2, 0) ==
+                    getSymbol(2, 1) &&
+                    getSymbol(2, 2) ==
+                            getSymbol(2, 1)) {
+                return getSymbol(2, 0);
             }
         }
 
-        return ' ';
+        return EMPTY_SYMBOL;
+    }
+
+    private char getSymbol(int x, int y) {
+        return _board.getSymbolAt(x, y).Symbol;
     }
 }
 
