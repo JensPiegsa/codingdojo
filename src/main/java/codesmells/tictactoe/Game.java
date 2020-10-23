@@ -1,13 +1,13 @@
 package codesmells.tictactoe;
 
 public class Game {
-    public static final char EMPTY_SYMBOL = ' ';
-    public static final char O_SYMBOL = 'O';
+    public static final Symbol EMPTY_SYMBOL = Symbol.EMPTY;
+    public static final Symbol O_SYMBOL = Symbol.O;
 
-    private char lastSymbol = EMPTY_SYMBOL;
+    private Symbol lastSymbol = EMPTY_SYMBOL;
     private Board board = new Board();
 
-    public void Play(char symbol, int x, int y) throws Exception {
+    public void Play(Symbol symbol, int x, int y) throws Exception {
         //if first move
         if (lastSymbol == EMPTY_SYMBOL) {
             //if player is X
@@ -29,7 +29,7 @@ public class Game {
         board.AddTileAt(symbol, x, y);
     }
 
-    public char getWinner() {
+    public Symbol getWinner() {
         if (isRowOccupied(0)) return board.getSymbol(0, 0);
         if (isRowOccupied(1)) return board.getSymbol(1, 0);
         if (isRowOccupied(2)) return board.getSymbol(2, 0);

@@ -24,12 +24,12 @@ public class Board {
         return null;
     }
 
-    public void AddTileAt(char symbol, int x, int y) {
-        getTileAt(x, y).setSymbol(symbol);
+    public void AddTileAt(Symbol symbol, int x, int y) {
+        getTileAt(x, y).symbol = symbol;
     }
 
-    char getSymbol(int x, int y) {
-        return getTileAt(x, y).getSymbol();
+    Symbol getSymbol(int x, int y) {
+        return getTileAt(x, y).symbol;
     }
 
     boolean isPositionOccupied(int x, int y) {
