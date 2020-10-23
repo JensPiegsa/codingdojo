@@ -1,4 +1,4 @@
-package codesmells.ticktactoe;
+package codesmells.tictactoe;
 
 public class Tile
 {

@@ -1,4 +1,4 @@
-package codesmells.ticktactoe;
+package codesmells.tictactoe;
 
 import org.junit.Before;
 import org.junit.Test;

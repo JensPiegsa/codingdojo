@@ -1,4 +1,4 @@
-package codesmells.ticktactoe;
+package codesmells.tictactoe;
 
 import java.util.ArrayList;
 import java.util.List;
