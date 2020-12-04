@@ -1,8 +1,9 @@
 package medicineclash;
 
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 public class Patient {
 
@@ -12,14 +13,21 @@ public class Patient {
         this.medicines.add(medicine);
     }
 
-    public Collection<Date> clash(Collection<String> medicineNames) {
+    public Collection<Instant> clash(Collection<String> medicineNames) {
         return clash(medicineNames, 90);
     }
 
-    public Collection<Date> clash(Collection<String> medicineNames, int daysBack) {
-        // TODO: implement this method
-        return null;
+    public Collection<Instant> clash(Collection<String> medicineNames, int daysBack) {
+
+        Collection<Instant> clashingDays = new ArrayList<>();
+        for (int day = daysBack; day >= 0; day--) {
+            final Instant currentDay = Instant.now().minus(Period.ofDays(day));
+            
+            if (!medicines.isEmpty()) {
+                clashingDays.add(currentDay);
+            }
+        }
+        
+        return clashingDays;
     }
-
-
 }

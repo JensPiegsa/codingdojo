@@ -1,13 +1,13 @@
 package medicineclash;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class Prescription {
     
-    private Date dispenseDate = new Date();
+    private Instant dispenseDate = Instant.now();
     private int daysSupply = 30;
     
-    public Prescription(Date dispenseDate, int daysSupply) {
+    public Prescription(Instant dispenseDate, int daysSupply) {
         this.dispenseDate = dispenseDate;
         this.daysSupply = daysSupply;
     }
