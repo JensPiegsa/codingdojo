@@ -26,8 +26,9 @@ class PatientTest {
 	@Test @DisplayName("clash for patient with prescription")
 	void clashForPatientWithPrescription() {
 		// given
-		Prescription prescriptionOne = new Prescription(Instant.parse("2020-12-03T12:00:00.000Z"), 2);
-		Prescription prescriptionTwo = new Prescription(Instant.parse("2020-12-03T12:00:00.000Z"), 2);
+		Instant today = Instant.now();
+		Prescription prescriptionOne = new Prescription(today, 2);
+		Prescription prescriptionTwo = new Prescription(today, 2);
 		Medicine medicineOne = new Medicine("First");
 		medicineOne.addPrescription(prescriptionOne);
 		Medicine medicineTwo = new Medicine("Second");
