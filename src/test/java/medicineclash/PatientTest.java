@@ -24,14 +24,16 @@ class PatientTest {
 		assertThat(clash).isEmpty();
 	}
 
-	@Test @DisplayName("clash for patient with prescription")
+	@Test @DisplayName("clash for patient with same prescription days")
 	void clashForPatientWithPrescription() {
 		// given
-		final ZonedDateTime today = ZonedDateTime.parse("2020-12-03T12:00:00.000Z");
-		final ZonedDateTime yesterday = ZonedDateTime.parse("2020-12-02T12:00:00.000Z");
+		final ZonedDateTime twoDaysBack = ZonedDateTime.parse("2020-12-02T12:00:00.000Z");
+		final ZonedDateTime yesterday = ZonedDateTime.parse("2020-12-03T12:00:00.000Z");
+		final ZonedDateTime today = ZonedDateTime.parse("2020-12-04T12:00:00.000Z");
 		
-		Prescription prescriptionOne = new Prescription(today, 1);
-		Prescription prescriptionTwo = new Prescription(today, 1);
+		Prescription prescriptionOne = new Prescription(twoDaysBack, 1);
+		Prescription prescriptionTwo = new Prescription(twoDaysBack, 1);
+		
 		Medicine medicineOne = new Medicine("First");
 		medicineOne.addPrescription(prescriptionOne);
 		Medicine medicineTwo = new Medicine("Second");
@@ -43,11 +45,11 @@ class PatientTest {
 		patient.addMedicine(medicineTwo);
 		
 		// when
-		final Collection<ZonedDateTime> clash = patient.clash(asList("First", "Second"), 1);
+		final Collection<ZonedDateTime> clash = patient.clash(asList("First", "Second"), 2);
 
 		// then
 		assertThat(clash).hasSize(2);
-		assertThat(clash).containsExactlyInAnyOrder(today, yesterday);
+		assertThat(clash).containsExactlyInAnyOrder(twoDaysBack, yesterday);
 	}
 	
 	@Test @DisplayName("no clash for patient with prescription")

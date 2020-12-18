@@ -3,6 +3,7 @@ package medicineclash;
 import java.time.Clock;
 import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -24,11 +25,15 @@ public class Patient {
     public Collection<ZonedDateTime> clash(Collection<String> medicineNames, int daysBack) {
 
         Collection<ZonedDateTime> clashingDays = new ArrayList<>();
+        final ZonedDateTime today = clock.instant()
+                .atZone(clock.getZone())
+                .truncatedTo(ChronoUnit.DAYS);
+        
         for (int day = daysBack; day >= 0; day--) {
-            final ZonedDateTime currentDay = clock.instant().atZone(clock.getZone()).minus(Period.ofDays(day));
-
-            if (isClashing(medicineNames, currentDay)) {
-                clashingDays.add(currentDay);
+            final ZonedDateTime queryDay = today.minus(Period.ofDays(day));
+            
+            if (isClashing(medicineNames, queryDay)) {
+                clashingDays.add(queryDay);
             }
         }
         
@@ -38,6 +43,7 @@ public class Patient {
     private boolean isClashing(final Collection<String> medicineNames, final ZonedDateTime currentDay) {
         return medicines.stream()
                 .filter(medicine -> medicine.isTakenAt(currentDay))
+                .map(Medicine::getName)
                 .collect(Collectors.toList())
                 .containsAll(medicineNames);
     }

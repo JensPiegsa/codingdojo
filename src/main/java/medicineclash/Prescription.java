@@ -1,8 +1,7 @@
 package medicineclash;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class Prescription {
     
@@ -14,14 +13,17 @@ public class Prescription {
         this.daysSupply = daysSupply;
     }
 
-    public boolean isTakenAt(final ZonedDateTime currentDay) {
-        final LocalDate startDateInclusive = dispenseDate.toLocalDate();
-        final LocalDate endDateExclusive = currentDay.plusDays(1).toLocalDate();
-        final int daysBetween = Period.between(startDateInclusive, endDateExclusive).getDays();
-        System.out.println("###\n" +
-                "startDateInclusive: " + startDateInclusive +
-                "\nendDateExclusive: " + endDateExclusive +
-                "\ndaysBetween: " + daysBetween);
-        return daysBetween >= 0 && daysBetween <= daysSupply;
+    public boolean isTakenAt(final ZonedDateTime queryDate) {
+        final ZonedDateTime dispenseDay = dispenseDate.truncatedTo(ChronoUnit.DAYS);
+        final ZonedDateTime queryDay = queryDate.truncatedTo(ChronoUnit.DAYS);
+        final ZonedDateTime lastDay = dispenseDay.plusDays(daysSupply);
+        
+        return isBetweenInclusive(dispenseDay, queryDay, lastDay);
+    }
+
+    private boolean isBetweenInclusive(final ZonedDateTime dispenseDay, final ZonedDateTime queryDay, final ZonedDateTime lastDay) {
+        return queryDay.isEqual(dispenseDay)
+                || queryDay.isEqual(lastDay)
+                || (queryDay.isBefore(lastDay) && queryDay.isAfter(dispenseDay));
     }
 }
