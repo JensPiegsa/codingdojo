@@ -34,17 +34,45 @@ public class ExpenseReportTest {
 	@Test @DisplayName("returns expected multiply product from file")
 	void returnsExpectedMultiplyProductFromFile() throws URISyntaxException, IOException {
 		// given
-		final URI uri = ExpenseReportTest.class.getResource("input.txt").toURI();
-		List<Integer> expenses = Files.readAllLines(Paths.get(uri))
-				.stream()
-				.filter(line -> !line.isEmpty())
-				.map(Integer::parseInt)
-				.collect(toList());
+		List<Integer> expenses = readLinesAsNumbersFromFile("input.txt");
 
 		// when
 		final int product = expenseReport.calculateProduct(2020, expenses);
 
 		// then
 		then(product).isEqualTo(482811);
+	}
+
+	private List<Integer> readLinesAsNumbersFromFile(final String fileName) throws URISyntaxException, IOException {
+		final URI uri = ExpenseReportTest.class.getResource(fileName).toURI();
+		return Files.readAllLines(Paths.get(uri))
+				.stream()
+				.filter(line -> !line.isEmpty())
+				.map(Integer::parseInt)
+				.collect(toList());
+	}
+
+	@Test @DisplayName("returns expected multiply product with three numbers")
+	void returnsExpectedMultiplyProductWithThreeNumbers() {
+		// given
+		List<Integer> expenses = asList(1721, 979, 366, 299, 675, 1456);
+		
+		// when
+		final int product = expenseReport.calculateProductOfThree(2020, expenses);
+		
+		// then
+		then(product).isEqualTo(241861950);
+	}
+
+	@Test @DisplayName("returns expected multiply product from file with three numbers")
+	void returnsExpectedMultiplyProductFromFileWithThreeNumbers() throws URISyntaxException, IOException {
+		// given
+		List<Integer> expenses = readLinesAsNumbersFromFile("input.txt");
+
+		// when
+		final int product = expenseReport.calculateProductOfThree(2020, expenses);
+
+		// then
+		then(product).isEqualTo(193171814);
 	}
 }
