@@ -49,4 +49,16 @@ class PasswordValidatorTest {
 				.filter(line -> !line.isEmpty())
 				.collect(toList());
 	}
+	
+	@Test @DisplayName("part two")
+	void partTwo() throws IOException, URISyntaxException {
+		// given
+		List<String> passwords = readLinesAsStringFromFile("input.txt");
+
+		// when
+		long numberOfValidPasswords = passwordValidator.countValid2(passwords);
+
+		// then
+		then(numberOfValidPasswords).isEqualTo(306);
+	}
 }
