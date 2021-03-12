@@ -7,33 +7,29 @@ import java.util.*;
 
 public class Bananas {
 
-  static Set<String> bananas(final String inputString) {
-    return recursiveBanana(inputString, "banana");
+  private static final int notFound = -1;
+
+  static Set<String> bananas(final String input) {
+    return recursiveBanana(input, "banana");
   }
 
-  private static Set<String> recursiveBanana(String newInputString, String searchTerm) {
+  private static Set<String> recursiveBanana(String remainingInput, String searchTerm) {
     if (searchTerm.isEmpty()) {
-      if (!newInputString.isEmpty()) {
-        String tail = nDashes(newInputString.length());
-        return singleton(tail);
-      }
-      return singleton("");
+      String tail = nDashes(remainingInput.length());
+      return singleton(tail);
     }
     char firstLetter = searchTerm.charAt(0);
-    int position = newInputString.indexOf(firstLetter);
+    int position = remainingInput.indexOf(firstLetter);
     Set<String> result = new HashSet<>();
-    if (position == -1) {
-      return emptySet();
-    }
-    while (position != -1) {
+    
+    while (position != notFound) {
       String head = nDashes(position) + firstLetter;
-      Set<String> subResult = recursiveBanana(newInputString.substring(position + 1),
-          searchTerm.substring(1));
-      for (String tail : subResult) {
+      Set<String> tails = recursiveBanana(remainingInput.substring(position + 1), searchTerm.substring(1));
+      for (String tail : tails) {
         String fullWord = head + tail;
         result.add(fullWord);
       }
-      position = newInputString.indexOf(firstLetter, position + 1);
+      position = remainingInput.indexOf(firstLetter, position + 1);
     }
     return result;
   }
