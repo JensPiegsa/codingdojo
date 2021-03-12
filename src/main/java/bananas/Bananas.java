@@ -1,7 +1,9 @@
 package bananas;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Bananas {
 
@@ -10,16 +12,33 @@ public class Bananas {
   }
 
   private static Set<String> recursiveBanana(String newInputString, String searchTerm) {
-    // Abbruchbedingung definieren
-    // Suche Positionen p des ersten Buchstaben von searchTerm in newInputString
-    // Resultset definieren
-    // Schleife durchläuft die Positionen
-    //    Aufruf recursiveBanana mit: newInputString ab p+1 mit searchTerm ohne ersten Buchstaben
-    //    Schleife durchläuft das result von recursiveBanana
-    //      Head + Tail definieren
-    //      Head + Tail dem Resultset hinzufügen
-    // Return Resultset
-    return Collections.EMPTY_SET;
+    if (searchTerm.isEmpty()) {
+      if (!newInputString.isEmpty()) {
+        String tail = nDashes(newInputString.length());
+        return singleton(tail);
+      }
+      return singleton("");
+    }
+    char firstLetter = searchTerm.charAt(0);
+    int position = newInputString.indexOf(firstLetter);
+    Set<String> result = new HashSet<>();
+    if (position == -1) {
+      return emptySet();
+    }
+    while (position != -1) {
+      String head = nDashes(position) + firstLetter;
+      Set<String> subResult = recursiveBanana(newInputString.substring(position + 1),
+          searchTerm.substring(1));
+      for (String tail : subResult) {
+        String fullWord = head + tail;
+        result.add(fullWord);
+      }
+      position = newInputString.indexOf(firstLetter, position + 1);
+    }
+    return result;
   }
 
+  private static String nDashes(int n) {
+    return String.join("", Collections.nCopies(n, "-"));
+  }
 }
