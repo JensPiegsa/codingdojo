@@ -24,4 +24,14 @@ class StringCalculatorTest {
 	void canAddCommaSeparatedNumbers() {
 		assertThat(stringCalculator.add("1,2")).isEqualTo(3);
 	}
+	
+	@Test @DisplayName("can add numbers with new lines")
+	void canAddNumbersWithNewLines() {
+		assertThat(stringCalculator.add("1\n2,3")).isEqualTo(6);
+	}
+	
+	@Test @DisplayName("can add numbers with special delimiter")
+	void canAddNumbersWithSpecialDelimiter() {
+		assertThat(stringCalculator.add("//;\\n1;2")).isEqualTo(3);
+	}
 }
