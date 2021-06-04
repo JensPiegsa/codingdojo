@@ -32,6 +32,6 @@ class StringCalculatorTest {
 	
 	@Test @DisplayName("can add numbers with special delimiter")
 	void canAddNumbersWithSpecialDelimiter() {
-		assertThat(stringCalculator.add("//;\\n1;2")).isEqualTo(3);
+		assertThat(stringCalculator.add("//;\n1;2")).isEqualTo(3);
 	}
 }
