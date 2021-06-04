@@ -1,5 +1,8 @@
 package stringcalculator;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static java.util.Arrays.stream;
 
 
@@ -19,9 +22,24 @@ public class StringCalculator {
 			preparedNumbers = numbers.substring(firstNewline + 1);
 		}
 
-		return stream(preparedNumbers.split(defaultDelimiter))
-				.mapToInt(Integer::parseInt)
+		List<Integer> preparedIntNumbers = stream(preparedNumbers.split(defaultDelimiter))
+				.map(Integer::parseInt)
+				.collect(Collectors.toList());
+		raiseExceptionForNegativeNumbers(preparedIntNumbers);
+		return preparedIntNumbers.stream()
+				.mapToInt(n -> n)
 				.sum();
+	}
+
+	private void raiseExceptionForNegativeNumbers(List<Integer> preparedIntNumbers) {
+		List<String> negativeNumbers = preparedIntNumbers.stream()
+				.filter(number -> number < 0)
+				.map(String::valueOf)
+				.collect(Collectors.toList());
+		if (!negativeNumbers.isEmpty()) {
+			String error = "negatives not allowed: " + String.join(", ", negativeNumbers);
+			throw new IllegalArgumentException(error);
+		}
 	}
 
 	private boolean hasDelimiterDeclaration(String numbers) {

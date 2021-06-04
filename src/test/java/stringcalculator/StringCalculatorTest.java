@@ -1,6 +1,7 @@
 package stringcalculator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,5 +34,10 @@ class StringCalculatorTest {
 	@Test @DisplayName("can add numbers with special delimiter")
 	void canAddNumbersWithSpecialDelimiter() {
 		assertThat(stringCalculator.add("//;\n1;2")).isEqualTo(3);
+	}
+
+	@Test @DisplayName("throws exception for negative numbers")
+	void throwsExceptionForNegativeNumbers() {
+		assertThatThrownBy(() -> stringCalculator.add("1,-2,-5")).hasMessage("negatives not allowed: -2, -5");
 	}
 }
