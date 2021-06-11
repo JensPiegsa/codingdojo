@@ -21,4 +21,8 @@ public class MarsRover {
 	public Direction getDirection() {
 		return direction;
 	}
+
+	public void move(final char[] commands) {
+		position.setY(position.getY() + 1);
+	}
 }

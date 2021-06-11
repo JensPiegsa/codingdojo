@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Position {
 	
-	private final int x;
-	private final int y;
+	private int x;
+	private int y;
 
 	public Position(final int x, final int y) {
 		this.x = x;
@@ -35,5 +35,21 @@ public class Position {
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y);
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setX(final int x) {
+		this.x = x;
+	}
+
+	public void setY(final int y) {
+		this.y = y;
 	}
 }

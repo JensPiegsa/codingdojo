@@ -27,7 +27,7 @@ class MarsRoverTest {
 	}
 
 	@Test
-	@DisplayName("has an initial facing direction")
+	@DisplayName("has an initial facing direction.")
 	void hasAnInitialFacingDirection() {
 
 	    // Act
@@ -35,5 +35,18 @@ class MarsRoverTest {
 
 	    // Assert
 		assertThat(rover.getDirection()).isEqualTo(Direction.NORTH);
+	}
+	
+	@Test @DisplayName("can move forward.")
+	void canMoveForward() {
+		// given
+		rover = new MarsRover(Position.of(0, 0), Direction.NORTH);
+		char[] givenCommands = {'f'};
+
+		// when
+		rover.move(givenCommands);
+		
+		// then
+		assertThat(rover.getPosition()).isEqualTo(Position.of(0,1));
 	}
 }
