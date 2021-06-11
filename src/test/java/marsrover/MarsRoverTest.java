@@ -14,4 +14,26 @@ class MarsRoverTest {
 	void startsAtPositionZeroZero() {
 		assertThat(rover.getPosition()).isEqualTo(Position.of(0, 0));
 	}
+
+	@Test
+	@DisplayName("has an initial position at x and y")
+	void hasAnInitialPositionAtXAndY() {
+
+	    // Act
+	    rover = new MarsRover(Position.of(123, 456), Direction.NORTH);
+
+	    // Assert
+		assertThat(rover.getPosition()).isEqualTo(Position.of(123, 456));
+	}
+
+	@Test
+	@DisplayName("has an initial facing direction")
+	void hasAnInitialFacingDirection() {
+
+	    // Act
+	    rover = new MarsRover(Position.of(0, 0), Direction.NORTH);
+
+	    // Assert
+		assertThat(rover.getDirection()).isEqualTo(Direction.NORTH);
+	}
 }
