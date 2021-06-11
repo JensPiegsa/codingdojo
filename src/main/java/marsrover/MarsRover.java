@@ -2,8 +2,8 @@ package marsrover;
 
 public class MarsRover {
 
-	private final Position position;
-	private final Direction direction;
+	private Position position;
+	private Direction direction;
 
 	public MarsRover(Position position, Direction direction) {
 		this.position = position;
@@ -23,6 +23,6 @@ public class MarsRover {
 	}
 
 	public void move(final char[] commands) {
-		position.setY(position.getY() + 1);
+		position = direction.moveForward(position);
 	}
 }
