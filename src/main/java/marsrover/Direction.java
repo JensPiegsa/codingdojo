@@ -2,13 +2,13 @@ package marsrover;
 
 public enum Direction {
 
-    NORTH (0, 1),
-    EAST(1, 0),
+    NORTH(0, 1),
     WEST(-1, 0),
-    SOUTH(0, -1);
+    SOUTH(0, -1),
+    EAST(1, 0);
 
-    private int deltaX;
-    private int deltaY;
+    private final int deltaX;
+    private final int deltaY;
 
     Direction(int deltaX, int deltaY) {
         this.deltaX = deltaX;
@@ -21,5 +21,10 @@ public enum Direction {
 
     public Position moveBackwards(Position from) {
         return Position.of(from.getX() - deltaX, from.getY() - deltaY);
+    }
+
+    public Direction turnLeft() {
+        final int newOrdinal = (ordinal() + 1) % values().length;
+        return values()[newOrdinal];
     }
 }
