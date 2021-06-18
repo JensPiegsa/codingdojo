@@ -18,4 +18,8 @@ public enum Direction {
     public Position moveForward(Position from) {
         return Position.of(from.getX() + deltaX, from.getY() + deltaY);
     }
+
+    public Position moveBackwards(Position from) {
+        return Position.of(from.getX() - deltaX, from.getY() - deltaY);
+    }
 }

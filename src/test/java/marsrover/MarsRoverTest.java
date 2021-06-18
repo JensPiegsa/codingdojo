@@ -62,4 +62,30 @@ class MarsRoverTest {
 		// then
 		assertThat(rover.getPosition()).isEqualTo(Position.of(1,0));
 	}
+
+	@Test @DisplayName("can move forward facing west.")
+	void canMoveForwardFacingWest() {
+		// given
+		rover = new MarsRover(Position.of(0, 0), Direction.WEST);
+		char[] givenCommands = {'f'};
+
+		// when
+		rover.move(givenCommands);
+
+		// then
+		assertThat(rover.getPosition()).isEqualTo(Position.of(-1,0));
+	}
+
+	@Test @DisplayName("can move backwards facing west.")
+	void canMoveBackwardsFacingWest() {
+		// given
+		rover = new MarsRover(Position.of(0, 0), Direction.WEST);
+		char[] givenCommands = {'b'};
+
+		// when
+		rover.move(givenCommands);
+
+		// then
+		assertThat(rover.getPosition()).isEqualTo(Position.of(1,0));
+	}
 }

@@ -23,6 +23,10 @@ public class MarsRover {
 	}
 
 	public void move(final char[] commands) {
-		position = direction.moveForward(position);
+		if (commands[0] == 'f') {
+			position = direction.moveForward(position);
+		} else {
+			position = direction.moveBackwards(position);
+		}
 	}
 }
