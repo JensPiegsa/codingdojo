@@ -16,7 +16,7 @@ class MarsRoverTest {
 	}
 
 	@Test
-	@DisplayName("has an initial position at x and y")
+	@DisplayName("has an initial position at x and y.")
 	void hasAnInitialPositionAtXAndY() {
 
 	    // Act

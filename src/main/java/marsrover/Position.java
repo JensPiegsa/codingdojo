@@ -1,13 +1,14 @@
 package marsrover;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Position {
 	
 	private int x;
 	private int y;
-
-	public Position(final int x, final int y) {
+	
+	private Position(final int x, final int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -43,13 +44,5 @@ public class Position {
 
 	public int getY() {
 		return y;
-	}
-
-	public void setX(final int x) {
-		this.x = x;
-	}
-
-	public void setY(final int y) {
-		this.y = y;
 	}
 }
