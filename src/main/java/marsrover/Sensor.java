@@ -1,11 +1,7 @@
 package marsrover;
 
-public class Sensor {
-	public boolean hasFrontObstacle() {
-		return false;
-	}
-
-	public boolean hasBackObstacle() {
-		return false;
-	}
+public interface Sensor {
+	
+	boolean hasFrontObstacle();
+	boolean hasBackObstacle();
 }
