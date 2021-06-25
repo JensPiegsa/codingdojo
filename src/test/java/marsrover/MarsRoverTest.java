@@ -153,4 +153,19 @@ class MarsRoverTest {
 		assertThat(obstacle).isTrue();
 		assertThat(rover.getPosition()).isEqualTo(Position.of(0,0));
 	}
+	
+	@Test @DisplayName("can sense obstacle when moving backward.")
+	void canSenseObstacleWhenMovingBackward() {
+		// given
+		rover = new MarsRover(Position.of(0, 0), Direction.EAST, sensor);
+		char[] givenCommands = {'b'};
+		given(sensor.hasBackObstacle()).willReturn(true);
+
+		// when
+		boolean obstacle = rover.move(givenCommands);
+
+		// then
+		assertThat(obstacle).isTrue();
+		assertThat(rover.getPosition()).isEqualTo(Position.of(0,0));
+	}
 }

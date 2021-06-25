@@ -50,6 +50,9 @@ public class MarsRover {
 		BACKWARD('b') {
 			@Override
 			public boolean execute(final MarsRover marsRover) {
+				if (marsRover.sensor.hasBackObstacle()) {
+					return true;
+				}
 				marsRover.position = marsRover.direction.moveBackwards(marsRover.position);
 				return false;
 			}
