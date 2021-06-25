@@ -22,9 +22,11 @@ public class MarsRover {
 		return direction;
 	}
 
-	public void move(final char[] commands) {
-		Command command = Command.lookUp(commands[0]);
-		command.execute(this);
+	public void move(final char[] commandCharacters) {
+		for (char commandCharacter : commandCharacters) {
+			Command command = Command.lookUp(commandCharacter);
+			command.execute(this);
+		}
 	}
 
 	private enum Command {
