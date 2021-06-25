@@ -27,4 +27,10 @@ public enum Direction {
         final int newOrdinal = (ordinal() + 1) % values().length;
         return values()[newOrdinal];
     }
+
+    public Direction turnRight() {
+        final int count = values().length;
+        final int newOrdinal = (count + ordinal() - 1) % count;
+        return values()[newOrdinal];
+    }
 }

@@ -102,4 +102,18 @@ class MarsRoverTest {
 		assertThat(rover.getPosition()).isEqualTo(Position.of(0,0));
 		assertThat(rover.getDirection()).isEqualTo(Direction.NORTH);
 	}
+	
+	@Test @DisplayName("can turn right facing east.")
+	void canTurnRightFacingEast() {
+		// given
+		rover = new MarsRover(Position.of(0, 0), Direction.EAST);
+		char[] givenCommands = {'r'};
+
+		// when
+		rover.move(givenCommands);
+
+		// then
+		assertThat(rover.getPosition()).isEqualTo(Position.of(0,0));
+		assertThat(rover.getDirection()).isEqualTo(Direction.SOUTH);
+	}
 }

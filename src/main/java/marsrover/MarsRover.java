@@ -46,6 +46,12 @@ public class MarsRover {
 			public void execute(final MarsRover marsRover) {
 				marsRover.direction = marsRover.direction.turnLeft();
 			}
+		},
+		TURN_RIGHT('r') {
+			@Override
+			public void execute(final MarsRover marsRover) {
+				marsRover.direction = marsRover.direction.turnRight();
+			}
 		};
 
 		private final char commandChar;
