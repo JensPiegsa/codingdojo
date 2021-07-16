@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 @DisplayName("DailyWeather")
 class DailyWeatherTest {
 	
-	@Test @DisplayName("test")
-	void test() {
+	@Test @DisplayName("find day with maximum temperature spread")
+	void findDayWithMaximumTemperatureSpread() {
 		final String weatherDatContent = contentOf(getClass().getResource("weather.dat"));
 		final DailyWeather dailyWeather = new DailyWeather(new WeatherImporter());
 		
