@@ -17,7 +17,10 @@ public class TableImporterTest {
         String tableContent = contentOf(getClass().getResource("football.dat"));
 
         // Act
-        Table table = tableImporter.importData(tableContent);
+        final ColumnBounds columnBounds = ColumnBounds
+               .defineBounds(0, 0, 7) // TODO
+               .and(1, 8, 24);
+        Table table = tableImporter.importData(tableContent, columnBounds);
 
         // Assert
         then(table).isNotNull();
@@ -53,7 +56,9 @@ public class TableImporterTest {
         String tableContent = contentOf(getClass().getResource("weather.dat"));
 
         // Act
-        Table table = tableImporter.importData(tableContent);
+        final ColumnBounds customColumnBounds = ColumnBounds.defineBounds(19, 84, 89)
+                .and(18, 81, 83);
+        Table table = tableImporter.importData(tableContent, customColumnBounds);
 
         // Assert
         then(table).isNotNull();
