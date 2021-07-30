@@ -1,13 +1,18 @@
 package datamunging;
 
 public class Table {
-    public Table(String tableContent) {
 
+    private String[] head;
+    private String[][] tableCells;
+
+    public Table(String[] head, String[][] tableCells) {
+        this.head = head;
+        this.tableCells = tableCells;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return String.join(", ", head);
     }
 }
 

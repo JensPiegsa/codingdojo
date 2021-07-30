@@ -1,6 +1,8 @@
 package datamunging;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,21 +23,21 @@ public class ColumnBounds {
 		return this;
 	}
 
-	public static ColumnBounds measure(final String header) {
+	public static ColumnBounds measure(final String headerLine) {
 
 		final ColumnBounds columnBounds = new ColumnBounds();
 		int columnStartPosition = 0;
 		int columnIndex = 0;
 		boolean lastCharSpace = false;
 
-		for (int charPosition = 0; charPosition <= header.length(); charPosition++) {
-			if ((charPosition == header.length()) || (lastCharSpace && header.charAt(charPosition) != ' ')) {
+		for (int charPosition = 0; charPosition <= headerLine.length(); charPosition++) {
+			if ((charPosition == headerLine.length()) || (lastCharSpace && headerLine.charAt(charPosition) != ' ')) {
 				columnBounds.and(columnIndex, columnStartPosition, charPosition-1);
 				columnStartPosition = charPosition;
 				columnIndex++;
 			}
-			if (charPosition < header.length()) {
-				lastCharSpace = header.charAt(charPosition) == ' ';
+			if (charPosition < headerLine.length()) {
+				lastCharSpace = headerLine.charAt(charPosition) == ' ';
 			}
 		}
 		return columnBounds;
@@ -66,5 +68,17 @@ public class ColumnBounds {
 				"leftColumnBounds=" + leftColumnBounds +
 				", rightColumnBounds=" + rightColumnBounds +
 				'}';
+	}
+
+	public String[] cut(final String line) {
+
+		String[] result = new String[leftColumnBounds.size()];
+
+		for (int columnIndex = 0; columnIndex < leftColumnBounds.size(); columnIndex++) {
+			final String cellContent = line.substring(leftColumnBounds.get(columnIndex), rightColumnBounds.get(columnIndex) + 1);
+			result[columnIndex] = cellContent.trim();
+		}
+
+		return result;
 	}
 }
