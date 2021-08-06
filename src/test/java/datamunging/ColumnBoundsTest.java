@@ -35,17 +35,17 @@ class ColumnBoundsTest {
 	@Test @DisplayName("can cut string.")
 	void canCutString() {
 		// given
-		final ColumnBounds columnBounds = ColumnBounds.measure("AAA BB");
+		final ColumnBounds columnBounds = ColumnBounds.measure("   AAA BB ");
 
 		// when
-		String[] individualColumn = columnBounds.cut("aaa bb");
+		String[] individualColumn = columnBounds.cut("   aaa bb ");
 
 		// then
-		then(individualColumn).containsExactly("aaa", "bb");
+		then(individualColumn).containsExactly("   aaa ", "bb ");
 	}
 
-	@Test @DisplayName("measure only")
-	void measureOnly() {
+	@Test @DisplayName("measure first column with leading spaces")
+	void measureFirstColumnWithLeadingSpaces() {
 		// given
 
 		// when

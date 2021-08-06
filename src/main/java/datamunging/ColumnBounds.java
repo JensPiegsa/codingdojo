@@ -8,77 +8,83 @@ import java.util.Objects;
 
 public class ColumnBounds {
 
-	Map<Integer, Integer> leftColumnBounds = new HashMap<>();
-	Map<Integer, Integer> rightColumnBounds = new HashMap<>();
+    Map<Integer, Integer> leftColumnBounds = new HashMap<>();
+    Map<Integer, Integer> rightColumnBounds = new HashMap<>();
 
-	public static ColumnBounds defineBounds(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
-		final ColumnBounds columnBounds = new ColumnBounds();
-		return columnBounds.and(columnIndex, leftColumnBound, rightColumnBoundInclusive);
-	}
+    public static ColumnBounds defineBounds(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
+        final ColumnBounds columnBounds = new ColumnBounds();
+        return columnBounds.and(columnIndex, leftColumnBound, rightColumnBoundInclusive);
+    }
 
-	public ColumnBounds and(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
-		leftColumnBounds.put(columnIndex, leftColumnBound);
-		rightColumnBounds.put(columnIndex, rightColumnBoundInclusive);
+    public ColumnBounds and(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
+        leftColumnBounds.put(columnIndex, leftColumnBound);
+        rightColumnBounds.put(columnIndex, rightColumnBoundInclusive);
 
-		return this;
-	}
+        return this;
+    }
 
-	public static ColumnBounds measure(final String headerLine) {
+    public static ColumnBounds measure(final String headerLine) {
 
-		final ColumnBounds columnBounds = new ColumnBounds();
-		int columnStartPosition = 0;
-		int columnIndex = 0;
-		boolean lastCharSpace = false;
+        final ColumnBounds columnBounds = new ColumnBounds();
+        int currentColumnStartPosition = 0;
+        int currentColumnIndex = 0;
+        boolean previousCharWasSpace = false;
+        boolean previousCharWasLeadingSpace = true;
 
-		for (int charPosition = 0; charPosition <= headerLine.length(); charPosition++) {
-			if ((charPosition == headerLine.length()) || (lastCharSpace && headerLine.charAt(charPosition) != ' ')) {
-				columnBounds.and(columnIndex, columnStartPosition, charPosition-1);
-				columnStartPosition = charPosition;
-				columnIndex++;
-			}
-			if (charPosition < headerLine.length()) {
-				lastCharSpace = headerLine.charAt(charPosition) == ' ';
-			}
-		}
-		return columnBounds;
-	}
+        for (int charPosition = 0; charPosition < headerLine.length(); charPosition++) {
+            boolean currentCharIsSpace = headerLine.charAt(charPosition) == ' ';
+            boolean columnExceeded = !previousCharWasLeadingSpace && previousCharWasSpace && !currentCharIsSpace;
+            if (columnExceeded) {
+                columnBounds.and(currentColumnIndex, currentColumnStartPosition, charPosition - 1);
+                currentColumnStartPosition = charPosition;
+                currentColumnIndex++;
+            }
+            previousCharWasLeadingSpace = currentCharIsSpace && previousCharWasLeadingSpace;
+            previousCharWasSpace = headerLine.charAt(charPosition) == ' ';
+        }
+        if (!headerLine.isEmpty()) {
+            columnBounds.and(currentColumnIndex, currentColumnStartPosition, headerLine.length() - 1);
+        }
+        return columnBounds;
+    }
 
-	public ColumnBounds merge(final ColumnBounds customColumnBounds) {
-		this.leftColumnBounds.putAll(customColumnBounds.leftColumnBounds);
-		this.rightColumnBounds.putAll(customColumnBounds.rightColumnBounds);
-		return this;
-	}
+    public ColumnBounds merge(final ColumnBounds customColumnBounds) {
+        this.leftColumnBounds.putAll(customColumnBounds.leftColumnBounds);
+        this.rightColumnBounds.putAll(customColumnBounds.rightColumnBounds);
+        return this;
+    }
 
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final ColumnBounds that = (ColumnBounds) o;
-		return leftColumnBounds.equals(that.leftColumnBounds) && rightColumnBounds.equals(that.rightColumnBounds);
-	}
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final ColumnBounds that = (ColumnBounds) o;
+        return leftColumnBounds.equals(that.leftColumnBounds) && rightColumnBounds.equals(that.rightColumnBounds);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(leftColumnBounds, rightColumnBounds);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(leftColumnBounds, rightColumnBounds);
+    }
 
-	@Override
-	public String toString() {
-		return "ColumnBounds{" +
-				"leftColumnBounds=" + leftColumnBounds +
-				", rightColumnBounds=" + rightColumnBounds +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "ColumnBounds{" +
+                "leftColumnBounds=" + leftColumnBounds +
+                ", rightColumnBounds=" + rightColumnBounds +
+                '}';
+    }
 
-	public String[] cut(final String line) {
+    public String[] cut(final String line) {
 
-		String[] result = new String[leftColumnBounds.size()];
+        String[] result = new String[leftColumnBounds.size()];
 
-		for (int columnIndex = 0; columnIndex < leftColumnBounds.size(); columnIndex++) {
-			final String cellContent = line.substring(leftColumnBounds.get(columnIndex), rightColumnBounds.get(columnIndex) + 1);
-			result[columnIndex] = cellContent.trim();
-		}
+        for (int columnIndex = 0; columnIndex < leftColumnBounds.size(); columnIndex++) {
+            int beginIndex = leftColumnBounds.get(columnIndex);
+            int endIndexExclusive = rightColumnBounds.get(columnIndex) + 1;
+            result[columnIndex] = line.substring(beginIndex, endIndexExclusive);
+        }
 
-		return result;
-	}
+        return result;
+    }
 }
