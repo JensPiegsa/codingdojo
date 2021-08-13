@@ -1,5 +1,8 @@
 package datamunging;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Table {
 
     private String[] head;
@@ -12,7 +15,9 @@ public class Table {
 
     @Override
     public String toString() {
-        return String.join(", ", head);
+        return Arrays.stream(head)
+                .map(s -> s.isEmpty() ? "<NA>" : s)
+                .collect(Collectors.joining(", "));
     }
 }
 

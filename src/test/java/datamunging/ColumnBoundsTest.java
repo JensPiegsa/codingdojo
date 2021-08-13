@@ -44,6 +44,33 @@ class ColumnBoundsTest {
 		then(individualColumn).containsExactly("   aaa ", "bb ");
 	}
 
+	@Test @DisplayName("can cut football header.")
+	void canCutFootballHeader() {
+		// given
+		final ColumnBounds columnBounds = ColumnBounds.measure("X      Team            P     W    L   D    F   X  A     Pts");
+
+		System.out.println(columnBounds.toString());
+	}
+
+	@Test @DisplayName("can cut with empty header")
+	void canCutWithEmptyHeader() {
+		// given
+		final String header = "     MnR       BOB"; // custom | custom | custom | custom
+		//                     |---||-||-----||-|
+		//                     000001112222222333
+
+		final ColumnBounds customColumnBounds = ColumnBounds.defineBounds(0, 0, 4)
+				.and(1, 5, 7)
+				.and(2, 8, 14)
+				.and(3,15,17);
+
+		// when
+		String[] result = customColumnBounds.cut(header);
+
+		// then
+		then(result).containsExactly("     ","MnR","       ","BOB");
+	}
+
 	@Test @DisplayName("measure first column with leading spaces")
 	void measureFirstColumnWithLeadingSpaces() {
 		// given

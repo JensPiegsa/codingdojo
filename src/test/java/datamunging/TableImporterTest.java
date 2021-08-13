@@ -22,17 +22,18 @@ public class TableImporterTest {
             String tableContent = contentOf(getClass().getResource("football.dat"));
 
             // Act
+            // ColumnBounds{leftColumnBounds={0=0, 1=7, 2=23, 3=29, 4=34, 5=38, 6=43, 7=47, 8=50, 9=56}, rightColumnBounds={0=6, 1=22, 2=28, 3=33, 4=37, 5=42, 6=46, 7=49, 8=55, 9=58}}
             final ColumnBounds columnBounds = ColumnBounds
                     .defineBounds(0, 0, 6)
-                    .and(1, 7, 23)
-                    .and(2,24,29)
-                    .and(3, 30, 34)
-                    .and(4,35, 38)
-                    .and(5,39, 43)
-                    .and(6, 44, 47)
-                    .and(7, 48, 50)
-                    .and(8, 51, 56)
-                    .and(9, 57, 59);
+                    .and(1, 7, 22)
+                    .and(2,23,28)
+                    .and(3, 29, 33)
+                    .and(4,34, 37)
+                    .and(5,38, 42)
+                    .and(6, 43, 46)
+                    .and(7, 47, 49)
+                    .and(8, 50, 55)
+                    .and(9, 56, 58);
 
             Table table = importer.importData(tableContent, columnBounds);
 
