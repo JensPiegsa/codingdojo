@@ -27,9 +27,9 @@ public class TableImporterTest {
                     .defineBounds(0, 0, 6)
                     .and(1, 7, 22)
                     .and(2,23,28)
-                    .and(3, 29, 33)
-                    .and(4,34, 37)
-                    .and(5,38, 42)
+                    .and(3, 29, 32)
+                    .and(4,33, 34)
+                    .and(5,35, 42)
                     .and(6, 43, 46)
                     .and(7, 47, 49)
                     .and(8, 50, 55)
@@ -38,7 +38,7 @@ public class TableImporterTest {
             final Table table = importer.importData(tableContent, columnBounds);
 
             // Assert
-            then(table).hasToString(
+            then(table.toString()).isEqualTo(
                     "<NA>, Team, P, W, L, D, F, <NA>, A, Pts\n" +
                             "1., Arsenal, 38, 26, 9, 3, 79, -, 36, 87\n" +
                             "2., Liverpool, 38, 24, 8, 6, 67, -, 30, 80\n" +
@@ -57,6 +57,7 @@ public class TableImporterTest {
                             "15., Everton, 38, 11, 10, 17, 45, -, 57, 43\n" +
                             "16., Bolton, 38, 9, 13, 16, 44, -, 62, 40\n" +
                             "17., Sunderland, 38, 10, 10, 18, 29, -, 51, 40\n" +
+                            "----, ----------------, ------, ----, --, --------, ----, ---, ------, --\n" +
                             "18., Ipswich, 38, 9, 9, 20, 41, -, 64, 36\n" +
                             "19., Derby, 38, 8, 6, 24, 33, -, 63, 30\n" +
                             "20., Leicester, 38, 5, 13, 20, 30, -, 64, 28");
@@ -75,8 +76,9 @@ public class TableImporterTest {
             final Table table = importer.importData(tableContent, customColumnBounds);
 
             // Assert
-            then(table).hasToString(
+            then(table.toString()).isEqualTo(
                     "Dy, MxT, MnT, AvT, HDDay, AvDP, 1HrP, TPcpn, WxType, PDir, AvSp, Dir, MxS, SkyC, MxR, MnR, AvSLP\n"+
+                            ", , , , , , , , , , , , , , , , \n"+
                             "1, 88, 59, 74, , 53.8, , 0.00, F, 280, 9.6, 270, 17, 1.6, 93, 23, 1004.5\n"+
                             "2, 79, 63, 71, , 46.5, , 0.00, , 330, 8.7, 340, 23, 3.3, 70, 28, 1004.5\n"+
                             "3, 77, 55, 66, , 39.6, , 0.00, , 350, 5.0, 350, 9, 2.8, 59, 24, 1016.8\n"+

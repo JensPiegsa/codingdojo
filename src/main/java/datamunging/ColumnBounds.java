@@ -82,7 +82,13 @@ public class ColumnBounds {
         for (int columnIndex = 0; columnIndex < leftColumnBounds.size(); columnIndex++) {
             int beginIndex = leftColumnBounds.get(columnIndex);
             int endIndexExclusive = rightColumnBounds.get(columnIndex) + 1;
-            result[columnIndex] = line.substring(beginIndex, endIndexExclusive);
+            if (beginIndex > line.length()) {
+                result[columnIndex] = "";
+            } else if (endIndexExclusive > line.length()) {
+                result[columnIndex] = line.substring(beginIndex);
+            } else {
+                result[columnIndex] = line.substring(beginIndex, endIndexExclusive);
+            }
         }
 
         return result;
