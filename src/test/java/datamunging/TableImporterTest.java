@@ -19,7 +19,7 @@ public class TableImporterTest {
         @DisplayName("import football data")
         void importFootballData() {
             // Arrange
-            String tableContent = contentOf(getClass().getResource("football.dat"));
+            final String tableContent = contentOf(getClass().getResource("football.dat"));
 
             // Act
             // ColumnBounds{leftColumnBounds={0=0, 1=7, 2=23, 3=29, 4=34, 5=38, 6=43, 7=47, 8=50, 9=56}, rightColumnBounds={0=6, 1=22, 2=28, 3=33, 4=37, 5=42, 6=46, 7=49, 8=55, 9=58}}
@@ -35,7 +35,7 @@ public class TableImporterTest {
                     .and(8, 50, 55)
                     .and(9, 56, 58);
 
-            Table table = importer.importData(tableContent, columnBounds);
+            final Table table = importer.importData(tableContent, columnBounds);
 
             // Assert
             then(table).hasToString(
@@ -66,13 +66,13 @@ public class TableImporterTest {
         @DisplayName("import weather data")
         void importWeatherData() {
             // Arrange
-            String tableContent = contentOf(getClass().getResource("weather.dat"));
+            final String tableContent = contentOf(getClass().getResource("weather.dat"));
 
             // Act
             final ColumnBounds customColumnBounds = ColumnBounds
                     .defineBounds(15, 81, 83)
                     .and(16, 84, 89);
-            Table table = importer.importData(tableContent, customColumnBounds);
+            final Table table = importer.importData(tableContent, customColumnBounds);
 
             // Assert
             then(table).hasToString(
@@ -115,8 +115,8 @@ public class TableImporterTest {
     @Nested
     class ToString {
 
-        @Test @DisplayName("test")
-        void test() {
+        @Test @DisplayName("returns comma-separated header names for empty table.")
+        void returnsCommaSeparatedHeaderNamesForEmptyTable() {
         	// given
             final String onlyHeader = "  Col1  Col2  ";
 
