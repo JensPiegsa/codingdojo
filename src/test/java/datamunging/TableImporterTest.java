@@ -16,7 +16,7 @@ public class TableImporterTest {
     class AcceptanceTests{
 
         @Test
-        @DisplayName("import football data")
+        @DisplayName("import football data.")
         void importFootballData() {
             // Arrange
             final String tableContent = contentOf(getClass().getResource("football.dat"));
@@ -63,15 +63,15 @@ public class TableImporterTest {
         }
 
         @Test
-        @DisplayName("import weather data")
+        @DisplayName("import weather data.")
         void importWeatherData() {
             // Arrange
             final String tableContent = contentOf(getClass().getResource("weather.dat"));
 
             // Act
             final ColumnBounds customColumnBounds = ColumnBounds
-                    .defineBounds(15, 81, 83)
-                    .and(16, 84, 89);
+                    .defineBounds(15, 80, 82)
+                    .and(16, 83, 88);
             final Table table = importer.importData(tableContent, customColumnBounds);
 
             // Assert
@@ -125,6 +125,37 @@ public class TableImporterTest {
 
             // then
         	then(table).hasToString("Col1, Col2");
+        }
+        
+        @Test @DisplayName("returns comma-separated header names for empty table with custom bounds.")
+        void returnsCommaSeparatedHeaderNamesForEmptyTableWithCustomBounds() {
+            // given
+            final String onlyHeader = "Col1 Col2";
+            final ColumnBounds customColumnBounds = ColumnBounds
+                    .defineBounds(1, 5, 8);
+            
+            // when
+            final Table table = importer.importData(onlyHeader, customColumnBounds);
+
+            // then
+            then(table).hasToString("Col1, Col2");
+        }
+
+        @Test @DisplayName("import weather data (header only).")
+        void importWeatherData() {
+            // Arrange
+            final String tableContent = "  Dy MxT   MnT   AvT   HDDay  AvDP 1HrP TPcpn WxType PDir AvSp Dir MxS SkyC MxR MnR AvSLP";
+
+            // Act
+            final ColumnBounds customColumnBounds = ColumnBounds
+                    .defineBounds(15, 80, 82)
+                    .and(16, 83, 88);
+            final Table table = importer.importData(tableContent, customColumnBounds);
+//            final Table table = importer.importData(tableContent);
+
+            // Assert
+            then(table).hasToString(
+                    "Dy, MxT, MnT, AvT, HDDay, AvDP, 1HrP, TPcpn, WxType, PDir, AvSp, Dir, MxS, SkyC, MxR, MnR, AvSLP");
         }
     }
 }
