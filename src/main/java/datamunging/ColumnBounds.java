@@ -32,8 +32,8 @@ public class ColumnBounds {
         boolean previousCharWasLeadingSpace = true;
 
         for (int charPosition = 0; charPosition < headerLine.length(); charPosition++) {
-            boolean currentCharIsSpace = headerLine.charAt(charPosition) == ' ';
-            boolean columnExceeded = !previousCharWasLeadingSpace && previousCharWasSpace && !currentCharIsSpace;
+            final boolean currentCharIsSpace = headerLine.charAt(charPosition) == ' ';
+            final boolean columnExceeded = !previousCharWasLeadingSpace && previousCharWasSpace && !currentCharIsSpace;
             if (columnExceeded) {
                 columnBounds.and(currentColumnIndex, currentColumnStartPosition, charPosition - 1);
                 currentColumnStartPosition = charPosition;
@@ -49,8 +49,8 @@ public class ColumnBounds {
     }
 
     public ColumnBounds merge(final ColumnBounds customColumnBounds) {
-        this.leftColumnBounds.putAll(customColumnBounds.leftColumnBounds);
-        this.rightColumnBounds.putAll(customColumnBounds.rightColumnBounds);
+        leftColumnBounds.putAll(customColumnBounds.leftColumnBounds);
+        rightColumnBounds.putAll(customColumnBounds.rightColumnBounds);
         return this;
     }
 
@@ -95,11 +95,11 @@ public class ColumnBounds {
 
     public String[] cut(final String line) {
 
-        String[] result = new String[leftColumnBounds.size()];
+        final String[] result = new String[leftColumnBounds.size()];
 
         for (int columnIndex = 0; columnIndex < leftColumnBounds.size(); columnIndex++) {
-            int beginIndex = leftColumnBounds.get(columnIndex);
-            int endIndexExclusive = rightColumnBounds.get(columnIndex) + 1;
+            final int beginIndex = leftColumnBounds.get(columnIndex);
+            final int endIndexExclusive = rightColumnBounds.get(columnIndex) + 1;
             if (beginIndex > line.length()) {
                 result[columnIndex] = "";
             } else if (endIndexExclusive > line.length()) {
