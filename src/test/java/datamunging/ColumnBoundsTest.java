@@ -141,17 +141,17 @@ class ColumnBoundsTest {
 		
 		@Test @DisplayName("working for empty bounds.")
 		void workingForEmptyBounds() {
-			ColumnBounds columnBounds = new ColumnBounds();
-			String string = columnBounds.toString();
+			final ColumnBounds columnBounds = new ColumnBounds();
+			final String string = columnBounds.toString();
 			then(string).isEqualTo("ColumnBounds[empty]");
 		}
 
 		@Test @DisplayName("working for single column.")
 		void workingForSingleColumn() {
-			String column = " col ";
-			ColumnBounds columnBounds = ColumnBounds.measure(column);
-			String string = columnBounds.toString();
-			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0}, rightColumnBounds={0=4}]\n" +
+			final String column = " col ";
+			final ColumnBounds columnBounds = ColumnBounds.measure(column);
+			final String string = columnBounds.toString();
+			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0}, rightColumnBounds={0=4}]:\n" +
 					"|---|\n" +
 					"00000");
 		}

@@ -72,10 +72,17 @@ public class ColumnBounds {
         if (leftColumnBounds.isEmpty() && rightColumnBounds.isEmpty()) {
             return "ColumnBounds[empty]";
         }
-        return "ColumnBounds[" +
+        final String header = "ColumnBounds[" +
                 "leftColumnBounds=" + leftColumnBounds +
                 ", rightColumnBounds=" + rightColumnBounds +
-                ']';
+                "]:";
+        String lines = "";
+        for (final int columnIndex : leftColumnBounds.keySet()) {
+            final int leftColumnBound = leftColumnBounds.get(columnIndex);
+            final int rightColumnBound = rightColumnBounds.get(columnIndex);
+            lines += "-".repeat(rightColumnBound - leftColumnBound - 2);
+        }
+        return header + "\n" + lines;
     }
 
     public String[] cut(final String line) {
