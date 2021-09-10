@@ -58,6 +58,4 @@ public class TableImporter {
 
         return d.toArray(new String[d.size()][]);
     }
-
-
 }

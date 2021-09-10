@@ -88,14 +88,6 @@ class ColumnBoundsTest {
 			then(individualColumn).containsExactly("   aaa ", "bb ");
 		}
 
-//		@Test @DisplayName("football header.")
-//		void footballHeader() {
-//			// given
-//			final ColumnBounds columnBounds = ColumnBounds.measure("X      Team            P     W    L   D    F   X  A     Pts");
-//	
-//			System.out.println(columnBounds);
-//		}
-	
 		@Test @DisplayName("with empty header.")
 		void withEmptyHeader() {
 			// given
@@ -115,7 +107,6 @@ class ColumnBoundsTest {
 			then(result).containsExactly("     ","MnR","       ","BOB");
 		}
 
-
 		@Test @DisplayName("with empty header (2).")
 		void withEmptyHeader2() {
 			// given
@@ -134,6 +125,30 @@ class ColumnBoundsTest {
 			// then
 			then(result).containsExactly("     ","MnR","      "," BOB");
 		}
+
+		@Test @DisplayName("with weather example columns.")
+		void withForWeatherExampleColumns() {
+			final String header = "  Dy MxT   MnT   AvT   HDDay  AvDP 1HrP TPcpn WxType PDir AvSp Dir MxS SkyC MxR MnR AvSLP";
+			final ColumnBounds customColumnBounds = ColumnBounds
+					.defineBounds(15, 80, 82)
+					.and(16, 83, 88);
+			final ColumnBounds columnBounds = ColumnBounds.measure(header).merge(customColumnBounds);
+			final String lineToBeCut = "  17  81    57    69          51.7       0.00 T       260  9.1 270  29* 5.2  90 34 1012.5";
+
+			final String[] actual = columnBounds.cut(lineToBeCut);
+			
+			System.out.println(columnBounds);
+			System.out.println(header);
+			System.out.println(lineToBeCut);
+		}
+
+//		@Test @DisplayName("football header.")
+//		void footballHeader() {
+//			// given
+//			final ColumnBounds columnBounds = ColumnBounds.measure("X      Team            P     W    L   D    F   X  A     Pts");
+//	
+//			System.out.println(columnBounds);
+//		}
 	}
 
 	@Nested @DisplayName("has toString()")
@@ -176,8 +191,8 @@ class ColumnBoundsTest {
 					"001122334455667788990011");
 		}
 
-		@Test @DisplayName("working for example columns.")
-		void workingForExampleColumns() {
+		@Test @DisplayName("working for weather example columns.")
+		void workingForWeatherExampleColumns() {
 			final String header = "  Dy MxT   MnT   AvT   HDDay  AvDP 1HrP TPcpn WxType PDir AvSp Dir MxS SkyC MxR MnR AvSLP";
 
 			final ColumnBounds customColumnBounds = ColumnBounds
