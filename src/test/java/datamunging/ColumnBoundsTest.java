@@ -145,5 +145,15 @@ class ColumnBoundsTest {
 			String string = columnBounds.toString();
 			then(string).isEqualTo("ColumnBounds[empty]");
 		}
+
+		@Test @DisplayName("working for single column.")
+		void workingForSingleColumn() {
+			String column = " col ";
+			ColumnBounds columnBounds = ColumnBounds.measure(column);
+			String string = columnBounds.toString();
+			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0}, rightColumnBounds={0=4}]\n" +
+					"|---|\n" +
+					"00000");
+		}
 	}
 }

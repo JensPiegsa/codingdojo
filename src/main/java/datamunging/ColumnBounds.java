@@ -69,10 +69,13 @@ public class ColumnBounds {
 
     @Override
     public String toString() {
-        return "ColumnBounds{" +
+        if (leftColumnBounds.isEmpty() && rightColumnBounds.isEmpty()) {
+            return "ColumnBounds[empty]";
+        }
+        return "ColumnBounds[" +
                 "leftColumnBounds=" + leftColumnBounds +
                 ", rightColumnBounds=" + rightColumnBounds +
-                '}';
+                ']';
     }
 
     public String[] cut(final String line) {
