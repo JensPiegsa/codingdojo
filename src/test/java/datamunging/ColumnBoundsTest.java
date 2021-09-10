@@ -135,4 +135,15 @@ class ColumnBoundsTest {
 			then(result).containsExactly("     ","MnR","      "," BOB");
 		}
 	}
+
+	@Nested @DisplayName("has toString()")
+	class HasToString {
+		
+		@Test @DisplayName("working for empty bounds.")
+		void workingForEmptyBounds() {
+			ColumnBounds columnBounds = new ColumnBounds();
+			String string = columnBounds.toString();
+			then(string).isEqualTo("ColumnBounds[empty]");
+		}
+	}
 }
