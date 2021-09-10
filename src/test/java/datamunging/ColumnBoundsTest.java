@@ -166,14 +166,33 @@ class ColumnBoundsTest {
 					"00000");
 		}
 		
-		@Test @DisplayName("working for many column.")
-		void workingForManyColumn() {
-			final String column = "0 1 2 3 4 5 6 7 8 9 0 1 ";
-			final ColumnBounds columnBounds = ColumnBounds.measure(column);
+		@Test @DisplayName("working for many columns.")
+		void workingForManyColumns() {
+			final String header = "0 1 2 3 4 5 6 7 8 9 0 1 ";
+			final ColumnBounds columnBounds = ColumnBounds.measure(header);
 			final String string = columnBounds.toString();
 			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0, 1=2, 2=4, 3=6, 4=8, 5=10, 6=12, 7=14, 8=16, 9=18, 10=20, 11=22}, rightColumnBounds={0=1, 1=3, 2=5, 3=7, 4=9, 5=11, 6=13, 7=15, 8=17, 9=19, 10=21, 11=23}]:\n" +
 					"||||||||||||||||||||||||\n" +
 					"001122334455667788990011");
+		}
+
+		@Test @DisplayName("working for example columns.")
+		void workingForExampleColumns() {
+			final String header = "  Dy MxT   MnT   AvT   HDDay  AvDP 1HrP TPcpn WxType PDir AvSp Dir MxS SkyC MxR MnR AvSLP";
+
+			final ColumnBounds customColumnBounds = ColumnBounds
+					.defineBounds(15, 80, 82)
+					.and(16, 83, 88);
+			final ColumnBounds columnBounds = ColumnBounds.measure(header).merge(customColumnBounds);
+			final String string = columnBounds.toString();
+
+			System.out.println(string);
+			System.out.println(header);
+			System.out.println("  17  81    57    69          51.7       0.00 T       260  9.1 270  29* 5.2  90 34 1012.5");
+
+			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0, 1=5, 2=11, 3=17, 4=23, 5=30, 6=35, 7=40, 8=46, 9=53, 10=58, 11=63, 12=67, 13=71, 14=76, 15=80, 16=83}, rightColumnBounds={0=4, 1=10, 2=16, 3=22, 4=29, 5=34, 6=39, 7=45, 8=52, 9=57, 10=62, 11=66, 12=70, 13=75, 14=79, 15=82, 16=88}]:\n" +
+					"|---||----||----||----||-----||---||---||----||-----||---||---||--||--||---||--||-||----|\n" +
+					"00000111111222222333333444444455555666667777778888888999990000011112222333334444555666666");
 		}
 	}
 }

@@ -13,7 +13,9 @@ public class TableImporter {
 
     public Table importData(final String tableContent, final ColumnBounds customColumnBounds) {
         final String header = extractHeader(tableContent);
-        final ColumnBounds columnBounds = customColumnBounds == null ? ColumnBounds.measure(header) : ColumnBounds.measure(header).merge(customColumnBounds);
+        final ColumnBounds columnBounds = customColumnBounds == null
+                ? ColumnBounds.measure(header)
+                : ColumnBounds.measure(header).merge(customColumnBounds);
         
         final String[] columnNames = createColumnNames(header, columnBounds);
         
