@@ -146,6 +146,16 @@ class ColumnBoundsTest {
 			then(string).isEqualTo("ColumnBounds[empty]");
 		}
 
+		@Test @DisplayName("working for single char column.")
+		void workingForSingleCharColumn() {
+			final String column = "c";
+			final ColumnBounds columnBounds = ColumnBounds.measure(column);
+			final String string = columnBounds.toString();
+			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0}, rightColumnBounds={0=0}]:\n" +
+					"|\n" +
+					"0");
+		}
+
 		@Test @DisplayName("working for single column.")
 		void workingForSingleColumn() {
 			final String column = " col ";

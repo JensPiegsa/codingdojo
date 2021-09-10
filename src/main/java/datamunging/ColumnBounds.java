@@ -77,12 +77,20 @@ public class ColumnBounds {
                 ", rightColumnBounds=" + rightColumnBounds +
                 "]:";
         String lines = "";
+        String indices = "";
         for (final int columnIndex : leftColumnBounds.keySet()) {
             final int leftColumnBound = leftColumnBounds.get(columnIndex);
             final int rightColumnBound = rightColumnBounds.get(columnIndex);
-            lines += "-".repeat(rightColumnBound - leftColumnBound - 2);
+            final int columnWidth = rightColumnBound - leftColumnBound + 1;
+            lines += "|";
+            lines += "-".repeat(Math.max(0, columnWidth - 2));
+            if (columnWidth > 1) {
+                lines += "|";
+            }
+
+            indices += String.valueOf(columnIndex).repeat(columnWidth);
         }
-        return header + "\n" + lines;
+        return header + "\n" + lines + "\n" + indices;
     }
 
     public String[] cut(final String line) {
