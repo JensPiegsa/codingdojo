@@ -88,7 +88,7 @@ public class ColumnBounds {
                 lines += "|";
             }
 
-            indices += String.valueOf(columnIndex).repeat(columnWidth);
+            indices += String.valueOf(columnIndex % 10).repeat(columnWidth);
         }
         return header + "\n" + lines + "\n" + indices;
     }

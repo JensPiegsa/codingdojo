@@ -165,5 +165,15 @@ class ColumnBoundsTest {
 					"|---|\n" +
 					"00000");
 		}
+		
+		@Test @DisplayName("working for many column.")
+		void workingForManyColumn() {
+			final String column = "0 1 2 3 4 5 6 7 8 9 0 1 ";
+			final ColumnBounds columnBounds = ColumnBounds.measure(column);
+			final String string = columnBounds.toString();
+			then(string).isEqualTo("ColumnBounds[leftColumnBounds={0=0, 1=2, 2=4, 3=6, 4=8, 5=10, 6=12, 7=14, 8=16, 9=18, 10=20, 11=22}, rightColumnBounds={0=1, 1=3, 2=5, 3=7, 4=9, 5=11, 6=13, 7=15, 8=17, 9=19, 10=21, 11=23}]:\n" +
+					"||||||||||||||||||||||||\n" +
+					"001122334455667788990011");
+		}
 	}
 }
