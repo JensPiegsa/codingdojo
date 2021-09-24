@@ -15,7 +15,6 @@ public class ColumnBounds {
     }
 
     public ColumnBounds and(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
-
         final ColumnBounds columnBounds = new ColumnBounds();
         columnBounds.leftColumnBounds.putAll(leftColumnBounds);
         columnBounds.rightColumnBounds.putAll(rightColumnBounds);
@@ -50,9 +49,14 @@ public class ColumnBounds {
     }
 
     public ColumnBounds merge(final ColumnBounds customColumnBounds) {
-        leftColumnBounds.putAll(customColumnBounds.leftColumnBounds);
-        rightColumnBounds.putAll(customColumnBounds.rightColumnBounds);
-        return this;
+        final ColumnBounds columnBounds = new ColumnBounds();
+        
+        columnBounds.leftColumnBounds.putAll(leftColumnBounds);
+        columnBounds.rightColumnBounds.putAll(rightColumnBounds);
+        columnBounds.leftColumnBounds.putAll(customColumnBounds.leftColumnBounds);
+        columnBounds.rightColumnBounds.putAll(customColumnBounds.rightColumnBounds);
+        
+        return columnBounds;
     }
 
     @Override
