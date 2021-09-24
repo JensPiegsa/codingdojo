@@ -6,8 +6,8 @@ import java.util.Objects;
 
 public class ColumnBounds {
 
-    Map<Integer, Integer> leftColumnBounds = new HashMap<>();
-    Map<Integer, Integer> rightColumnBounds = new HashMap<>();
+    private final Map<Integer, Integer> leftColumnBounds = new HashMap<>();
+    private final Map<Integer, Integer> rightColumnBounds = new HashMap<>();
 
     public static ColumnBounds defineBounds(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
         final ColumnBounds columnBounds = new ColumnBounds();
@@ -25,7 +25,7 @@ public class ColumnBounds {
 
     public static ColumnBounds measure(final String headerLine) {
 
-        final ColumnBounds columnBounds = new ColumnBounds();
+        ColumnBounds columnBounds = new ColumnBounds();
         int currentColumnStartPosition = 0;
         int currentColumnIndex = 0;
         boolean previousCharWasSpace = false;
@@ -35,7 +35,7 @@ public class ColumnBounds {
             final boolean currentCharIsSpace = headerLine.charAt(charPosition) == ' ';
             final boolean columnExceeded = !previousCharWasLeadingSpace && previousCharWasSpace && !currentCharIsSpace;
             if (columnExceeded) {
-                columnBounds.and(currentColumnIndex, currentColumnStartPosition, charPosition - 1);
+                columnBounds = columnBounds.and(currentColumnIndex, currentColumnStartPosition, charPosition - 1);
                 currentColumnStartPosition = charPosition;
                 currentColumnIndex++;
             }
@@ -43,7 +43,7 @@ public class ColumnBounds {
             previousCharWasSpace = headerLine.charAt(charPosition) == ' ';
         }
         if (!headerLine.isEmpty()) {
-            columnBounds.and(currentColumnIndex, currentColumnStartPosition, headerLine.length() - 1);
+            columnBounds = columnBounds.and(currentColumnIndex, currentColumnStartPosition, headerLine.length() - 1);
         }
         return columnBounds;
     }
