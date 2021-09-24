@@ -216,25 +216,19 @@ class ColumnBoundsTest {
 	@Test @DisplayName("can equal.")
 	void canEqual() {
 		// given
-		ColumnBounds firstBounds = ColumnBounds
-				.defineBounds(0, 0, 2)
-				.and(1, 3,5);
-		ColumnBounds secondBounds = ColumnBounds
+		final ColumnBounds firstBounds = ColumnBounds
 				.defineBounds(0, 0, 2);
-		ColumnBounds thirdBounds = ColumnBounds
-				.defineBounds(0, 0, 2)
-				.and(1, 3,5);
+		final ColumnBounds secondBounds = ColumnBounds
+				.defineBounds(0, 0, 2);
 
-		Set<ColumnBounds> bounds = new HashSet<>();
+		final Set<ColumnBounds> bounds = new HashSet<>();
 		bounds.add(firstBounds);
-		bounds.add(secondBounds);
 
-		secondBounds.and(1, 3, 5);
-		bounds.add(thirdBounds);
 		// when
+		firstBounds.and(1, 3, 5);
 
 		// then
-		then(bounds).hasSize(2);
-		then(bounds).containsExactlyInAnyOrder(firstBounds, secondBounds);
+		then(bounds).hasSize(1);
+		then(bounds).containsExactlyInAnyOrder(secondBounds);
 	}
 }
