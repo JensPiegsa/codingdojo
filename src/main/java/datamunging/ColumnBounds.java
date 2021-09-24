@@ -6,8 +6,8 @@ import java.util.Objects;
 
 public class ColumnBounds {
 
-    Map<Integer, Integer> leftColumnBounds = new HashMap<>();
-    Map<Integer, Integer> rightColumnBounds = new HashMap<>();
+    private final Map<Integer, Integer> leftColumnBounds = new HashMap<>();
+    private final Map<Integer, Integer> rightColumnBounds = new HashMap<>();
 
     public static ColumnBounds defineBounds(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
         final ColumnBounds columnBounds = new ColumnBounds();
@@ -35,7 +35,7 @@ public class ColumnBounds {
             final boolean currentCharIsSpace = headerLine.charAt(charPosition) == ' ';
             final boolean columnExceeded = !previousCharWasLeadingSpace && previousCharWasSpace && !currentCharIsSpace;
             if (columnExceeded) {
-                columnBounds.and(currentColumnIndex, currentColumnStartPosition, charPosition - 1);
+                columnBounds = columnBounds.and(currentColumnIndex, currentColumnStartPosition, charPosition - 1);
                 currentColumnStartPosition = charPosition;
                 currentColumnIndex++;
             }
