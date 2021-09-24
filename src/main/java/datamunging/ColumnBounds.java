@@ -15,10 +15,13 @@ public class ColumnBounds {
     }
 
     public ColumnBounds and(final int columnIndex, final int leftColumnBound, final int rightColumnBoundInclusive) {
-        leftColumnBounds.put(columnIndex, leftColumnBound);
-        rightColumnBounds.put(columnIndex, rightColumnBoundInclusive);
 
-        return this;
+        final ColumnBounds columnBounds = new ColumnBounds();
+        columnBounds.leftColumnBounds.putAll(leftColumnBounds);
+        columnBounds.rightColumnBounds.putAll(rightColumnBounds);
+        columnBounds.leftColumnBounds.put(columnIndex, leftColumnBound);
+        columnBounds.rightColumnBounds.put(columnIndex, rightColumnBoundInclusive);
+        return columnBounds;
     }
 
     public static ColumnBounds measure(final String headerLine) {
