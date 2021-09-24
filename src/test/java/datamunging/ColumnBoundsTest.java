@@ -3,7 +3,9 @@ package datamunging;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -209,5 +211,30 @@ class ColumnBoundsTest {
 					"|---||----||----||----||-----||---||---||----||-----||---||---||--||--||---||--||-||----|\n" +
 					"00000111111222222333333444444455555666667777778888888999990000011112222333334444555666666");
 		}
+	}
+
+	@Test @DisplayName("can equal.")
+	void canEqual() {
+		// given
+		ColumnBounds firstBounds = ColumnBounds
+				.defineBounds(0, 0, 2)
+				.and(1, 3,5);
+		ColumnBounds secondBounds = ColumnBounds
+				.defineBounds(0, 0, 2);
+		ColumnBounds thirdBounds = ColumnBounds
+				.defineBounds(0, 0, 2)
+				.and(1, 3,5);
+
+		Set<ColumnBounds> bounds = new HashSet<>();
+		bounds.add(firstBounds);
+		bounds.add(secondBounds);
+
+		secondBounds.and(1, 3, 5);
+		bounds.add(thirdBounds);
+		// when
+
+		// then
+		then(bounds).hasSize(2);
+		then(bounds).containsExactlyInAnyOrder(firstBounds, secondBounds);
 	}
 }
