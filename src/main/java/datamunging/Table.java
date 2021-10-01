@@ -3,6 +3,7 @@ package datamunging;
 import static java.util.stream.Collectors.*;
 
 import java.util.Arrays;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class Table {
@@ -30,6 +31,10 @@ public class Table {
             stringBuilder.append(lineString);
         }
         return stringBuilder.toString();
+    }
+
+    public String findMinimum(final int firsColumnIndex, final int secondColumnIndex, final BiFunction<String, String, Number> function, final int resultColumnIndex) {
+        return null;
     }
 }
 

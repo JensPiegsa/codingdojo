@@ -3,6 +3,8 @@ package datamunging;
 import static org.assertj.core.api.Assertions.contentOf;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.function.BiFunction;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +29,8 @@ class TableProcessorTest {
 		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
 		
 		// when
-		String teamName = soccer.findMinimum(6, 8, 1);
+		BiFunction<String, String , Number> soccerMin = (a,b) -> Integer.parseInt(a) - Integer.parseInt(b);
+		String teamName = soccer.findMinimum(6, 8, soccerMin, 1);
 
 		// then
 
