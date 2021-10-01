@@ -1,6 +1,7 @@
 package datamunging;
 
 import static org.assertj.core.api.Assertions.contentOf;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.function.BiFunction;
@@ -27,12 +28,12 @@ class TableProcessorTest {
 				.and(8, 50, 55)
 				.and(9, 56, 58);
 		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
+		final BiFunction<String, String , Number> f = (a, b) -> Integer.parseInt(a) - Integer.parseInt(b);
 		
 		// when
-		BiFunction<String, String , Number> soccerMin = (a,b) -> Integer.parseInt(a) - Integer.parseInt(b);
-		String teamName = soccer.findMinimum(6, 8, soccerMin, 1);
+		final String teamName = soccer.findMinimum(6, 8, f, 1);
 
 		// then
-
+		then(teamName).isEqualTo("Aston_Villa");
 	}
 }

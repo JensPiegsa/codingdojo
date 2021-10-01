@@ -33,7 +33,17 @@ public class Table {
         return stringBuilder.toString();
     }
 
-    public String findMinimum(final int firsColumnIndex, final int secondColumnIndex, final BiFunction<String, String, Number> function, final int resultColumnIndex) {
+    public <T extends Number> String findMinimum(final int firsColumnIndex, final int secondColumnIndex, 
+                              final BiFunction<String, String, T> function, final int resultColumnIndex) {
+        T minimum = null;
+        for (final String[] row : tableCells) {
+            final String firstCell = row[firsColumnIndex];
+            final String secondCell = row[secondColumnIndex];
+            final T rowResult = function.apply(firstCell, secondCell);
+            if (minimum == null || rowResult < minimum) {
+                
+            }
+        }
         return null;
     }
 }
