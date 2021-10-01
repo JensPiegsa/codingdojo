@@ -33,6 +33,11 @@ class TableProcessorTest {
 		// when
 		final String teamName = soccer.findMinimum(6, 8, f, 1);
 
+
+		// 1. http://apfloat.org/apfloat_java/ | https://github.com/mtommila/apfloat
+		// 2. https://dzone.com/articles/arbitrary-precision-numbers | https://github.com/peteroupc/numbers-java
+		// 3. https://github.com/bwakell/Huldra
+
 		// then
 		then(teamName).isEqualTo("Aston_Villa");
 	}

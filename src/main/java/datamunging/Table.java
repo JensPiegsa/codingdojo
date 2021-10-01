@@ -41,7 +41,7 @@ public class Table {
             final String secondCell = row[secondColumnIndex];
             final T rowResult = function.apply(firstCell, secondCell);
             if (minimum == null || rowResult < minimum) {
-                
+
             }
         }
         return null;
