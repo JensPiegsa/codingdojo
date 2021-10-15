@@ -9,11 +9,17 @@ import java.util.function.BiFunction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("A table processor")
-class TableProcessorTest {
+/**
+ * Verbesserungsmöglichkeiten
+ * // 1. http://apfloat.org/apfloat_java/ | https://github.com/mtommila/apfloat
+ * 		// 2. https://dzone.com/articles/arbitrary-precision-numbers | https://github.com/peteroupc/numbers-java
+ * 		// 3. https://github.com/bwakell/Huldra
+ */
+@DisplayName("A table")
+class TableTest {
 
-	@Test @DisplayName("test")
-	void test() {
+	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum.")
+	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum() {
 		// given
 		final String soccerTableDatContent = contentOf(getClass().getResource("football.dat"));
 		final ColumnBounds columnBounds = ColumnBounds
@@ -28,15 +34,10 @@ class TableProcessorTest {
 				.and(8, 50, 55)
 				.and(9, 56, 58);
 		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
-		final BiFunction<String, String , Number> f = (a, b) -> Integer.parseInt(a) - Integer.parseInt(b);
+		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
 		
 		// when
 		final String teamName = soccer.findMinimum(6, 8, f, 1);
-
-
-		// 1. http://apfloat.org/apfloat_java/ | https://github.com/mtommila/apfloat
-		// 2. https://dzone.com/articles/arbitrary-precision-numbers | https://github.com/peteroupc/numbers-java
-		// 3. https://github.com/bwakell/Huldra
 
 		// then
 		then(teamName).isEqualTo("Aston_Villa");

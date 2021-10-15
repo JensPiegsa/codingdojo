@@ -4,9 +4,11 @@ import static java.util.stream.Collectors.*;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 public class Table {
+
+    private static final Logger log = Logger.getLogger(Table.class.getName());
 
     private final String[] head;
     private final String[][] tableCells;
@@ -33,18 +35,40 @@ public class Table {
         return stringBuilder.toString();
     }
 
-    public <T extends Number> String findMinimum(final int firsColumnIndex, final int secondColumnIndex, 
-                              final BiFunction<String, String, T> function, final int resultColumnIndex) {
-        T minimum = null;
-        for (final String[] row : tableCells) {
-            final String firstCell = row[firsColumnIndex];
-            final String secondCell = row[secondColumnIndex];
-            final T rowResult = function.apply(firstCell, secondCell);
-            if (minimum == null || rowResult < minimum) {
+    public String findMinimum(final int firstColumnIndex, final int secondColumnIndex,
+                              final BiFunction<Double, Double, Double> function, final int resultColumnIndex) {
+        Double minimum = null;
+        int minimumRowIndex = -1;
 
+        for (int rowIndex = 0; rowIndex < tableCells.length; rowIndex++) {
+            final String[] row = tableCells[rowIndex];
+            final String firstCell = row[firstColumnIndex];
+            final String secondCell = row[secondColumnIndex];
+
+            final Double firstCellValue = parseDouble(firstCell, rowIndex, firstColumnIndex);
+            final Double secondCellValue = parseDouble(secondCell, rowIndex, secondColumnIndex);
+            
+            if (firstCellValue == null || secondCellValue == null) {
+                continue;
+            }
+            final double rowResult = function.apply(firstCellValue, secondCellValue);
+
+            if (minimum == null || rowResult < minimum) {
+                minimum = rowResult;
+                minimumRowIndex = rowIndex;
             }
         }
-        return null;
+        return tableCells[minimumRowIndex][resultColumnIndex];
+    }
+
+    private Double parseDouble(final String cell, final int rowIndex, final int columnIndex) {
+        try {
+            return Double.parseDouble(cell);
+        } catch (final NumberFormatException e) {
+            log.warning(() -> "Number format exception at [" + rowIndex + ", "
+                    + columnIndex + "] : " + e.getMessage());
+            return null;
+        }
     }
 }
 
