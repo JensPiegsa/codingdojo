@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 @DisplayName("A table")
 class TableTest {
 
-	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum.")
-	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum() {
+	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum (1).")
+	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum1() {
 		// given
 		final String soccerTableDatContent = contentOf(getClass().getResource("football.dat"));
 		final ColumnBounds columnBounds = ColumnBounds
@@ -41,5 +41,39 @@ class TableTest {
 
 		// then
 		then(teamName).isEqualTo("Aston_Villa");
+	}
+
+	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum (2).")
+	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum2() {
+		// given
+		final String soccerTableDatContent = contentOf(getClass().getResource("weather.dat"));
+		final ColumnBounds columnBounds = ColumnBounds
+				.defineBounds(15, 80, 82)
+				.and(16, 83, 88);
+		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
+		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
+
+		// when
+		final String dayNumber = soccer.findMinimum(1, 2, f, 0);
+
+		// then
+		then(dayNumber).isEqualTo("14");
+	}
+
+	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global maximum.")
+	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMaximum() {
+		// given
+		final String soccerTableDatContent = contentOf(getClass().getResource("weather.dat"));
+		final ColumnBounds columnBounds = ColumnBounds
+				.defineBounds(15, 80, 82)
+				.and(16, 83, 88);
+		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
+		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
+
+		// when
+		final String dayNumber = soccer.findMaximum(1, 2, f, 0);
+
+		// then
+		then(dayNumber).isEqualTo("54");
 	}
 }
