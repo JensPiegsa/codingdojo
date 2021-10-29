@@ -5,6 +5,8 @@ import static java.util.stream.Collectors.*;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Table {
 
@@ -35,6 +37,32 @@ public class Table {
         return stringBuilder.toString();
     }
 
+    public String findMaximum(final int firstColumnIndex, final int secondColumnIndex,
+                              final BiFunction<Double, Double, Double> function, final int resultColumnIndex) {
+        Double maximum = null;
+        int maximumRowIndex = -1;
+
+        for (int rowIndex = 0; rowIndex < tableCells.length; rowIndex++) {
+            final String[] row = tableCells[rowIndex];
+            final String firstCell = row[firstColumnIndex];
+            final String secondCell = row[secondColumnIndex];
+
+            final Double firstCellValue = parseDoubleWeakly(firstCell, rowIndex, firstColumnIndex);
+            final Double secondCellValue = parseDoubleWeakly(secondCell, rowIndex, secondColumnIndex);
+
+            if (firstCellValue == null || secondCellValue == null) {
+                continue;
+            }
+            final double rowResult = function.apply(firstCellValue, secondCellValue);
+
+            if (maximum == null || rowResult > maximum) {
+                maximum = rowResult;
+                maximumRowIndex = rowIndex;
+            }
+        }
+        return tableCells[maximumRowIndex][resultColumnIndex];
+    }
+
     public String findMinimum(final int firstColumnIndex, final int secondColumnIndex,
                               final BiFunction<Double, Double, Double> function, final int resultColumnIndex) {
         Double minimum = null;
@@ -45,8 +73,8 @@ public class Table {
             final String firstCell = row[firstColumnIndex];
             final String secondCell = row[secondColumnIndex];
 
-            final Double firstCellValue = parseDouble(firstCell, rowIndex, firstColumnIndex);
-            final Double secondCellValue = parseDouble(secondCell, rowIndex, secondColumnIndex);
+            final Double firstCellValue = parseDoubleWeakly(firstCell, rowIndex, firstColumnIndex);
+            final Double secondCellValue = parseDoubleWeakly(secondCell, rowIndex, secondColumnIndex);
             
             if (firstCellValue == null || secondCellValue == null) {
                 continue;
@@ -61,9 +89,13 @@ public class Table {
         return tableCells[minimumRowIndex][resultColumnIndex];
     }
 
-    private Double parseDouble(final String cell, final int rowIndex, final int columnIndex) {
+    private Double parseDoubleWeakly(final String cell, final int rowIndex, final int columnIndex) {
         try {
-            return Double.parseDouble(cell);
+            final Pattern pattern = Pattern.compile("([0-9]*\\.[0-9]*)");
+
+            final Matcher matcher = pattern.matcher(cell);
+            final String number = matcher.find() ? matcher.group() : "";
+            return Double.parseDouble(number);
         } catch (final NumberFormatException e) {
             log.warning(() -> "Number format exception at [" + rowIndex + ", "
                     + columnIndex + "] : " + e.getMessage());
