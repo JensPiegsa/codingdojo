@@ -91,7 +91,7 @@ public class Table {
 
     private Double parseDoubleWeakly(final String cell, final int rowIndex, final int columnIndex) {
         try {
-            final Pattern pattern = Pattern.compile("([0-9]*\\.[0-9]*)");
+            final Pattern pattern = Pattern.compile("([0-9]+|[0-9]+\\.[0-9]*|[0-9]*\\.[0-9]+)");
 
             final Matcher matcher = pattern.matcher(cell);
             final String number = matcher.find() ? matcher.group() : "";
@@ -101,6 +101,14 @@ public class Table {
                     + columnIndex + "] : " + e.getMessage());
             return null;
         }
+    }
+
+    public int getRowCount() {
+        return tableCells.length;
+    }
+
+    public String getCellValue(final int rowIndex, final int columnIndex) {
+        return tableCells[rowIndex][columnIndex];
     }
 }
 
