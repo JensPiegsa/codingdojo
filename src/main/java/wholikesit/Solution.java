@@ -5,7 +5,7 @@ class Solution {
     public static String whoLikesIt(final String... names) {
 
         final int count = names.length;
-        String formattedNames;
+        final String formattedNames;
 
         if (count == 0) {
             formattedNames = "no one";
