@@ -2,7 +2,6 @@ package datamunging;
 
 import static org.assertj.core.api.Assertions.contentOf;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.function.BiFunction;
 
@@ -16,12 +15,55 @@ import org.junit.jupiter.api.Test;
  * 		// 3. https://github.com/bwakell/Huldra
  */
 @DisplayName("A table")
+@SuppressWarnings("NewMethodNamingConvention")
 class TableTest {
 
 	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum (1).")
 	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum1() {
-		// given
-		final String soccerTableDatContent = contentOf(getClass().getResource("football.dat"));
+		final Table soccer = readSoccerTable();
+		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
+		
+		final String teamName = soccer.findMinimum(6, 8, f, 1);
+
+		then(teamName).isEqualTo("Aston_Villa");
+	}
+
+	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum (2).")
+	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum2() {
+		final Table weather = readWeatherTable();
+		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
+
+		final String dayNumber = weather.findMinimum(1, 2, f, 0);
+
+		then(dayNumber).isEqualTo("14");
+	}
+
+	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global maximum.")
+	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMaximum() {
+		final Table weather = readWeatherTable();
+		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
+
+		final String dayNumber = weather.findMaximum(1, 2, f, 0);
+
+		then(dayNumber).isEqualTo("9");
+	}
+
+	@Test @DisplayName("returns number of data rows.")
+	void returnsNumberOfDataRows() {
+		final Table weather = readWeatherTable();
+		final int rowCount = weather.getRowCount();
+		then(rowCount).isEqualTo(32);
+	}
+
+	@Test @DisplayName("return expected cell value.")
+	void returnExpectedCellValue() {
+		final Table weather = readWeatherTable();
+		final String actual = weather.getCellValue(1,3);
+		then(actual).isEqualTo("74");
+	}
+
+	private static Table readSoccerTable() {
+		final String soccerTableDatContent = contentOf(TableTest.class.getResource("football.dat"));
 		final ColumnBounds columnBounds = ColumnBounds
 				.defineBounds(0, 0, 6)
 				.and(1, 7, 22)
@@ -34,46 +76,14 @@ class TableTest {
 				.and(8, 50, 55)
 				.and(9, 56, 58);
 		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
-		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
-		
-		// when
-		final String teamName = soccer.findMinimum(6, 8, f, 1);
-
-		// then
-		then(teamName).isEqualTo("Aston_Villa");
+		return soccer;
 	}
 
-	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global minimum (2).")
-	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMinimum2() {
-		// given
-		final String soccerTableDatContent = contentOf(getClass().getResource("weather.dat"));
+	private static Table readWeatherTable() {
+		final String weatherTableDatContent = contentOf(TableTest.class.getResource("weather.dat"));
 		final ColumnBounds columnBounds = ColumnBounds
 				.defineBounds(15, 80, 82)
 				.and(16, 83, 88);
-		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
-		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
-
-		// when
-		final String dayNumber = soccer.findMinimum(1, 2, f, 0);
-
-		// then
-		then(dayNumber).isEqualTo("14");
-	}
-
-	@Test @DisplayName("returns cell value of requested column and row where function on two columns results in global maximum.")
-	void returnsCellValueOfRequestedColumnAndRowWhereFunctionOnTwoColumnsResultsInGlobalMaximum() {
-		// given
-		final String soccerTableDatContent = contentOf(getClass().getResource("weather.dat"));
-		final ColumnBounds columnBounds = ColumnBounds
-				.defineBounds(15, 80, 82)
-				.and(16, 83, 88);
-		final Table soccer = new TableImporter().importData(soccerTableDatContent, columnBounds);
-		final BiFunction<Double, Double , Double> f = (a, b) -> Math.abs(a - b);
-
-		// when
-		final String dayNumber = soccer.findMaximum(1, 2, f, 0);
-
-		// then
-		then(dayNumber).isEqualTo("54");
+		return new TableImporter().importData(weatherTableDatContent, columnBounds);
 	}
 }
