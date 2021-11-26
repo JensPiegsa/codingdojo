@@ -6,7 +6,10 @@ class Solution {
 
     public static String whoLikesIt(String... names) {
 
-        if (names.length > 0) return names[0] + LIKES_THIS;
-        return "no one" + LIKES_THIS;
+        String formattedNames = "no one";
+        if (names.length > 0) {
+            formattedNames = names[0];
+        }
+        return formattedNames + LIKES_THIS;
     }
 }
