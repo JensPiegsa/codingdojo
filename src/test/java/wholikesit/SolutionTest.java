@@ -12,5 +12,6 @@ public class SolutionTest {
         assertEquals("Jacob and Alex like this", Solution.whoLikesIt("Jacob", "Alex"));
         assertEquals("Max, John and Mark like this", Solution.whoLikesIt("Max", "John", "Mark"));
         assertEquals("Alex, Jacob and 2 others like this", Solution.whoLikesIt("Alex", "Jacob", "Mark", "Max"));
+        assertEquals("Alex, Jacob and 4 others like this", Solution.whoLikesIt("Alex", "Jacob", "Mark", "Max", "Lars", "Jens"));
     }
 }
