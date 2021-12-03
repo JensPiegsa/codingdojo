@@ -40,4 +40,9 @@ public class SolutionTest {
 	public void singlePairIsValid() {
 		assertThat(Solution.validParentheses( "()" )).isTrue();
 	}
+
+	@Test
+	public void singlePairInWrongOrderIsInvalid() {
+		assertThat(Solution.validParentheses( ")(" )).isFalse();
+	}
 }
