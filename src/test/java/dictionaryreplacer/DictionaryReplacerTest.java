@@ -62,7 +62,8 @@ class DictionaryReplacerTest {
 	@DisplayName("replaces '$temp$' in input with dictionary entry 'temporary'.")
 	@CsvSource({
 			"$temp$,temporary",
-			"$temp$$temp$,temporarytemporary"
+			"$temp$$temp$,temporarytemporary",
+			"$temp$ $key$,temporary value"
 	})
 	void replacesTempInInputWithDictionaryEntryTemporary(String givenInput, String expectedOutput) {
 		// given
