@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class DictionaryReplacerTest {
 
@@ -68,7 +70,24 @@ class DictionaryReplacerTest {
 		// then
 		then(output).isEqualTo("temporary");
 	}
-	
+
+	@ParameterizedTest
+	@DisplayName("replaces '$temp$' in input with dictionary entry 'temporary'.")
+	@CsvSource({
+			"$temp$,temporary",
+			"$temp$$temp$,temporarytemporary"
+	})
+	void replacesTempInInputWithDictionaryEntryTemporary(String givenInput, String expectedOutput) {
+		// given
+		final String input = "$temp$";
+		final Map<String, String> dictionary = Map.of("temp", "temporary");
+
+		// when
+		final String output = DictionaryReplacer.replace(input, dictionary);
+
+		// then
+		then(output).isEqualTo("temporary");
+	}
 	// temp$$temp$temp temp$temporarytemp
 	//
 }
