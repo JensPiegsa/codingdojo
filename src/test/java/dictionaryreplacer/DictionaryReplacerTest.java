@@ -68,6 +68,7 @@ class DictionaryReplacerTest {
 		// then
 		then(output).isEqualTo("temporary");
 	}
+	
 	// temp$$temp$temp temp$temporarytemp
 	//
 }
