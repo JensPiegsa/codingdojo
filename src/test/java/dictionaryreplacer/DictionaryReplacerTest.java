@@ -30,16 +30,29 @@ class DictionaryReplacerTest {
 	 * input : “\$temp\$ here comes the name \$name\$“, dict [“temp”, “temporary”] [“name”, “John Doe”], output : “temporary here comes the name John Doe”
 	 */
 
-	@Test @DisplayName("first test")
-	void firstTest() {
+	@Test @DisplayName("accepts empty input and dictionary.")
+	void acceptsEmptyInputAndDictionary() {
 		// given
 		final String input = "";
-		final Map<String, String> dictionary = new HashMap<>();
+		final Map<String, String> dictionary = Map.of();
 
 		// when
-		String output = DictionaryReplacer.replace(input, dictionary);
+		final String output = DictionaryReplacer.replace(input, dictionary);
 
 		// then
-		then(output).isEqualTo("");
+		then(output).isEmpty();
+	}
+	
+	@Test @DisplayName("replaces '$key$' in input with dictionary entry 'value'.")
+	void replacesKeyInInputWithDictionaryEntryValue() {
+		// given
+		final String input = "$key$";
+		final Map<String, String> dictionary = Map.of("key", "value");
+
+		// when
+		final String output = DictionaryReplacer.replace(input, dictionary);
+
+		// then
+		then(output).isEqualTo("value");
 	}
 }
