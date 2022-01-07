@@ -58,19 +58,6 @@ class DictionaryReplacerTest {
 		then(output).isEqualTo("value");
 	}
 
-	@Test @DisplayName("replaces '$temp$' in input with dictionary entry 'temporary'.")
-	void replacesTempInInputWithDictionaryEntryTemporary() {
-		// given
-		final String input = "$temp$";
-		final Map<String, String> dictionary = Map.of("temp", "temporary");
-
-		// when
-		final String output = DictionaryReplacer.replace(input, dictionary);
-
-		// then
-		then(output).isEqualTo("temporary");
-	}
-
 	@ParameterizedTest
 	@DisplayName("replaces '$temp$' in input with dictionary entry 'temporary'.")
 	@CsvSource({
@@ -80,7 +67,10 @@ class DictionaryReplacerTest {
 	void replacesTempInInputWithDictionaryEntryTemporary(String givenInput, String expectedOutput) {
 		// given
 		final String input = "$temp$";
-		final Map<String, String> dictionary = Map.of("temp", "temporary");
+		final Map<String, String> dictionary = Map.of(
+				"temp", "temporary",
+				"key", "value"
+		);
 
 		// when
 		final String output = DictionaryReplacer.replace(input, dictionary);
