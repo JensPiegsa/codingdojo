@@ -13,7 +13,7 @@ public class Dive {
 
 	public void move(final SubmarineCommand command, final int units) {
 		depth = Math.max(0, depth + command.getDepthFactor() * units);
-		horizontalPosition += command.getHorizontalDelta() * units;
+		horizontalPosition += command.getHorizontalFactor() * units;
 	}
 
 	public void move(final List<String> commands) {
