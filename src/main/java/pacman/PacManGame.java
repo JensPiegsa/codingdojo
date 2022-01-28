@@ -6,12 +6,14 @@ import java.util.OptionalInt;
 public class PacManGame {
 
 	private final int boardWidth;
+	private final int boardHeight;
 	private String board;
 
 	public PacManGame(final String board) {
 		this.board = board;
 		final String[] rows = board.split("\n");
 		boardWidth = Arrays.stream(rows).mapToInt(String::length).max().getAsInt();
+		boardHeight = rows.length;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class PacManGame {
 	}
 
 	public int getBoardHeight() {
-		return 0;
+		return boardHeight;
 	}
 
 	public int getBoardWidth() {
