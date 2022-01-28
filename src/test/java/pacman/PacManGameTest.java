@@ -2,6 +2,7 @@ package pacman;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.api.BDDSoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -75,7 +76,7 @@ public class PacManGameTest {
 		
 		final PacManGame pacManGame = new PacManGame("""
 			. . .
-			.V.
+			.V.  
 			. . .
         """);
 
@@ -83,9 +84,10 @@ public class PacManGameTest {
 
 		assertThat(pacManGame.getBoardWidth()).isEqualTo(5);
 		assertThat(pacManGame.getBoardHeight()).isEqualTo(3);
+		// FIXME who removes our trailing white spaces at the end of second line:
 		assertThat(string).isEqualTo("""
 			. . .
-			.V.
+			.V.  
 			. . .
         """);
 	}
@@ -95,14 +97,14 @@ public class PacManGameTest {
 		
 		final PacManGame pacManGame = new PacManGame("""
 			. . .
-			.V.
+			.V.  
 			. . .
-        """);
+			""");
 		pacManGame.move(Direction.up);
 
-		assertThat(pacManGame).hasToString("""
+		assertThat(pacManGame.toString()).isEqualTo("""
 			.V. .
-			. .
+			. .  
 			. . .
         """);
 	}
