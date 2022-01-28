@@ -76,7 +76,7 @@ public class PacManGameTest {
 		
 		final PacManGame pacManGame = new PacManGame("""
 			. . .
-			.V.  
+			.V.\s\s
 			. . .
         """);
 
@@ -87,7 +87,7 @@ public class PacManGameTest {
 		// FIXME who removes our trailing white spaces at the end of second line:
 		assertThat(string).isEqualTo("""
 			. . .
-			.V.  
+			.V.\s\s
 			. . .
         """);
 	}
