@@ -27,7 +27,7 @@ public class Wrapper {
 				lastSpacePosition = index;
 			}
 		}
-				
+
 		return output.toString();
 	}
 }
