@@ -16,7 +16,7 @@ public class PacManBoard {
 
 	public enum PacManTile {
 		pacManLeft('>'),
-		pacManUp('V'),
+		pacManUp('v'),
 		pacManRight('<'),
 		pacManDown('^'),
 		empty(' '),
@@ -44,6 +44,16 @@ public class PacManBoard {
 		}
 	}
 
+	/**
+	 * <pre style="font-style=normal;">
+	 *     
+	 *    --------> x
+	 *    |
+	 *    |
+	 *  y V
+	 *  
+	 * </pre>
+	 */
 	private PacManTile[][] tiles;
 	private final int boardWidth;
 	private final int boardHeight;
@@ -78,6 +88,38 @@ public class PacManBoard {
 
 	public int getBoardWidth() {
 		return boardWidth;
+	}
+
+
+	public void move(final Direction direction) {
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
+				if (isPacMan(x, y)) {
+					
+					tiles[x][y] = PacManTile.empty;
+					
+					// TODO implement and use PacManTile pacManTile = PacMan.pacManForDirection(direction)
+					// TODO implement direction.getDeltaX() and direction.getDeltaY()
+					if (direction == Direction.up) {
+						tiles[x][(y + boardHeight - 1) % boardHeight] = PacManTile.pacManUp;
+					} else if (direction == Direction.right) {
+						tiles[(boardWidth + x + 1) % boardWidth][y] = PacManTile.pacManRight;
+					} else if (direction == Direction.left) {
+						tiles[(boardWidth + x - 1) % boardWidth][y] = PacManTile.pacManLeft;
+					} else {
+						tiles[x][(y + boardHeight + 1) % boardHeight] = PacManTile.pacManDown;
+					}
+					return;
+				}
+			}
+		}
+	}
+
+	private boolean isPacMan(final int x, final int y) {
+		return tiles[x][y] == PacManTile.pacManUp
+				|| tiles[x][y] == PacManTile.pacManLeft
+				|| tiles[x][y] == PacManTile.pacManRight
+				|| tiles[x][y] == PacManTile.pacManDown;
 	}
 
 	@Override

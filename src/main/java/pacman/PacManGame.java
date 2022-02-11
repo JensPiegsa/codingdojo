@@ -23,6 +23,7 @@ public class PacManGame {
 //			. .
 //			. . .
 //        """;
+		board.move(direction);
 	}
 
 	public int getBoardHeight() {
