@@ -14,6 +14,8 @@ import java.util.Arrays;
 // ~~~Table<???> columns~~~
 public class PacManBoard {
 
+	private int score;
+
 	public enum PacManTile {
 		pacManLeft('>'),
 		pacManUp('v'),
@@ -27,6 +29,18 @@ public class PacManBoard {
 
 		PacManTile(final char c) {
 			this.c = c;
+		}
+
+		public static PacManTile pacManForDirection(final Direction direction) {
+			if (direction == Direction.up) {
+				return PacManTile.pacManUp;
+			} else if (direction == Direction.right) {
+				return PacManTile.pacManRight;
+			} else if (direction == Direction.left) {
+				return PacManTile.pacManLeft;
+			} else {
+				return PacManTile.pacManDown;
+			}
 		}
 
 		@Override
@@ -97,18 +111,17 @@ public class PacManBoard {
 				if (isPacMan(x, y)) {
 					
 					tiles[x][y] = PacManTile.empty;
+
+					final PacManTile pacManTile = PacManTile.pacManForDirection(direction);
 					
-					// TODO implement and use PacManTile pacManTile = PacMan.pacManForDirection(direction)
-					// TODO implement direction.getDeltaX() and direction.getDeltaY()
-					if (direction == Direction.up) {
-						tiles[x][(y + boardHeight - 1) % boardHeight] = PacManTile.pacManUp;
-					} else if (direction == Direction.right) {
-						tiles[(boardWidth + x + 1) % boardWidth][y] = PacManTile.pacManRight;
-					} else if (direction == Direction.left) {
-						tiles[(boardWidth + x - 1) % boardWidth][y] = PacManTile.pacManLeft;
-					} else {
-						tiles[x][(y + boardHeight + 1) % boardHeight] = PacManTile.pacManDown;
+					final int newX = (boardWidth + x + direction.getDeltaX()) % boardWidth;
+					final int newY = (boardHeight + y + direction.getDeltaY()) % boardHeight;
+
+					if (tiles[newX][newY] == PacManTile.dot) {
+						score++;
 					}
+					tiles[newX][newY] = pacManTile;
+					
 					return;
 				}
 			}
@@ -124,6 +137,10 @@ public class PacManBoard {
 
 	@Override
 	public String toString() {
+		return getBoard() + "\nscore: " + score + "\n";
+	}
+
+	public String getBoard() {
 		String s = "";
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {

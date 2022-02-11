@@ -33,4 +33,8 @@ public class PacManGame {
 	public int getBoardWidth() {
 		return board.getBoardWidth();
 	}
+
+	public String getBoard() {
+		return board.getBoard();
+	}
 }

@@ -80,7 +80,7 @@ class PacManGameTest {
 				. . .
 				""");
 
-		final String string = pacManGame.toString();
+		final String string = pacManGame.getBoard();
 
 		assertThat(pacManGame.getBoardWidth()).isEqualTo(5);
 		assertThat(pacManGame.getBoardHeight()).isEqualTo(3);
@@ -106,7 +106,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.up);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					.v. .
 					. .\s\s
 					. . .
@@ -123,7 +123,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.up);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					. . .
 					. .\s\s
 					.v. .
@@ -140,7 +140,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.down);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					. . .
 					.^.\s\s
 					. . .
@@ -157,7 +157,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.right);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					. < .
 					. .\s\s
 					. . .
@@ -174,7 +174,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.left);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					> . .
 					. .\s\s
 					. . .
@@ -191,7 +191,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.down);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					.^. .
 					. .\s\s
 					. . .
@@ -208,7 +208,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.right);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					< .\s\s
 					. .\s\s
 					. . .
@@ -225,7 +225,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.left);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					  . >
 					. .\s\s
 					. . .
@@ -244,7 +244,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.right);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					 <
 					..
 					""");
@@ -258,7 +258,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.right);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					 <
 					..
 					""");
@@ -272,7 +272,7 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.right);
 
-			assertThat(pacManGame.toString()).isEqualTo("""
+			assertThat(pacManGame.getBoard()).isEqualTo("""
 					 <
 					..
 					""");
@@ -286,9 +286,66 @@ class PacManGameTest {
 					""");
 			pacManGame.move(Direction.right);
 
+			assertThat(pacManGame.getBoard()).isEqualTo("""
+					 <
+					..
+					""");
+		}
+	}
+
+	@Nested @DisplayName("has score")
+	class HasScore {
+		
+		@Test @DisplayName("0 at start of game.")
+		void zeroAtStartOfGame() {
+
+			final PacManGame pacManGame = new PacManGame("""
+					^.
+					..
+					""");
+
+			final String screen = pacManGame.toString();
+			
+			assertThat(screen).isEqualTo("""
+					^.
+					..
+					
+					score: 0
+					""");
+		}
+		
+		@Test @DisplayName("1 after eating point.")
+		void oneAfterEatingPoint() {
+			final PacManGame pacManGame = new PacManGame("""
+					^.
+					..
+					""");
+
+			pacManGame.move(Direction.right);
+			
 			assertThat(pacManGame.toString()).isEqualTo("""
 					 <
 					..
+					
+					score: 1
+					""");
+		}
+		
+		@Test @DisplayName("2 after eating two points.")
+		void twoAfterEatingTwoPoints() {
+			final PacManGame pacManGame = new PacManGame("""
+					^.
+					..
+					""");
+
+			pacManGame.move(Direction.right);
+			pacManGame.move(Direction.down);
+
+			assertThat(pacManGame.toString()).isEqualTo("""
+					\s\s
+					.^
+					
+					score: 2
 					""");
 		}
 	}
