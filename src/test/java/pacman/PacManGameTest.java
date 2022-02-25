@@ -2,6 +2,11 @@ package pacman;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.Terminal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,15 +40,15 @@ class PacManGameTest {
 	 * 
 	 * Incomplete list of things the game needs:
 	 * 
-	 * pacman is on a grid filled with dots
-	 * pacman has a direction
-	 * pacman moves on each tick
-	 * user can rotate pacman
-	 * pacman eats dots
-	 * pacman wraps around
-	 * pacman stops on wall
-	 * pacman will not rotate into a wall
-	 * game score (levels completed, number of dots eaten in this level)
+	 * [x] pacman is on a grid filled with dots
+	 * [x] pacman has a direction
+	 * [ ] pacman moves on each tick
+	 * [ ] user can rotate pacman
+	 * [ ] pacman eats dots
+	 * [ ] pacman wraps around
+	 * [ ] pacman stops on wall
+	 * [ ] pacman will not rotate into a wall
+	 * [ ] game score (levels completed, number of dots eaten in this level)
 	 * monsters…
 	 * levels
 	 * animate pacman eating (mouth opens and closes)
@@ -84,7 +89,6 @@ class PacManGameTest {
 
 		assertThat(pacManGame.getBoardWidth()).isEqualTo(5);
 		assertThat(pacManGame.getBoardHeight()).isEqualTo(3);
-		// FIXME who removes our trailing white spaces at the end of second line:
 		assertThat(string).isEqualTo("""
 				. . .
 				.v.\s\s
@@ -313,7 +317,26 @@ class PacManGameTest {
 					score: 0
 					""");
 		}
-		
+
+		@Test @DisplayName("0 after moving on empty tile.")
+		void zeroAfterMovingOnEmptyTile() {
+
+			final PacManGame pacManGame = new PacManGame("""
+					^.
+					 .
+					""");
+
+			pacManGame.move(Direction.down);
+			final String screen = pacManGame.toString();
+
+			assertThat(screen).isEqualTo("""
+					 .
+					^.
+					
+					score: 0
+					""");
+		}
+
 		@Test @DisplayName("1 after eating point.")
 		void oneAfterEatingPoint() {
 			final PacManGame pacManGame = new PacManGame("""
