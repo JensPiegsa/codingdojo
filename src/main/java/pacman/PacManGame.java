@@ -2,7 +2,6 @@ package pacman;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
@@ -75,5 +74,9 @@ public class PacManGame {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void next() {
+		move(Direction.right);
 	}
 }

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import org.junit.jupiter.api.DisplayName;
@@ -370,6 +371,57 @@ class PacManGameTest {
 					
 					score: 2
 					""");
+		}
+	}
+
+	@Test @DisplayName("test")
+	void test() {
+		// Startbildschirm: press Space
+		// game loop
+
+		final long tickDelayInMillis = 1000L;
+		final PacManGame pacManGame = new PacManGame("""
+				<.
+				..
+				""");
+
+		final PacManGame expectedTickOneGame = new PacManGame("""
+				 <
+				..
+				""");
+
+		final TextGraphics textGraphics;
+		try {
+			final DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory(System.out, System.in, StandardCharsets.UTF_8);
+			final Terminal terminal = terminalFactory.createTerminal();
+			terminal.enterPrivateMode();
+
+			terminal.clearScreen();
+
+			terminal.setCursorPosition(0, 0);
+			terminal.putString(pacManGame.toString());
+			terminal.flush();
+
+			textGraphics = terminal.newTextGraphics();
+			assertThat(textGraphics.getCharacter(0,0).getCharacterString()).isEqualTo("<");
+			assertThat(textGraphics.getCharacter(1,0).getCharacterString()).isEqualTo(".");
+			assertThat(textGraphics.getCharacter(0,1).getCharacterString()).isEqualTo(".");
+			assertThat(textGraphics.getCharacter(1,1).getCharacterString()).isEqualTo(".");
+
+			Thread.sleep((long) (tickDelayInMillis * 1.1f));
+			terminal.setCursorPosition(0, 0);
+			pacManGame.next();
+			
+			terminal.putString(pacManGame.toString());
+			terminal.flush();
+
+			assertThat(textGraphics.getCharacter(0,0).getCharacterString()).isEqualTo(" ");
+			assertThat(textGraphics.getCharacter(1,0).getCharacterString()).isEqualTo("<");
+			assertThat(textGraphics.getCharacter(0,1).getCharacterString()).isEqualTo(".");
+			assertThat(textGraphics.getCharacter(1,1).getCharacterString()).isEqualTo(".");
+
+		} catch (final IOException | InterruptedException e) {
+			System.err.println("Fatal error: " + e.getMessage());
 		}
 	}
 }
