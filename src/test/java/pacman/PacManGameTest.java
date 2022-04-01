@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import org.junit.jupiter.api.DisplayName;
@@ -374,8 +375,8 @@ class PacManGameTest {
 		}
 	}
 
-	@Test @DisplayName("test")
-	void test() {
+	@Test @DisplayName("with terminal")
+	void withTerminal() {
 		// Startbildschirm: press Space
 		// game loop
 
@@ -393,13 +394,13 @@ class PacManGameTest {
 		final TextGraphics textGraphics;
 		try {
 			final DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory(System.out, System.in, StandardCharsets.UTF_8);
+			
 			final Terminal terminal = terminalFactory.createTerminal();
 			terminal.enterPrivateMode();
 
 			terminal.clearScreen();
 
-			terminal.setCursorPosition(0, 0);
-			terminal.putString(pacManGame.toString());
+			printMultilineTextAtUpperLeftCorner(terminal, pacManGame.toString());
 			terminal.flush();
 
 			textGraphics = terminal.newTextGraphics();
@@ -412,7 +413,7 @@ class PacManGameTest {
 			terminal.setCursorPosition(0, 0);
 			pacManGame.next();
 			
-			terminal.putString(pacManGame.toString());
+			printMultilineTextAtUpperLeftCorner(terminal, pacManGame.toString());
 			terminal.flush();
 
 			assertThat(textGraphics.getCharacter(0,0).getCharacterString()).isEqualTo(" ");
@@ -422,6 +423,17 @@ class PacManGameTest {
 
 		} catch (final IOException | InterruptedException e) {
 			System.err.println("Fatal error: " + e.getMessage());
+		}
+	}
+	
+	
+
+	private void printMultilineTextAtUpperLeftCorner(final Terminal terminal, final String string) throws IOException {
+		int lineCounter = 0;
+		for (final String line : string.split("[\n\r]")) {
+			terminal.setCursorPosition(0, lineCounter);
+			terminal.putString(line);
+			lineCounter++;
 		}
 	}
 }
