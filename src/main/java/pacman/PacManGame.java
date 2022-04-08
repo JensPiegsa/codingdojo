@@ -8,8 +8,8 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 public class PacManGame {
 
-
 	private PacManBoard board;
+	private PacManOutput output; //TODO introduce constructor parameter for output;
 
 	public PacManGame(final String board) {
 		this.board = PacManBoard.parse(board);
