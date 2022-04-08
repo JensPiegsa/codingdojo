@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.charset.StandardCharsets;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.graphics.TextImage;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import org.junit.jupiter.api.DisplayName;
@@ -38,5 +39,12 @@ public class LanternaLT {
 		assertThat(textGraphics.getCharacter(10,0).getCharacterString()).isEqualTo("d");
 		
 		Thread.sleep(50L);
+	}
+
+	@Test @DisplayName("text image")
+	void textImage() {
+
+		final DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory(System.out, System.in, StandardCharsets.UTF_8);
+
 	}
 }
