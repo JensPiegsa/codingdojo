@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class LoopInspectorTest {
+
+	// https://www.codewars.com/kata/52a89c2ea8ddc5547a000863/train/java
+
 	@Test
 	public void loop_size_of_3() {
 		Node list = Node.createChain(1, 3);
