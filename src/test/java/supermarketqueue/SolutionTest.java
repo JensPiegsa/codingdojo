@@ -20,8 +20,7 @@ class SolutionTest {
 
 		then(totalCheckoutTimeInMinutes).isZero();
 	}
-
-
+	
 	@Test @DisplayName("checkout time expected to be five with one customer.")
 	void checkoutTimeExpectedToBeFiveWithOneCustomer() {
 		assertThat(Solution.solveSuperMarketQueue(new int[]{5}, 1)).isEqualTo(5);
