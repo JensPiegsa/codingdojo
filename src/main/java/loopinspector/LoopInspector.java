@@ -1,31 +1,30 @@
 package loopinspector;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public class LoopInspector {
 
-	public int loopSize(Node firstTailNode) {
+	public int loopSize(final Node firstTailNode) {
 
-		final int loopSize = 0;
-
-		final LinkedList<Node> inspectedNodes = new LinkedList<>();
-		Node aNode = firstTailNode.getNext();
+		final var inspectedNodes = new LinkedList<Node>();
+		Node node = firstTailNode.getNext();
 		Node firstLoopNode = null;
-		while (aNode != null) {
-
-			if (inspectedNodes.contains(aNode)) {
-//				return loopSize;
-				firstLoopNode = aNode;
+		while (node != null) {
+			if (inspectedNodes.contains(node)) {
+				firstLoopNode = node;
 				break;
 			} else {
-				inspectedNodes.add(aNode);
+				inspectedNodes.add(node);
 			} 
-			aNode = aNode.getNext();
+			node = node.getNext();
 		}
 
-		final Iterator<Node> nodeIterator = inspectedNodes.descendingIterator();
+		final var nodeIterator = inspectedNodes.descendingIterator();
+		int loopSize = 1;
+		while (nodeIterator.hasNext() && nodeIterator.next() != firstLoopNode) {
+			loopSize++;
+		}
 
-		return 0;
+		return loopSize;
 	}
 }
