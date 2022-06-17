@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import org.junit.jupiter.api.Test;
 
 public class SolutionTest {
+	
+	// https://www.codewars.com/kata/57e5a6a67fbcc9ba900021cd/train/java
 
 	@Test
 	public void emptyArray() {
