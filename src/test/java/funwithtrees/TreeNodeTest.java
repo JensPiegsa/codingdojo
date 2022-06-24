@@ -97,5 +97,13 @@ class TreeNodeTest {
 		void invokedWithOtherObjectReturnsFalse() {
 			assertThat(new TreeNode(1).equals(new Object())).isFalse();
 		}
+
+		@Test @DisplayName("bug")
+		void bug() {
+			final TreeNode a = new TreeNode(3, new TreeNode(4), null);
+			final TreeNode b = new TreeNode(3);
+			assertThat(a.equals(b)).isFalse();
+			assertThat(b.equals(a)).isFalse();
+		}
 	}
 }

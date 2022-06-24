@@ -32,9 +32,12 @@ class TreeNode {
         
 		final TreeNode otherNode = (TreeNode) other;
 		if (value == otherNode.value) {
-            if (left == null && right == null) {
-                return true;
-            }
+			if (left == null && right == null) {
+				if (otherNode.left == null && otherNode.right == null) {
+					return true;
+				}
+				return false;
+			}
 			if (left != null && right == null) {
 				return left.equals(otherNode.left);
 			}
