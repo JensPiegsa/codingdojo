@@ -66,6 +66,22 @@ class ParseMoleculeTest {
 		assertThat(ParseMolecule.getAtoms("H2"))
 				.hasSize(1)
 				.contains(entry("H", 2));
-		
+	}
+
+	@Test @DisplayName("returns map of size two for tow atom molecule containing number.")
+	void returnsMapOfSizeTwoForTwoAtomMoleculeContainingNumber() {
+		assertThat(ParseMolecule.getAtoms("H2O"))
+				.hasSize(2)
+				.contains(entry("H", 2), entry("O", 1));
+	}
+	
+	@Test @DisplayName("supports parentheses.")
+	void supportsParentheses() {
+		assertThat(ParseMolecule.getAtoms("Ca(OH)2"))
+				.hasSize(3)
+				.contains(
+						entry("Ca", 1), 
+						entry("O", 2),
+						entry("H", 2));
 	}
 }
