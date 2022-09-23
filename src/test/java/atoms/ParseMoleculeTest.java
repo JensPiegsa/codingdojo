@@ -84,4 +84,15 @@ class ParseMoleculeTest {
 						entry("O", 2),
 						entry("H", 2));
 	}
+
+	@Test @DisplayName("supports complex parentheses.")
+	void supportsComplexParentheses() {
+		assertThat(ParseMolecule.getAtoms("Ca(OH)2(Mg)2"))
+				.hasSize(4)
+				.contains(
+						entry("Ca", 1),
+						entry("O", 2),
+						entry("H", 2),
+						entry("Mg", 2));
+	}
 }
