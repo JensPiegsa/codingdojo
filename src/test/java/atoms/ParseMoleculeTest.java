@@ -95,4 +95,16 @@ class ParseMoleculeTest {
 						entry("H", 2),
 						entry("Mg", 2));
 	}
+	
+	@Test @DisplayName("bugs")
+	void bugs() {
+		final String noNumberAfterParenthesis = "(C5H5)Fe(CO)2CH3";
+		final String thirdTypeOfBraces1 = "As2{Be4C5[BCo3(CO2)3]2}4Cu5";
+		final String thirdTypeOfBraces2 = "{[Co(NH3)4(OH)2]3Co}(SO4)3";
+		// Should parse maleic acid: "C2H2(COOH)2"
+		// Your function should throw an IllegalArgumentException for a wrong formula: Mg(OH
+		// Your function should throw an IllegalArgumentException for a wrong formula: MgOH)2
+		// Your function should throw an IllegalArgumentException for a wrong formula: Mg(OH]2
+		// Your function should throw an IllegalArgumentException for a wrong formula: Au5(C2H5[OH)3Li]3
+	}
 }

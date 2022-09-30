@@ -3,7 +3,7 @@ package atoms;
 import java.util.Map;
 import java.util.HashMap;
 
-@SuppressWarnings({"ImplicitNumericConversion", "StringConcatenationInLoop", "NonConstantStringShouldBeStringBuffer"})
+@SuppressWarnings({"ImplicitNumericConversion", "StringConcatenationInLoop"})
 class ParseMolecule {
 
     private static final Map<Character, Character> matchingParentheses = Map.of('(',')','[',']');
