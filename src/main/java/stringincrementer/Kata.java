@@ -1,16 +1,18 @@
 package stringincrementer;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Kata {
 	
 	public static String incrementString(final String string) {
-		final Pattern pattern = Pattern.compile("^([^0-9]*)([0-9]*)$");
-		final Matcher matcher = pattern.matcher(string);
-		matcher.matches();
-		final String head = matcher.group(1);
-		final String tail = matcher.group(2);
+		int i;
+		for (i = string.length() - 1; i >= 0; i--) {
+			final char c = string.charAt(i);
+			if (!Character.isDigit(c)) {
+				break;
+			}
+		}
+		
+		final String head = string.substring(0, i + 1);
+		final String tail = string.substring(i + 1);
 		return head + increment(tail);
 	}
 

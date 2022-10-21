@@ -34,5 +34,6 @@ class KataTest {
 		assertThat(Kata.incrementString("text099")).isEqualTo("text100");
 		assertThat(Kata.incrementString("text99")).isEqualTo("text100");
 		assertThat(Kata.incrementString("snapshot-99")).isEqualTo("snapshot-100");
+		assertThat(Kata.incrementString("A22-1")).isEqualTo("A22-2");
 	}
 }
