@@ -1,5 +1,7 @@
 package stringincrementer;
 
+import java.math.BigInteger;
+
 public class Kata {
 	
 	public static String incrementString(final String string) {
@@ -17,8 +19,8 @@ public class Kata {
 	}
 
 	private static String increment(final String tail) {
-		final int i = tail.isEmpty() ? 0 : Integer.parseInt(tail);
-		final String result = String.valueOf(i + 1);
+		final BigInteger i = tail.isEmpty() ? BigInteger.ZERO : new BigInteger(tail);
+		final String result = String.valueOf(i.add(BigInteger.ONE));
 		final int leadingZeroCount = Math.max(0, tail.length() - result.length());
 		return "0".repeat(leadingZeroCount) + result;
 	}
