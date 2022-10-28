@@ -2,21 +2,22 @@ package potus;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static potus.Dinglemouse.Position;
+import static potus.Dinglemouse.House;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * https://www.codewars.com/kata/5c230f017f74a2e1c300004f
+ * <a href="https://www.codewars.com/kata/5c230f017f74a2e1c300004f">Kata</a>
  */
 class DinglemouseTest {
 
     @Test @DisplayName("test")
     void test() {
         String level = """
-                    ###
-                    #X#
-                    ###
+                ###
+                #X#
+                ###
                 """;
         final boolean actual = Dinglemouse.allAlone(toChars(level));
         then(actual).isTrue();
@@ -25,9 +26,9 @@ class DinglemouseTest {
     @Test @DisplayName("test2")
     void test2() {
         String level = """
-                    ####
-                    #Xo#
-                    ####
+                ####
+                #Xo#
+                ####
                 """;
         final boolean actual = Dinglemouse.allAlone(toChars(level));
         then(actual).isFalse();
@@ -37,10 +38,10 @@ class DinglemouseTest {
     @Test @DisplayName("test3")
     void test3() {
         String level = """
-                    #### ####
-                    #X ### o#
-                    #       #
-                    #########
+                #### ####
+                #X ### o#
+                #       #
+                #########
                 """;
         final boolean actual = Dinglemouse.allAlone(toChars(level));
         then(actual).isFalse();
@@ -53,7 +54,7 @@ class DinglemouseTest {
                 # X#
                 ####
                 """;
-        final Position actual = Dinglemouse.findPotus(toChars(level));
+        final Position actual = new House(toChars(level)).findPotus();
         then(actual).isEqualTo(new Position(1, 2));
     }
 
@@ -64,7 +65,7 @@ class DinglemouseTest {
                 #X #
                 ####
                 """;
-        final Dinglemouse.Position actual = Dinglemouse.findPotus(toChars(level));
+        final Dinglemouse.Position actual = new House(toChars(level)).findPotus();
         then(actual).isEqualTo(new Position(1, 1));
     }
 
