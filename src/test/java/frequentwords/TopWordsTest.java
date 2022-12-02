@@ -11,17 +11,48 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+/**
+ * https://www.codewars.com/kata/51e056fe544cf36c410000fb/train/java
+ */
 @DisplayName("A TopWords")
 class TopWordsTest {
 
 	@Nested @DisplayName("unit tests")
 	class UnitTests {
-		
-		@Test @DisplayName("test")
-		void test() {
-			final String text = " , ; +";
+
+		@Test @DisplayName("works without words.")
+		void worksWithoutWords() {
+			final String text = " ,\n ; +";
 			final var words = TopWords.top3(text);
 			then(words).isEmpty();
+		}
+
+		@Test @DisplayName("works with one word.")
+		void worksWithOneWord() {
+			final String text = " ,\n  don't ; +";
+			final var words = TopWords.top3(text);
+			then(words).contains("don't");
+		}
+
+		@Test @DisplayName("works with two words.")
+		void worksWithTwoWords() {
+			final String text = "we ,\n  don't ; +";
+			final var words = TopWords.top3(text);
+			then(words).containsExactlyInAnyOrder("we", "don't");
+		}
+
+		@Test @DisplayName("works with four words.")
+		void worksWithFourWords() {
+			final String text = "we ,\n  don't ; need + words.";
+			final var words = TopWords.top3(text);
+			then(words).containsExactlyInAnyOrder("we", "don't", "need");
+		}
+		
+		@Test @DisplayName("works with multiple instances of the same words.")
+		void worksWithMultipleInstancesOfTheSameWords() {
+			final String text = "we ,\n  don't ; need + words. WORDS don't need us.";
+			final var words = TopWords.top3(text);
+			then(words).containsExactlyInAnyOrder("words", "don't", "need");
 		}
 	}
 	
