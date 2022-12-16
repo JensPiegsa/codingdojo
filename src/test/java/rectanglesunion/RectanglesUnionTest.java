@@ -10,7 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RectanglesUnionTest {
 
-
+    @Nested @DisplayName("Unit")
+    class Unit {
+    	@Test @DisplayName("two intersecting rectangles case 1a")
+    	void twoIntersectingRectanglesCase1A() {
+    		// given
+    		
+    		// when
+    		
+    		// then
+    		
+    	}
+    }
     
     @Nested @DisplayName("acceptance")
     class Acceptance {
@@ -26,5 +37,6 @@ public class RectanglesUnionTest {
             int[][] recs = {{0, 4, 11, 6}};
             assertEquals(22, RectanglesUnion.calculateSpace(recs), "One rectangle [0, 4, 11, 6] => 22");
         }
+        
     }
 }
