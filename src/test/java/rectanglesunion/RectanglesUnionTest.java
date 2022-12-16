@@ -10,10 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RectanglesUnionTest {
 
-    @Nested @DisplayName("unit")
-    class Unit {
-    	
-    }
+
     
     @Nested @DisplayName("acceptance")
     class Acceptance {
