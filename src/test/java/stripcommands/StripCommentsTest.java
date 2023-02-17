@@ -99,5 +99,9 @@ class StripCommentsTest {
         );
 
     }
-
+    
+    @Test @DisplayName("bug")
+    void bug() {
+        assertThat(StripComments.stripComments("one/comment", new String[]{"//"})).isEqualTo("one/comment");
+    }
 }
