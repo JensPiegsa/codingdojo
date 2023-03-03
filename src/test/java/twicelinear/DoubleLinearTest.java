@@ -59,6 +59,10 @@ public class DoubleLinearTest {
 
     @Test
     public void test() {
+        //      i:  0  1  2  3  4   5   6   7   8   9  10
+        // u_symm: [1, 3, 4, 7, 9, 10, 13, 15, 21, 22, 31]
+        // u_asym: [1, 3, 4, 7, 9, 10, 13, 15, 19, 27, 28, 39]
+        //     u = [1, 3, 4, 7, 9, 10, 13, 15, 19, 21, 22, 27, ...]
         System.out.println("Fixed Tests dblLinear");
         testing(DoubleLinear.dblLinear(10), 22);
         testing(DoubleLinear.dblLinear(20), 57);

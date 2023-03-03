@@ -25,20 +25,29 @@ class DoubleLinear {
         if (n == 0) {
             return result.get(n);
         }
-        int counter = 0;
-        while (result.size() <= n) {
-            int x = result.get(counter);
-            int y = y(x);
-            int z = z(x);
-            if (!result.contains(y)) {
-                result.add(y);
+        int y = 0;
+        int z = 0;
+        int counterY = 0;
+        int counterZ = 0;
+        while (result.size() <= n + 1) {
+            if (y >= z) {
+                int x = result.get(counterZ);
+                z = z(x);
+                if (!result.contains(z)) {
+                    result.add(z);
+                }
+                counterZ++;
             }
-            if (!result.contains(z)) {
-                result.add(z);
+            if (y <= z){
+                int x = result.get(counterY);
+                y = y(x);
+                if (!result.contains(y)) {
+                    result.add(y);
+                }
+                counterY++;
             }
-            counter++;
+            Collections.sort(result);
         }
-        Collections.sort(result);
         return result.get(n);
     }
 }
