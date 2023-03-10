@@ -1,12 +1,36 @@
 package scramblies;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 
 class ScrambliesTest {
+
+    // https://www.codewars.com/kata/55c04b4cc56a697bb0000048/train/java
+
+    @Test @DisplayName("returns false when no scrambled letters are provided.")
+    void returnsFalseWhenNoScrambledLettersAreProvided() {
+        assertThat(Scramblies.scramble("", "abc")).isFalse();
+    }
+    
+    @Test @DisplayName("returns true when target is empty")
+    void returnsTrueWhenTargetIsEmpty() {
+        assertThat(Scramblies.scramble("unused", "")).isTrue();
+    }
+    
+    @Test @DisplayName("returns true when scrambled letters and target equal.")
+    void returnsTrueWhenScrambledLettersAndTargetEqual() {
+        assertThat(Scramblies.scramble("letters", "letters")).isTrue();
+    }
+
+    @Test @DisplayName("returns true when scrambled letters contain all target letters.")
+    void returnsTrueWhenScrambledLettersContainAllTargetLetters() {
+        assertThat(Scramblies.scramble("tletrse", "letters")).isTrue();
+    }
 
     @Nested @DisplayName("acceptance test.")
     class AcceptanceTest {
@@ -15,7 +39,8 @@ class ScrambliesTest {
             assertEquals(expected, actual);
         }
 
-        @Test @Order(1)
+        @Test
+        @Order(1)
         public void sampleTests() {
             testing(Scramblies.scramble("rkqodlw","world"), true);
             testing(Scramblies.scramble("cedewaraaossoqqyt","codewars"),true);
