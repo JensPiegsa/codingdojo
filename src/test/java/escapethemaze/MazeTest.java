@@ -1,7 +1,6 @@
 package escapethemaze;
 
 import static org.assertj.core.api.BDDAssertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +17,29 @@ class MazeTest {
 
     @Test @DisplayName("find player 1.")
     void findPlayer1() {
-        final char[][] maze = basicMazes.get(0);
-        final Pose pose = Maze.findPlayer(maze);
+        final Pose pose = new Maze(basicMazes.get(0)).findPlayer();
         final Position position = pose.position();
         final Direction direction = pose.direction();
         then(position).isEqualTo(new Position(1, 1));
         then(direction).isEqualTo(Direction.east);
     }
+    
     @Test @DisplayName("find player 2.")
     void findPlayer2() {
-        final char[][] maze = basicMazes.get(4);
-        final Pose pose = Maze.findPlayer(maze);
+        final Pose pose = new Maze(basicMazes.get(4)).findPlayer();
         final Position position = pose.position();
         final Direction direction = pose.direction();
         then(position).isEqualTo(new Position(4, 4));
         then(direction).isEqualTo(Direction.north);
+    }
+    
+    @Test @DisplayName("find player 3.")
+    void findPlayer3() {
+        final Pose pose = new Maze(basicMazes.get(2)).findPlayer();
+        final Position position = pose.position();
+        final Direction direction = pose.direction();
+        then(position).isEqualTo(new Position(9, 1));
+        then(direction).isEqualTo(Direction.east);
     }
 
     @Test @DisplayName("test")
@@ -40,6 +47,33 @@ class MazeTest {
         final char[][] maze = basicMazes.get(0);
         final List<Character> steps = Maze.escape(maze);
         then(steps).containsExactly('F');
+    }
+
+    @Test @DisplayName("can find all neighbours positions.")
+    void canFindAllNeighboursPositions() {
+        final char[][] maze = basicMazes.get(0);
+        final List<Position> neighbours = new Maze(maze).findAllValidPositions();
+        then(neighbours).containsExactlyInAnyOrder(
+            Position.of(1, 0),
+            Position.of(2, 1),
+            Position.of(1, 2),
+            Position.of(0, 1)
+        );
+    }
+    
+    @Test @DisplayName("can find all valid neighbour positions.")
+    void canFindAllValidNeighbourPositions() {
+        final char[][] maze = basicMazes.get(1);
+        final List<Position> neighbours = new Maze(maze).findAllValidPositions();
+        then(neighbours).containsExactlyInAnyOrder(
+                Position.of(2, 1));
+    }
+    
+    @Test @DisplayName("can move forward.")
+    void canMoveForward() {
+        final Maze maze = new Maze(basicMazes.get(1));
+        final List<Character> moves = maze.escape();
+        then(moves).containsExactly('F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'R', 'F');
     }
 
     @BeforeAll
@@ -52,8 +86,8 @@ class MazeTest {
         });
         basicMazes.add(new char[][] {
                 "###########".toCharArray(),
-                "#>        #".toCharArray(),
-                "######### #".toCharArray()
+                "#>12345678#".toCharArray(),
+                "#########9#".toCharArray()
         });
         basicMazes.add(new char[][] {
                 "# #########".toCharArray(),
