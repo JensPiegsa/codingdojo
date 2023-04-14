@@ -86,8 +86,8 @@ class MazeTest {
         });
         basicMazes.add(new char[][] {
                 "###########".toCharArray(),
-                "#>12345678#".toCharArray(),
-                "#########9#".toCharArray()
+                "#>        #".toCharArray(),
+                "######### #".toCharArray()
         });
         basicMazes.add(new char[][] {
                 "# #########".toCharArray(),
