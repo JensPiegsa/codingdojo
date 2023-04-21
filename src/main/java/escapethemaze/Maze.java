@@ -1,7 +1,10 @@
 package escapethemaze;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.stream.Stream;
 
 public class Maze {
 
@@ -30,8 +33,8 @@ public class Maze {
     }
 
     Pose findPlayer() {
-        for (int y = 0; y < maze.length; y++) {
-            for (int x = 0; x < maze[y].length; x++) {
+        for (int y = 0; y < dimension.height(); y++) {
+            for (int x = 0; x < dimension.width(); x++) {
                 final char cell = maze[y][x];
                 final Direction direction = Direction.of(cell);
                 if (direction != null) {
@@ -54,4 +57,22 @@ public class Maze {
     }
 
 
+    public MazeTravelCosts calculateCosts() {
+
+        final Position start = player.position();
+
+        final Costs costs = new Costs(dimension);
+        
+        
+        costs.setValue(start, 0);
+
+//        costs[]
+        final Queue<Position> visits = new LinkedList<>();
+
+
+//        final Stream<Position> neighbours = start.neighbours();
+        final Position end = null;
+
+        return new MazeTravelCosts(costs, start, end);
+    }
 }

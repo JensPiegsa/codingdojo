@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 class MazeTest {
 
     private static final List<char[][]> basicMazes = new ArrayList<>();
+    public static final int X = Integer.MAX_VALUE;
 
 
     @Test @DisplayName("find player 1.")
@@ -75,10 +76,40 @@ class MazeTest {
         final List<Character> moves = maze.escape();
         then(moves).containsExactly('F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'R', 'F');
     }
+    
+    @Test @DisplayName("can calculate travel costs.")
+    void canCalculateTravelCosts() {
+        final Maze maze = new Maze(basicMazes.get(0));
+        
+        final MazeTravelCosts costs = maze.calculateCosts();
+
+        then(costs.costs()).isEqualTo(
+                new Costs(new int[][]{
+                        {X, 1, X},
+                        {1, 0, 1},
+                        {X, 1, X}})
+        );
+        then(costs.startPosition()).isEqualTo(Position.of(1, 1));
+        then(costs.endPosition()).isIn(
+            Position.of(0, 1),
+            Position.of(2, 1),
+            Position.of(1, 0),
+            Position.of(1, 2));
+    }
+
+    @Test @DisplayName("can backtrack path positions.")
+    void canBacktrackPathPositions() {
+        fail("not yet implemented");
+    }
+
+    @Test @DisplayName("can produce navigation commands from travel path.")
+    void canProduceNavigationCommandsFromTravelPath() {
+        fail("not yet implemented");
+    }
 
     @BeforeAll
     private static void buildTests() {
-
+        
         basicMazes.add(new char[][] {
                 "# #".toCharArray(),
                 " > ".toCharArray(),
