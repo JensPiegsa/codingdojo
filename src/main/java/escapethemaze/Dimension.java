@@ -7,4 +7,11 @@ public record Dimension(int width, int height) {
                 && position.x() >= 0 && position.x() < width
                 && position.y() >= 0 && position.y() < height;
     }
+    
+    public boolean isAtBorder(final Position position) {
+        return position.x() == 0
+                || position.x() == width - 1
+                || position.y() == 0
+                || position.y() == height - 1;
+    }
 }
