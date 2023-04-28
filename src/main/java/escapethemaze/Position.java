@@ -1,5 +1,6 @@
 package escapethemaze;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public record Position(int x, int y) {
@@ -7,11 +8,15 @@ public record Position(int x, int y) {
         return new Position(x, y);
     }
 
-    public Stream<Position> neighbours() {
+    public Stream<Position> neighboursStream() {
         return Stream.of(
             of(x + 1, y),
             of(x - 1, y),
             of(x, y + 1),
             of(x, y - 1));
+    }
+
+    public List<Position> neighbours() {
+        return neighboursStream().toList();
     }
 }

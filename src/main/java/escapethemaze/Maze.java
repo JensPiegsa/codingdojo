@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Stream;
 
 public class Maze {
 
@@ -46,12 +45,13 @@ public class Maze {
     }
 
     public List<Position> findAllValidPositions() {
-        return player.position().neighbours()
+        return player.position().neighboursStream()
                 .filter(dimension::isInBounds)
                 .filter(this::isValid)
                 .toList();
     }
 
+    @SuppressWarnings("ImplicitNumericConversion")
     private boolean isValid(final Position position) {
         return maze[position.y()][position.x()] == ' ';
     }
@@ -62,17 +62,53 @@ public class Maze {
         final Position start = player.position();
 
         final Costs costs = new Costs(dimension);
-        
-        
+        initializeMaximalCostsForWalls(costs);
+
         costs.setValue(start, 0);
 
-//        costs[]
         final Queue<Position> visits = new LinkedList<>();
+        visits.offer(start);
+        
+        while (!visits.isEmpty()) {
+            final Position current = visits.poll();
+            final int currentCosts = costs.getValue(current);
 
+            final List<Position> neighbours = current.neighbours();
+            final List<Position> nextPositions = neighbours.stream()
+                    .filter(dimension::isInBounds)
+                    .filter(costs::isEmpty)
+                    .toList();
+            nextPositions.forEach(position -> costs.setValue(position, currentCosts + 1));
+            visits.addAll(nextPositions);
+        }
 
-//        final Stream<Position> neighbours = start.neighbours();
         final Position end = null;
 
         return new MazeTravelCosts(costs, start, end);
+    }
+
+    private void initializeMaximalCostsForWalls(final Costs costs) {
+        for (int y = 0; y < dimension.height(); y++) {
+            for (int x = 0; x < dimension.width(); x++) {
+                final Position position = Position.of(x, y);
+                if (isWall(position)) {
+                    costs.setMaximumValue(position);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("ImplicitNumericConversion")
+    private boolean isWall(final Position position) {
+        return getValue(position) == '#';
+    }
+
+    private boolean isFree(final Position position) {
+        return !isWall(position);
+    }
+    
+
+    private char getValue(final Position position) {
+        return maze[position.y()][position.x()];
     }
 }
