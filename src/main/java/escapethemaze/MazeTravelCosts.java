@@ -5,5 +5,7 @@ public record MazeTravelCosts(
         Position startPosition,
         Position endPosition) {
 
-    
+    public int costsAt(final Position position) {
+        return costs.getValue(position);
+    }
 }

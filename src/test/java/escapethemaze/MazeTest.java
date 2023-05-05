@@ -2,6 +2,7 @@ package escapethemaze;
 
 import static org.assertj.core.api.BDDAssertions.*;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,16 +92,33 @@ class MazeTest {
                         new Dimension(3,3))
         );
         then(costs.startPosition()).isEqualTo(Position.of(1, 1));
-//        then(costs.endPosition()).isIn(
-//            Position.of(0, 1),
-//            Position.of(2, 1),
-//            Position.of(1, 0),
-//            Position.of(1, 2));
+        then(costs.endPosition()).isIn(
+            Position.of(0, 1),
+            Position.of(2, 1),
+            Position.of(1, 0),
+            Position.of(1, 2));
     }
 
     @Test @DisplayName("can backtrack path positions.")
     void canBacktrackPathPositions() {
-        fail("not yet implemented");
+        final Maze maze = new Maze(basicMazes.get(1));
+
+        final MazeTravelCosts costs = maze.calculateCosts();
+        final MazePath path = maze.calculatePath();
+
+        then(costs.startPosition()).isEqualTo(Position.of(1, 1));
+        then(costs.endPosition()).isEqualTo(Position.of(9, 2));
+        then(path).isEqualTo(new MazePath()
+                .add(Position.of(9, 2))
+                .add(Position.of(9, 1))
+                .add(Position.of(8, 1))
+                .add(Position.of(7, 1))
+                .add(Position.of(6, 1))
+                .add(Position.of(5, 1))
+                .add(Position.of(4, 1))
+                .add(Position.of(3, 1))
+                .add(Position.of(2, 1))
+                .add(Position.of(1, 1)));
     }
 
     @Test @DisplayName("can produce navigation commands from travel path.")

@@ -69,9 +69,14 @@ public class Maze {
         final Queue<Position> visits = new LinkedList<>();
         visits.offer(start);
         
-        while (!visits.isEmpty()) {
+        Position end = null;
+        
+        while (!visits.isEmpty() && end == null) {
             final Position current = visits.poll();
             final int currentCosts = costs.getValue(current);
+            if (dimension.isAtBorder(current)) {
+                end = current;
+            }
 
             final List<Position> neighbours = current.neighbours();
             final List<Position> nextPositions = neighbours.stream()
@@ -82,7 +87,6 @@ public class Maze {
             visits.addAll(nextPositions);
         }
 
-        final Position end = null;
 
         return new MazeTravelCosts(costs, start, end);
     }
@@ -110,5 +114,30 @@ public class Maze {
 
     private char getValue(final Position position) {
         return maze[position.y()][position.x()];
+    }
+
+    public MazePath calculatePath() {
+        final MazePath mazePath = new MazePath();
+        final MazeTravelCosts mazeTravelCosts = calculateCosts();
+        final Position startPosition = mazeTravelCosts.startPosition();
+        final Position endPosition = mazeTravelCosts.endPosition();
+        mazePath.add(endPosition);
+        Position nextPosition = endPosition;
+        try {
+            while (!nextPosition.equals(startPosition)) {
+    
+                final var p = nextPosition;
+                nextPosition = nextPosition.neighboursStream()
+                        .filter(dimension::isInBounds)
+                        .filter(neighbour -> mazeTravelCosts.costsAt(p) - 1 == mazeTravelCosts.costsAt(neighbour))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No exit"));
+                mazePath.add(nextPosition);
+            }
+        } catch (final IllegalStateException e) {
+            return new MazePath();
+        }
+
+        return mazePath;
     }
 }
