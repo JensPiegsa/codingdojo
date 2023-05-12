@@ -2,7 +2,6 @@ package escapethemaze;
 
 import static org.assertj.core.api.BDDAssertions.*;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,9 +101,9 @@ class MazeTest {
     @Test @DisplayName("can backtrack path positions.")
     void canBacktrackPathPositions() {
         final Maze maze = new Maze(basicMazes.get(1));
-
         final MazeTravelCosts costs = maze.calculateCosts();
-        final MazePath path = maze.calculatePath();
+
+        final MazePath path = maze.calculatePath(costs);
 
         then(costs.startPosition()).isEqualTo(Position.of(1, 1));
         then(costs.endPosition()).isEqualTo(Position.of(9, 2));
@@ -123,7 +122,24 @@ class MazeTest {
 
     @Test @DisplayName("can produce navigation commands from travel path.")
     void canProduceNavigationCommandsFromTravelPath() {
-        fail("not yet implemented");
+
+        final Maze maze = new Maze(basicMazes.get(1));
+        final MazeTravelCosts costs = maze.calculateCosts();
+        final MazePath path = maze.calculatePath(costs);
+        
+        final NavigationCommands actual = maze.calculateNavigationCommands(path);
+
+        then(actual).isEqualTo(new NavigationCommands()
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.FORWARD)
+                .add(NavigationCommand.TURN_RIGHT)
+                .add(NavigationCommand.FORWARD));
     }
 
     @BeforeAll

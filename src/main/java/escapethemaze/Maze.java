@@ -116,11 +116,10 @@ public class Maze {
         return maze[position.y()][position.x()];
     }
 
-    public MazePath calculatePath() {
+    public MazePath calculatePath(final MazeTravelCosts costs) {
         final MazePath mazePath = new MazePath();
-        final MazeTravelCosts mazeTravelCosts = calculateCosts();
-        final Position startPosition = mazeTravelCosts.startPosition();
-        final Position endPosition = mazeTravelCosts.endPosition();
+        final Position startPosition = costs.startPosition();
+        final Position endPosition = costs.endPosition();
         mazePath.add(endPosition);
         Position nextPosition = endPosition;
         try {
@@ -129,7 +128,7 @@ public class Maze {
                 final var p = nextPosition;
                 nextPosition = nextPosition.neighboursStream()
                         .filter(dimension::isInBounds)
-                        .filter(neighbour -> mazeTravelCosts.costsAt(p) - 1 == mazeTravelCosts.costsAt(neighbour))
+                        .filter(neighbour -> costs.costsAt(p) - 1 == costs.costsAt(neighbour))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException("No exit"));
                 mazePath.add(nextPosition);
@@ -139,5 +138,16 @@ public class Maze {
         }
 
         return mazePath;
+    }
+
+    NavigationCommands calculateNavigationCommands(final MazePath path) {
+        final MazePath reversed = path.reversed();
+        Direction direction = player.direction();
+        Position position = player.position();
+
+        for (int index = 0; index < reversed.length(); index++) {
+
+        }
+        return null;
     }
 }
