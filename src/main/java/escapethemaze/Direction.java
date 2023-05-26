@@ -1,7 +1,10 @@
 package escapethemaze;
 
 public enum Direction {
-    east('>'), south('v'), west('<'), north('^');
+    east('>'),  // 0
+    south('v'), // 1
+    west('<'),  // 2
+    north('^'); // 3
 
     private final char character;
 
@@ -16,5 +19,30 @@ public enum Direction {
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("ReturnOfNull")
+    public static Direction fromDelta(final int deltaX, final int deltaY) {
+        if (deltaX < 0 && deltaY == 0) {
+            return west;
+        }
+        if (deltaX > 0 && deltaY == 0) {
+            return east;
+        }
+        if (deltaX == 0 && deltaY < 0) {
+            return north;
+        }
+        if (deltaX == 0 && deltaY > 0) {
+            return south;
+        }
+        return null;
+    }
+
+    public NavigationCommand turnTowards(final Direction requiredDirection) {
+        if (requiredDirection == this) {
+            return null;
+        }
+        final int directionDelta = (values().length + requiredDirection.ordinal() - ordinal()) % values().length;
+        return NavigationCommand.values()[directionDelta];
     }
 }

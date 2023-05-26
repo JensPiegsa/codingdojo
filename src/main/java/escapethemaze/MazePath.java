@@ -43,6 +43,10 @@ public class MazePath {
         return this;
     }
 
+    public Position get(int index) {
+        return positions.get(index);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

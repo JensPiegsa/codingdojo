@@ -9,15 +9,15 @@ public class Maze {
 
     private final Pose player;
     private final Dimension dimension;
-    private char[][] maze;
+    private final char[][] maze;
 
     public Maze(final char[][] maze) {
         this.maze = maze;
-        this.dimension = new Dimension(maze[0].length, maze.length);
+        dimension = new Dimension(maze[0].length, maze.length);
         player = findPlayer();
     }
 
-    public static List<Character> escape(char[][] maze) {
+    public static List<Character> escape(final char[][] maze) {
         return new Maze(maze).escape();
     }
 
@@ -141,13 +141,24 @@ public class Maze {
     }
 
     NavigationCommands calculateNavigationCommands(final MazePath path) {
+        final NavigationCommands navigationCommands = new NavigationCommands();
         final MazePath reversed = path.reversed();
-        Direction direction = player.direction();
-        Position position = player.position();
+        Direction lastDirection = player.direction();
+        Position lastPosition = player.position();
 
-        for (int index = 0; index < reversed.length(); index++) {
+        for (int index = 1; index < reversed.length(); index++) {
+            final Position pathPosition = reversed.get(index);
+            final Direction requiredDirection = lastPosition.directionTowards(pathPosition);
 
+            final NavigationCommand turnCommand = lastDirection.turnTowards(requiredDirection);
+            if (turnCommand != null) {
+                navigationCommands.add(turnCommand);
+            }
+            navigationCommands.add(NavigationCommand.FORWARD);
+
+            lastPosition = pathPosition;
+            lastDirection = requiredDirection;
         }
-        return null;
+        return navigationCommands;
     }
 }
