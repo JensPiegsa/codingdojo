@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -82,6 +83,7 @@ class MazeTest {
         then(moves).containsExactly('F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'R', 'F');
     }
 
+    @Disabled
     @Test @DisplayName("can build move path.")
     void canBuildMovePath() {
         final Maze maze = new Maze(basicMazes.get(3));

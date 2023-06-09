@@ -32,4 +32,8 @@ public class NavigationCommands {
                 "commands=" + commands +
                 '}';
     }
+
+    public List<Character> chars() {
+        return null;
+    }
 }

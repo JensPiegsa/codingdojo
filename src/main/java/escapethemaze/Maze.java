@@ -22,13 +22,11 @@ public class Maze {
     }
 
     List<Character> escape() {
-        // add all valid neighbour positions to visitList (map<Position, cost>)
-        // calculate cost per position
-        // choose next visit with lowest cost
-        // remove Position
-        final List<Character> steps = new ArrayList<>();
-        steps.add('F');
-        return steps;
+        final MazeTravelCosts costs = calculateCosts();
+        final MazePath path = calculatePath(costs);
+        final NavigationCommands commands = calculateNavigationCommands(path);
+
+        return commands.chars();
     }
 
     Pose findPlayer() {

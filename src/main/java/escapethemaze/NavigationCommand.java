@@ -1,6 +1,6 @@
 package escapethemaze;
 
-public enum NavigationCommand {
+public enum  NavigationCommand {
     FORWARD('F'), TURN_RIGHT('R'), TURN_BACK('B'), TURN_LEFT('L');
 
     private final char navigationCharacter;
