@@ -9,4 +9,8 @@ public enum  NavigationCommand {
 
         this.navigationCharacter = navigationCharacter;
     }
+
+    public char getCharacter() {
+        return navigationCharacter;
+    }
 }

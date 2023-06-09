@@ -48,6 +48,7 @@ class MazeTest {
     void test() {
         final char[][] maze = basicMazes.get(0);
         final List<Character> steps = Maze.escape(maze);
+        then(steps).isNotNull();
         then(steps).containsExactly('F');
     }
 
@@ -80,6 +81,7 @@ class MazeTest {
         // #ffffffffr#
         // ######### #
         final List<Character> moves = maze.escape();
+        then(moves).isNotNull();
         then(moves).containsExactly('F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'R', 'F');
     }
 

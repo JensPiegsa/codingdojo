@@ -34,6 +34,8 @@ public class NavigationCommands {
     }
 
     public List<Character> chars() {
-        return null;
+        return commands.stream()
+                .map(NavigationCommand::getCharacter)
+                .toList();
     }
 }
