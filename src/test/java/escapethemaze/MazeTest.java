@@ -73,10 +73,26 @@ class MazeTest {
     @Test @DisplayName("can move forward.")
     void canMoveForward() {
         final Maze maze = new Maze(basicMazes.get(1));
+        // r := R + F
+        //
+        // ###########
+        // #ffffffffr#
+        // ######### #
         final List<Character> moves = maze.escape();
         then(moves).containsExactly('F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'R', 'F');
     }
-    
+
+    @Test @DisplayName("can build move path.")
+    void canBuildMovePath() {
+        final Maze maze = new Maze(basicMazes.get(3));
+        // ####### #
+        // #>#   # #
+        // #   #   #
+        // #########
+        final List<Character> moves = maze.escape();
+        then(moves).containsExactly('R', 'F', 'L', 'F', 'F', 'L', 'F', 'R', 'F', 'F', 'R', 'F', 'L', 'F', 'F', 'L', 'F', 'F');
+    }
+
     @Test @DisplayName("can calculate travel costs.")
     void canCalculateTravelCosts() {
         final Maze maze = new Maze(basicMazes.get(0));
