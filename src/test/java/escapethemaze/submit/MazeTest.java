@@ -85,7 +85,6 @@ class MazeTest {
         then(moves).containsExactly('F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'R', 'F');
     }
 
-    @Disabled
     @Test @DisplayName("can build move path.")
     void canBuildMovePath() {
         final Maze maze = new Maze(basicMazes.get(3));
