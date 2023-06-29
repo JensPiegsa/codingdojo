@@ -95,6 +95,13 @@ class MazeTest {
         final List<Character> moves = maze.escape();
         then(moves).containsExactly('R', 'F', 'L', 'F', 'F', 'L', 'F', 'R', 'F', 'F', 'R', 'F', 'L', 'F', 'F', 'L', 'F', 'F');
     }
+    
+    @Test @DisplayName("returns empty path for impossible maze.")
+    void returnsEmptyPathForImpossibleMaze() {
+        final Maze maze = new Maze(basicMazes.get(6));
+        final List<Character> moves = maze.escape();
+        then(moves).isEmpty();
+    }
 
     @Test @DisplayName("can calculate travel costs.")
     void canCalculateTravelCosts() {
@@ -217,6 +224,16 @@ class MazeTest {
                 "# ##### ### # ### # # ##### # # ### ### #".toCharArray(),
                 "#     #     #     #   #     #   #   #    ".toCharArray(),
                 "#########################################".toCharArray()
+        });
+        basicMazes.add(new char[][] {
+                "##########".toCharArray(),
+                "#        #".toCharArray(),
+                "#  ##### #".toCharArray(),
+                "#  #   # #".toCharArray(),
+                "#  #^# # #".toCharArray(),
+                "#  ### # #".toCharArray(),
+                "#      # #".toCharArray(),
+                "##########".toCharArray()
         });
     }
 }

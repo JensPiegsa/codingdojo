@@ -125,6 +125,9 @@ public class Maze {
         final MazePath mazePath = new MazePath();
         final Position startPosition = costs.startPosition();
         final Position endPosition = costs.endPosition();
+        if (endPosition == null) {
+            return mazePath;
+        }
         mazePath.add(endPosition);
         Position nextPosition = endPosition;
         try {
