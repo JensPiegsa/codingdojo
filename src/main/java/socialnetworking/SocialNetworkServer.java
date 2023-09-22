@@ -53,11 +53,15 @@ public class SocialNetworkServer {
             
             final String response;
             final int responseStatusCode;
-            if (requestBody.contains("->")) {
+
+            String requestMethod = httpExchange.getRequestMethod();
+            boolean isPostMessage = requestBody.contains("->");
+            if (isPostMessage) {
                 response = "";                
                 responseStatusCode = ACCEPTED;
             } else {
-                response = "Alice - I love the weather today (5 minutes ago)";
+//                response = "Alice - I love the weather today (5 minutes ago)";
+                response = "";
                 responseStatusCode = OK;
             }
 
