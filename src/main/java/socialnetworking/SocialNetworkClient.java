@@ -33,11 +33,15 @@ public class SocialNetworkClient {
         } 
     }
 
-    public static void post(final String username, final String message) {
+    public void post(final String username, final String message) {
+        
         Map<String, List<Post>> postings;
+        
+        throw new IllegalStateException("not yet implemented");
     }
 
     public String reading(final String username) {
+        
         final HttpClient httpClient = HttpClient.newHttpClient();
         try {
             final HttpRequest request = HttpRequest.newBuilder()

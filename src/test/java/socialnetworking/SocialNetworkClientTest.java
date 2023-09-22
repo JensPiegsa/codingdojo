@@ -8,6 +8,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,15 +17,19 @@ import org.mockito.InjectMocks;
 @WireMockTest
 class SocialNetworkClientTest {
 
-    @InjectMocks SocialNetworkClient client;
+    SocialNetworkClient client;
+    
+    @BeforeEach
+    void setUp(final WireMockRuntimeInfo wiremockRuntimeInfo) {
+        client = new SocialNetworkClient(wiremockRuntimeInfo.getHttpBaseUrl());
+    }
     
     @Test @DisplayName("can read empty timeline from server.")
-    void canReadEmptyTimelineFromServer(final WireMockRuntimeInfo wiremockRuntimeInfo) {
+    void canReadEmptyTimelineFromServer() {
         
     	final String resultBodyContent = "";
         stubFor(get("/sns").withHeader("Accept", containing("text/plain")).willReturn(ok(resultBodyContent)));
 
-        final SocialNetworkClient client = new SocialNetworkClient(wiremockRuntimeInfo.getHttpBaseUrl());
         String output = client.reading("bob");
 
         verify(getRequestedFor(urlEqualTo("/sns")).withHeader("Accept", containing("text/plain")));
@@ -37,10 +42,15 @@ class SocialNetworkClientTest {
         final String resultBodyContent = "Alice - I love the weather today (5 minutes ago)";
         stubFor(get("/sns").withHeader("Accept", containing("text/plain")).willReturn(ok(resultBodyContent)));
 
-        final SocialNetworkClient client = new SocialNetworkClient(wiremockRuntimeInfo.getHttpBaseUrl());
         String output = client.reading("bob");
 
         verify(getRequestedFor(urlEqualTo("/sns")));
         then(output).isEqualTo("Alice - I love the weather today (5 minutes ago)");
+    }
+    
+    @Test @DisplayName("can post message.")
+    void canPostMessage() {
+        
+    	client.post("Alice", "I love the weather today");
     }
 }
