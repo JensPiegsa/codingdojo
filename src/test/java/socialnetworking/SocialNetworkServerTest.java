@@ -7,8 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SocialNetworkServerTest {
 
-    @Test @DisplayName("test")
-    void test() {
+    @Test @DisplayName("can handle post.")
+    void canHandlePost() {
+        final SocialNetworkServer server = new SocialNetworkServer();
+        server.start();
         
+        server.post
     }
 }

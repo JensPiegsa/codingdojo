@@ -53,6 +53,8 @@ class SocialNetworkClientTest {
         
     	client.post("Alice", "I love the weather today");
 
-        verify(postRequestedFor(urlEqualTo("/sns")).withRequestBody(equalTo("Alice -> I love the weather today")));
+        verify(postRequestedFor(urlEqualTo("/sns"))
+                .withHeader("Content-Type", containing("text/plain"))
+                .withRequestBody(equalTo("Alice -> I love the weather today")));
     }
 }

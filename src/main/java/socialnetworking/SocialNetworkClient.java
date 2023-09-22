@@ -40,11 +40,11 @@ public class SocialNetworkClient {
         
         //throw new IllegalStateException("not yet implemented");
 
-        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(username + " -> " + message);
+        final HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(username + " -> " + message);
         try {
-            HttpRequest request = HttpRequest.newBuilder()
+            final HttpRequest request = HttpRequest.newBuilder()
                     .POST(bodyPublisher).uri(new URI(serverBaseUrl + "/sns"))
-                    .header("Accept", "text/plain")
+                    .header("Content-Type", "text/plain")
                     .build();
             final HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
         } catch (URISyntaxException | InterruptedException | IOException e) {

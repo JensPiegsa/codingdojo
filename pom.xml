@@ -117,10 +117,18 @@
 			<artifactId>lanterna</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+		<!-- test the client -->
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
 			<artifactId>wiremock</artifactId>
 			<version>3.0.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- test the server: https://rest-assured.io/ -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>5.3.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
