@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Jens Piegsa
@@ -26,7 +25,7 @@ public class SocialNetworkServer {
         server.start();
     }
 
-    private void start() {
+    public void start() {
         try {
             httpServer = HttpServer.create(new InetSocketAddress(8087), 0);
         } catch (final IOException e) {
@@ -35,6 +34,10 @@ public class SocialNetworkServer {
         httpServer.createContext("/sns", new MyHandler());
         httpServer.setExecutor(null); // creates a default executor
         httpServer.start();
+    }
+    
+    public void stopInstantly() {
+        httpServer.stop(0);
     }
 
     static class MyHandler implements HttpHandler {
@@ -50,11 +53,15 @@ public class SocialNetworkServer {
             
             final String response;
             final int responseStatusCode;
-            if (requestBody.contains("->")) {
+
+            String requestMethod = httpExchange.getRequestMethod();
+            boolean isPostMessage = requestBody.contains("->");
+            if (isPostMessage) {
                 response = "";                
                 responseStatusCode = ACCEPTED;
             } else {
-                response = "Alice - I love the weather today (5 minutes ago)";
+//                response = "Alice - I love the weather today (5 minutes ago)";
+                response = "";
                 responseStatusCode = OK;
             }
 

@@ -4,10 +4,13 @@ import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SocialNetworkTest {
+
+    private SocialNetworkServer socialNetworkServer;
 
     @Nested @DisplayName("acceptance tests")
     class AcceptanceTests {
@@ -20,15 +23,19 @@ public class SocialNetworkTest {
         void setUp() {
             outContent = new ByteArrayOutputStream();
             originalOut = System.out;
-            System.setOut(new PrintStream(outContent));
+            System.setOut(new PrintStream(outContent, true, StandardCharsets.UTF_8));
+
+            socialNetworkServer = new SocialNetworkServer();
+            socialNetworkServer.start();
         }
 
         @AfterEach
         void tearDown() {
             System.setOut(originalOut);
+            socialNetworkServer.stopInstantly();
         }
 
-        @Test @DisplayName("read empty timeline of user")
+        @Test @DisplayName("read empty timeline of user.")
         void emptyTimeline () {
             
             final String[] args = {"alice"};
@@ -40,10 +47,8 @@ public class SocialNetworkTest {
         @Test @DisplayName("read non-empty timeline of user.")
         void readNonEmptyTimelineOfUser() {
             
-            SocialNetworkServer.main();
-            
             // Alice's client 
-            String username = "Alice";
+            final String username = "Alice";
             SocialNetworkClient.main(new String[]{username, "->", "I", "love", "weather", "today"});
             
             // Bob's client
