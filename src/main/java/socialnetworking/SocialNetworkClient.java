@@ -34,16 +34,22 @@ public class SocialNetworkClient {
     }
 
     public void post(final String username, final String message) {
-        
+
+        final HttpClient httpClient = HttpClient.newHttpClient();
         Map<String, List<Post>> postings;
         
         //throw new IllegalStateException("not yet implemented");
 
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .POST().uri(new URI(serverBaseUrl + "/sns"))
-                .header("Accept", "text/plain")
-                .build();
-        final HttpResponse<String> response = httpRequest.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(username + " -> " + message);
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .POST(bodyPublisher).uri(new URI(serverBaseUrl + "/sns"))
+                    .header("Accept", "text/plain")
+                    .build();
+            final HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
+        } catch (URISyntaxException | InterruptedException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String reading(final String username) {
