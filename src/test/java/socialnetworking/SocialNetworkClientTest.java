@@ -52,5 +52,7 @@ class SocialNetworkClientTest {
     void canPostMessage() {
         
     	client.post("Alice", "I love the weather today");
+
+        verify(postRequestedFor(urlEqualTo("/sns")).withRequestBody(equalTo("Alice -> I love the weather today")));
     }
 }

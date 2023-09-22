@@ -37,7 +37,13 @@ public class SocialNetworkClient {
         
         Map<String, List<Post>> postings;
         
-        throw new IllegalStateException("not yet implemented");
+        //throw new IllegalStateException("not yet implemented");
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .POST().uri(new URI(serverBaseUrl + "/sns"))
+                .header("Accept", "text/plain")
+                .build();
+        final HttpResponse<String> response = httpRequest.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
     }
 
     public String reading(final String username) {
