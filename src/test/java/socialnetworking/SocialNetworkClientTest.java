@@ -8,6 +8,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,7 @@ class SocialNetworkClientTest {
 
         verify(getRequestedFor(urlEqualTo("/sns")));
         then(output).isEqualTo("Alice - I love the weather today (5 minutes ago)");
+        throw new IllegalStateException("we need to verify bob");
     }
     
     @Test @DisplayName("can post message.")
