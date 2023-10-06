@@ -35,38 +35,46 @@ public class SocialNetworkClient {
 
     public void post(final String username, final String message) {
 
-        final HttpClient httpClient = HttpClient.newHttpClient();
         Map<String, List<Post>> postings;
         
         //throw new IllegalStateException("not yet implemented");
 
-        final HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(username + " -> " + message);
-        try {
-            final HttpRequest request = HttpRequest.newBuilder()
-                    .POST(bodyPublisher).uri(new URI(serverBaseUrl + "/sns"))
-                    .header("Content-Type", "text/plain")
-                    .build();
-            final HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        httpPost("posting", username, message);
+    }
+
+    public void follows(String username, String usernameToFollow) {
+        final String message = username + "follows" + usernameToFollow;
+        httpPost("follows", username, message);
     }
 
     public String reading(final String username) {
-        
+        return httpGet(username, "reading");
+    }
+
+    public String wall(String username) {
+        return httpGet(username, "wall");
+    }
+
+    private void httpPost(String endpoint, String username, String message) {
+        final HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(username + " -> " + message);
+        HttpRequest.Builder builder = HttpRequest.newBuilder().POST(bodyPublisher);
+        httpAction(endpoint, username, builder, "Content-Type");
+    }
+
+    private String httpGet(String username, String endpoint) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder().GET();
+        return httpAction(endpoint, username, builder, "Accept");
+    }
+
+    private String httpAction(String endpoint, String username, HttpRequest.Builder builder, String headerName) {
         final HttpClient httpClient = HttpClient.newHttpClient();
         try {
-            final HttpRequest request = HttpRequest.newBuilder()
-                    .GET().uri(new URI(serverBaseUrl + "/sns"))
-                    .header("Accept", "text/plain")
+            final HttpRequest request = builder.uri(new URI(serverBaseUrl + "/sns/" + endpoint + "/" + username))
+                    .header(headerName, "text/plain")
                     .build();
-
             final HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
             return response.body();
-
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        } catch (final InterruptedException | URISyntaxException e) {
+        } catch (URISyntaxException | InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
     }
