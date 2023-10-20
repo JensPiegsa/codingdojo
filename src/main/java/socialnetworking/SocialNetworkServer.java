@@ -51,6 +51,10 @@ public class SocialNetworkServer {
         httpServer.stop(0);
     }
 
+    public String calculateEndpoint(String urlPartPath) {
+        return null;
+    }
+
     static class MyHandler implements HttpHandler {
 
         private static final int OK = 200;

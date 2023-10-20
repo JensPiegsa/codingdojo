@@ -114,7 +114,6 @@ class SocialNetworkClientTest {
 
             // TODO get status code 202 if user exists, 4xx if no user found
             verify(postRequestedFor(urlEqualTo("/sns/" + endpoint + "/" + username)));
-            throw new RuntimeException("not fully implemented");
         }
 
 
