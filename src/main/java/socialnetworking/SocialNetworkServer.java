@@ -27,7 +27,7 @@ public class SocialNetworkServer {
         this(DEFAULT_PORT);
     }
 
-    public SocialNetworkServer(int port) {
+    public SocialNetworkServer(final int port) {
         this.port = port;
     }
 
@@ -51,8 +51,12 @@ public class SocialNetworkServer {
         httpServer.stop(0);
     }
 
-    public String calculateEndpoint(String urlPartPath) {
-        return null;
+    public String calculateEndpoint(final String urlPartPath) {
+        if (urlPartPath == null) {
+            return null;
+        }
+        final int index = urlPartPath.indexOf('\\');
+        return urlPartPath.substring(0, index);
     }
 
     static class MyHandler implements HttpHandler {
@@ -71,31 +75,43 @@ public class SocialNetworkServer {
                 final String urlPath = requestURI.getPath();
                 final String urlPathPart = StringUtils.removeStart(urlPath, contextPath);
 
-                String response;
+                final String response;
                 final int responseStatusCode;
 
-                String requestMethod = httpExchange.getRequestMethod();
-                boolean isPostMessage = requestBody.contains("->");
-                if (isPostMessage) {
-                    response = "";                
-                    responseStatusCode = ACCEPTED;
-                } else {
-                    String username = StringUtils.removeStart(urlPathPart, "/");
-                    if ("alice".equals(username.toLowerCase(Locale.ROOT))) {
-    
-                        response = "Alice - I love the weather today (5 minutes ago)";
-                    } else {
-                        
+                final String requestMethod = httpExchange.getRequestMethod();
+                switch (StringUtils.substringBetween(urlPathPart, "/")) {
+                    case "posting": {
+                        final String username = StringUtils.removeStart(urlPathPart, "/");
+                        responseStatusCode = ACCEPTED;
                         response = "";
-                    } 
-                    responseStatusCode = OK;
+                        break;
+                    }
+                    case null:
+                    default:
+                        final boolean isPostMessage = requestBody.contains("->");
+                        if (isPostMessage) {
+                            response = "";
+                            responseStatusCode = ACCEPTED;
+                        } else {
+                            final String username = StringUtils.removeStart(urlPathPart, "/");
+                            if ("alice".equals(username.toLowerCase(Locale.ROOT))) {
+
+                                response = "Alice - I love the weather today (5 minutes ago)";
+                            } else {
+
+                                response = "";
+                            }
+                            responseStatusCode = OK;
+                        }
                 }
+
+
 
                 httpExchange.sendResponseHeaders(responseStatusCode, response.length());
                 final OutputStream outputStream = httpExchange.getResponseBody();
                 outputStream.write(response.getBytes(StandardCharsets.UTF_8));
                 outputStream.close();
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 e.printStackTrace();
             }
         }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
 
 import static io.restassured.RestAssured.given;
 
@@ -27,12 +28,30 @@ class SocialNetworkServerTest {
 
         given()
                 .accept(ContentType.TEXT)
+                .body("Hello World!")
         .when()
-                .post("http://localhost:" + port + "/sns")
+                .post("http://localhost:" + port + "/sns/posting/Bob")
+
         .then()
                 .statusCode(Response.Status.ACCEPTED.getStatusCode());
     }
-    
+
+    @Test @DisplayName("will not accept posting.")
+    void willNotAcceptPosting() {
+        final int port = 8093;
+        final SocialNetworkServer server = new SocialNetworkServer(port);
+        server.start();
+
+        given()
+                .accept(ContentType.TEXT)
+                .body("Hello World!")
+        .when()
+                .post("http://localhost:" + port + "/sns/posting/")
+
+        .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
     @Test @DisplayName("will return timeline on get request.")
     void willReturnTimelineOnGetRequest() {
         final int port = 8089;
@@ -60,5 +79,16 @@ class SocialNetworkServerTest {
         String result = server.calculateEndpoint(urlPartPath);
 
         then(result).isEqualTo(expected);
+    }
+
+    @ParameterizedTest @DisplayName("can handle null endpoint.")
+    @NullSource()
+    void canCalculateMethodEndpoint(String urlPartPath) {
+        final int port = 8091;
+        final SocialNetworkServer server = new SocialNetworkServer(port);
+
+        String result = server.calculateEndpoint(urlPartPath);
+
+        then(result).isEqualTo(null);
     }
 }
