@@ -11,19 +11,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static io.restassured.RestAssured.given;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 
 import javax.ws.rs.core.Response;
 
 @ExtendWith(RestAssuredExtension.class)
+@ExtendWith(MockitoExtension.class)
 class SocialNetworkServerTest {
-    
-    @Test @DisplayName("will accept posted message.")
+    @Mock
+    PostStore postStore;
+
+    @Test @DisplayName("will accept posted message with username.")
     void willAcceptPostedMessage() {
 
         final int port = 8088;
-        final SocialNetworkServer server = new SocialNetworkServer(port);
+        final SocialNetworkServer server = constructServer(port);
         server.start();
 
         given()
@@ -34,19 +42,21 @@ class SocialNetworkServerTest {
 
         .then()
                 .statusCode(Response.Status.ACCEPTED.getStatusCode());
+
+        verify(postStore).persist(eq(new Post("Bob", "Hello World!")));
     }
 
-    @Test @DisplayName("will not accept posting.")
+    @Test @DisplayName("will not accept posted message without username.")
     void willNotAcceptPosting() {
         final int port = 8093;
-        final SocialNetworkServer server = new SocialNetworkServer(port);
+        final SocialNetworkServer server = constructServer(port);
         server.start();
 
         given()
                 .accept(ContentType.TEXT)
                 .body("Hello World!")
         .when()
-                .post("http://localhost:" + port + "/sns/posting/")
+                .post("http://localhost:" + port + "/sns/posting/") // missing /user
 
         .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -55,7 +65,7 @@ class SocialNetworkServerTest {
     @Test @DisplayName("will return timeline on get request.")
     void willReturnTimelineOnGetRequest() {
         final int port = 8089;
-        final SocialNetworkServer server = new SocialNetworkServer(port);
+        final SocialNetworkServer server = constructServer(port);
         server.start();
 
         given()
@@ -74,7 +84,7 @@ class SocialNetworkServerTest {
                 "posting\\bla, posting"})
     void canCalculateMethodEndpoint(String urlPartPath, String expected) {
         final int port = 8090;
-        final SocialNetworkServer server = new SocialNetworkServer(port);
+        final SocialNetworkServer server = constructServer(port);
 
         String result = server.calculateEndpoint(urlPartPath);
 
@@ -85,10 +95,14 @@ class SocialNetworkServerTest {
     @NullSource()
     void canCalculateMethodEndpoint(String urlPartPath) {
         final int port = 8091;
-        final SocialNetworkServer server = new SocialNetworkServer(port);
+        final SocialNetworkServer server = constructServer(port);
 
         String result = server.calculateEndpoint(urlPartPath);
 
         then(result).isEqualTo(null);
+    }
+
+    private SocialNetworkServer constructServer(int port) {
+        return new SocialNetworkServer(port, postStore);
     }
 }
