@@ -1,13 +1,21 @@
 package socialnetworking;
 
+import static java.time.LocalDateTime.now;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
+
+import javax.swing.text.AbstractDocument;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -24,20 +32,25 @@ public class SocialNetworkServer {
     public static final String contextPath = "/sns";
     private final int port;
     private final PostStore postStore;
+    private Clock clock;
     private HttpServer httpServer;
+    private TimelineRender timelineRenderer = new TimelineRender();
+
 
     public SocialNetworkServer () {
         this(DEFAULT_PORT);
     }
 
     public SocialNetworkServer(final int port) {
-        this(port, new InMemoryPostStore());
+        this(port, new InMemoryPostStore(), Clock.systemDefaultZone());
     }
     
-    public SocialNetworkServer(final int port, final PostStore postStore) {
+    public SocialNetworkServer(final int port, final PostStore postStore, Clock clock) {
         this.port = port;
         this.postStore = postStore;
+        this.clock = clock;
     }
+
 
     public static void main(final String... args) {
         final SocialNetworkServer server = new SocialNetworkServer();
@@ -75,7 +88,7 @@ public class SocialNetworkServer {
 
         @SuppressWarnings("ImplicitNumericConversion")
         @Override
-        public void handle(final HttpExchange httpExchange) throws IOException {
+        public void handle(final HttpExchange httpExchange) {
 
             try {
                 final InputStream requestBodyStream = httpExchange.getRequestBody();
@@ -99,7 +112,7 @@ public class SocialNetworkServer {
                             responseStatusCode = BAD_REQUEST;
                         } else {
                             responseStatusCode = ACCEPTED;
-                            postStore.persist(new Post("", ""));
+                            postStore.persist(new Post(username, requestBody, LocalDateTime.ofInstant(clock.instant(), ZoneId.of("GMT"))));
                         } 
                         response = "";
                         break;
@@ -115,7 +128,9 @@ public class SocialNetworkServer {
                         } else {
                             final String username = StringUtils.removeStart(urlPathPart, "/");
                             if ("alice".equals(username.toLowerCase(Locale.ROOT))) {
-                                response = "Alice - I love the weather today (5 minutes ago)";
+                                final List<Post> timeline = postStore.readTimeline("alice");
+                                String prettyTimeline = timelineRenderer.render(timeline);
+                                response = prettyTimeline;
                             } else {
                                 response = "";
                             }

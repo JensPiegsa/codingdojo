@@ -11,27 +11,39 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 
 @ExtendWith(RestAssuredExtension.class)
 @ExtendWith(MockitoExtension.class)
 class SocialNetworkServerTest {
-    @Mock
-    PostStore postStore;
 
-    @Test @DisplayName("will accept posted message with username.")
+    @Mock PostStore postStore;
+
+    @Test @DisplayName("will accept posted message.")
     void willAcceptPostedMessage() {
+        final Instant instant = LocalDateTime.parse("2023-11-03T12:05:48.091942100").toInstant(ZoneOffset.UTC);
+        Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
 
         final int port = 8088;
-        final SocialNetworkServer server = constructServer(port);
+
+        final SocialNetworkServer server = constructServer(port, clock);
         server.start();
 
         given()
@@ -43,7 +55,7 @@ class SocialNetworkServerTest {
         .then()
                 .statusCode(Response.Status.ACCEPTED.getStatusCode());
 
-        verify(postStore).persist(eq(new Post("Bob", "Hello World!")));
+        verify(postStore).persist(eq(new Post("Bob", "Hello World!", LocalDateTime.parse("2023-11-03T12:05:48.091942100"))));
     }
 
     @Test @DisplayName("will not accept posted message without username.")
@@ -62,11 +74,18 @@ class SocialNetworkServerTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
+
     @Test @DisplayName("will return timeline on get request.")
     void willReturnTimelineOnGetRequest() {
         final int port = 8089;
         final SocialNetworkServer server = constructServer(port);
         server.start();
+
+        final LocalDateTime localDateTime = LocalDateTime.parse("2023-11-03T12:00:00.000000000");
+        final Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
+        Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
+        final Post post = new Post("alice", "I love the weather today", localDateTime);
+        given(postStore.readTimeline("alice")).willReturn(List.of(post));
 
         given()
                 .accept(ContentType.TEXT)
@@ -74,7 +93,7 @@ class SocialNetworkServerTest {
                 .get("http://localhost:" + port + "/sns/alice")
         .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body(equalTo("Alice - I love the weather today (5 minutes ago)"));
+                .body(equalTo("I love the weather today (7 minutes ago)"));
     }
 
     @ParameterizedTest @DisplayName("can calculate method endpoint.")
@@ -103,6 +122,12 @@ class SocialNetworkServerTest {
     }
 
     private SocialNetworkServer constructServer(int port) {
-        return new SocialNetworkServer(port, postStore);
+        final Instant instant = LocalDateTime.parse("2023-11-03T12:00:00.000000000").toInstant(ZoneOffset.UTC);
+        Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
+        return new SocialNetworkServer(port, postStore, clock);
+    }
+
+    private SocialNetworkServer constructServer(int port, Clock clock) {
+        return new SocialNetworkServer(port, postStore, clock);
     }
 }

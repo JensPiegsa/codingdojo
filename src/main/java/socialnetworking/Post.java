@@ -11,11 +11,17 @@ public class Post {
     private final String message;
     private final LocalDateTime time;
 
+    @Deprecated
     public Post(String username, String message) {
-
         this.username = username;
         this.message = message;
         this.time = now();
+    }
+
+    public Post(final String username, final String message, final LocalDateTime time) {
+        this.username = username;
+        this.message = message;
+        this.time = time;
     }
 
     @Override
@@ -29,6 +35,18 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(username, message, time);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
     }
 
     @Override
