@@ -143,6 +143,17 @@
 			<version>0.1.2</version>
 			<scope>test</scope>
 		</dependency>
+		<!--  human-readable relative time formatting out of the box -->
+		<dependency>
+			<groupId>org.ocpsoft.prettytime</groupId>
+			<artifactId>prettytime</artifactId>
+			<version>5.0.7.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.threeten</groupId>
+			<artifactId>threeten-extra</artifactId>
+			<version>1.7.2</version>
+		</dependency>
 	</dependencies>
 	
 	<repositories>
