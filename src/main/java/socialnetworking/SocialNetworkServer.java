@@ -34,7 +34,7 @@ public class SocialNetworkServer {
     private final PostStore postStore;
     private Clock clock;
     private HttpServer httpServer;
-    private TimelineRender timelineRenderer = new TimelineRender();
+    private TimelineRender timelineRenderer;
 
 
     public SocialNetworkServer () {
@@ -49,6 +49,7 @@ public class SocialNetworkServer {
         this.port = port;
         this.postStore = postStore;
         this.clock = clock;
+        this.timelineRenderer = new TimelineRender(clock);
     }
 
 
