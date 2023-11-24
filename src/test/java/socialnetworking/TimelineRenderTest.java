@@ -9,6 +9,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimelineRenderTest {
+
+    // TODO switch for precise/approximate
+    // TODO switch for relative/absolute
+    // TODO threshold for relative/absolute time
+
     @Test
     @DisplayName("can render given postings")
     void canRenderGivenPostings() {
