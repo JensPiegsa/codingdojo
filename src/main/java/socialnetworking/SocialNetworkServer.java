@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -113,7 +114,7 @@ public class SocialNetworkServer {
                             responseStatusCode = BAD_REQUEST;
                         } else {
                             responseStatusCode = ACCEPTED;
-                            postStore.persist(new Post(username, requestBody, LocalDateTime.ofInstant(clock.instant(), ZoneId.of("GMT"))));
+                            postStore.persist(new Post(username, requestBody, ZonedDateTime.ofInstant(clock.instant(), ZoneId.of("GMT"))));
                         } 
                         response = "";
                         break;

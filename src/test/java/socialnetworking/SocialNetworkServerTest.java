@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -38,8 +39,7 @@ class SocialNetworkServerTest {
 
     @Test @DisplayName("will accept posted message.")
     void willAcceptPostedMessage() {
-        final Instant instant = LocalDateTime.parse("2023-11-03T12:05:48.091942100").toInstant(ZoneOffset.UTC);
-        Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
+        final Clock clock = Clock.fixed(ZonedDateTime.parse("2023-11-03T12:05:48.091942100Z").toInstant(), ZoneId.of("UTC"));
 
         final int port = 8088;
 
@@ -55,7 +55,9 @@ class SocialNetworkServerTest {
         .then()
                 .statusCode(Response.Status.ACCEPTED.getStatusCode());
 
-        verify(postStore).persist(eq(new Post("Bob", "Hello World!", LocalDateTime.parse("2023-11-03T12:05:48.091942100"))));
+        // TODO GMT???
+        // TODO tolerate X milliseconds creation time -> argument captor for post
+        verify(postStore).persist(eq(new Post("Bob", "Hello World!", ZonedDateTime.parse("2023-11-03T12:05:48.091942100Z"))));
     }
 
     @Test @DisplayName("will not accept posted message without username.")
@@ -77,14 +79,14 @@ class SocialNetworkServerTest {
 
     @Test @DisplayName("will return timeline on get request.")
     void willReturnTimelineOnGetRequest() {
+        final ZonedDateTime postingDateTime = ZonedDateTime.parse("2023-11-03T12:00:00.000000000Z");
+        final Clock now = Clock.fixed(postingDateTime.plusMinutes(7).toInstant(), ZoneId.of("UTC"));
+
         final int port = 8089;
-        final SocialNetworkServer server = constructServer(port);
+        final SocialNetworkServer server = constructServer(port, now);
         server.start();
 
-        final LocalDateTime localDateTime = LocalDateTime.parse("2023-11-03T12:00:00.000000000");
-        final Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
-        Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
-        final Post post = new Post("alice", "I love the weather today", localDateTime);
+        final Post post = new Post("alice", "I love the weather today", postingDateTime);
         given(postStore.readTimeline("alice")).willReturn(List.of(post));
 
         given()
@@ -101,33 +103,33 @@ class SocialNetworkServerTest {
                 "wall\\bla, wall",
                 "reading\\bla, reading",
                 "posting\\bla, posting"})
-    void canCalculateMethodEndpoint(String urlPartPath, String expected) {
+    void canCalculateMethodEndpoint(final String urlPartPath, final String expected) {
         final int port = 8090;
         final SocialNetworkServer server = constructServer(port);
 
-        String result = server.calculateEndpoint(urlPartPath);
+        final String result = server.calculateEndpoint(urlPartPath);
 
         then(result).isEqualTo(expected);
     }
 
     @ParameterizedTest @DisplayName("can handle null endpoint.")
-    @NullSource()
-    void canCalculateMethodEndpoint(String urlPartPath) {
+    @NullSource
+    void canCalculateMethodEndpoint(final String urlPartPath) {
         final int port = 8091;
         final SocialNetworkServer server = constructServer(port);
 
-        String result = server.calculateEndpoint(urlPartPath);
+        final String result = server.calculateEndpoint(urlPartPath);
 
         then(result).isEqualTo(null);
     }
 
-    private SocialNetworkServer constructServer(int port) {
+    private SocialNetworkServer constructServer(final int port) {
         final Instant instant = LocalDateTime.parse("2023-11-03T12:00:00.000000000").toInstant(ZoneOffset.UTC);
-        Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
+        final Clock clock = Clock.fixed(instant, ZoneId.of("UTC"));
         return new SocialNetworkServer(port, postStore, clock);
     }
 
-    private SocialNetworkServer constructServer(int port, Clock clock) {
+    private SocialNetworkServer constructServer(final int port, final Clock clock) {
         return new SocialNetworkServer(port, postStore, clock);
     }
 }

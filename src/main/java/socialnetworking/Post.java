@@ -1,6 +1,6 @@
 package socialnetworking;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -9,16 +9,16 @@ import static java.time.LocalDateTime.now;
 public class Post {
     private final String username;
     private final String message;
-    private final LocalDateTime time;
+    private final ZonedDateTime time;
 
     @Deprecated
     public Post(String username, String message) {
         this.username = username;
         this.message = message;
-        this.time = now();
+        this.time = ZonedDateTime.now();
     }
 
-    public Post(final String username, final String message, final LocalDateTime time) {
+    public Post(final String username, final String message, final ZonedDateTime time) {
         this.username = username;
         this.message = message;
         this.time = time;
@@ -45,7 +45,7 @@ public class Post {
         return message;
     }
 
-    public LocalDateTime getTime() {
+    public ZonedDateTime getTime() {
         return time;
     }
 

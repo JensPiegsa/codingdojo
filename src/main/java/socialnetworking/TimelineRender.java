@@ -18,14 +18,17 @@ public class TimelineRender {
     }
 
     public String render(final List<Post> timeline) {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
 
-        PrettyTime prettyTime = new PrettyTime(Locale.ENGLISH);
+        final PrettyTime prettyTime = new PrettyTime(Locale.ENGLISH);
         prettyTime.setReference(clock.instant());
 
-        for (Post post : timeline) {
-            String timeCalculation = prettyTime.formatDuration(prettyTime.calculatePreciseDuration(post.getTime()));
-            stringBuilder.append(post.getMessage() + " " + timeCalculation);
+        for (final Post post : timeline) {
+            final String timeCalculation = prettyTime.format(post.getTime());
+            stringBuilder.append(post.getMessage())
+                    .append(" (")
+                    .append(timeCalculation)
+                    .append(")");
         }
         return stringBuilder.toString();
     }
