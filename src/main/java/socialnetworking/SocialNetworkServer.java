@@ -9,14 +9,10 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
-
-import javax.swing.text.AbstractDocument;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -28,14 +24,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SocialNetworkServer {
 
+    private static final int OK = 200;
+    private static final int ACCEPTED = 202;
+    private static final int BAD_REQUEST = 400;
+
     static final Logger logger = Logger.getLogger(SocialNetworkServer.class.getName());
     public static final int DEFAULT_PORT = 8087;
     public static final String contextPath = "/sns";
     private final int port;
     private final PostStore postStore;
-    private Clock clock;
+    private final Clock clock;
     private HttpServer httpServer;
-    private TimelineRender timelineRenderer;
+    private final TimelineRender timelineRenderer;
 
 
     public SocialNetworkServer () {
@@ -46,11 +46,11 @@ public class SocialNetworkServer {
         this(port, new InMemoryPostStore(), Clock.systemDefaultZone());
     }
     
-    public SocialNetworkServer(final int port, final PostStore postStore, Clock clock) {
+    public SocialNetworkServer(final int port, final PostStore postStore, final Clock clock) {
         this.port = port;
         this.postStore = postStore;
         this.clock = clock;
-        this.timelineRenderer = new TimelineRender(clock);
+        timelineRenderer = new TimelineRender(clock);
     }
 
 
@@ -84,10 +84,6 @@ public class SocialNetworkServer {
 
     class MyHandler implements HttpHandler {
 
-        private static final int OK = 200;
-        private static final int ACCEPTED = 202;
-        private static final int BAD_REQUEST = 400;
-
         @SuppressWarnings("ImplicitNumericConversion")
         @Override
         public void handle(final HttpExchange httpExchange) {
@@ -99,50 +95,23 @@ public class SocialNetworkServer {
                 final String urlPath = requestURI.getPath();
                 final String urlPathPart = StringUtils.removeStart(urlPath, contextPath);
 
-                final String response;
-                final int responseStatusCode;
+                final Response response;
 
                 final String requestMethod = httpExchange.getRequestMethod();
                 switch (StringUtils.substringBetween(urlPathPart, "/")) {
-                    case "posting": {
-                        final String urlSegmentTail = StringUtils.removeStart(urlPathPart, "/posting");
-                        logger.info("Posting!");
-                        final String username = StringUtils.removeStart(urlSegmentTail, "/");
-                        
-                        logger.info("username: " + username);
-                        if (StringUtils.isEmpty(username)) {
-                            responseStatusCode = BAD_REQUEST;
-                        } else {
-                            responseStatusCode = ACCEPTED;
-                            postStore.persist(new Post(username, requestBody, ZonedDateTime.ofInstant(clock.instant(), ZoneId.of("GMT"))));
-                        } 
-                        response = "";
+                    case "posting":
+                        response = postEndpoint(requestMethod, urlPathPart, requestBody);
                         break;
-                    }
                     case null:
-                        logger.info("Null!");
+                        response = baseEndpoint(requestMethod, requestBody, urlPathPart);
+                        break;
                     default:
-                        logger.info("Default!");
-                        final boolean isPostMessage = requestBody.contains("->");
-                        if (isPostMessage) {
-                            response = "";
-                            responseStatusCode = ACCEPTED;
-                        } else {
-                            final String username = StringUtils.removeStart(urlPathPart, "/");
-                            if ("alice".equals(username.toLowerCase(Locale.ROOT))) {
-                                final List<Post> timeline = postStore.readTimeline("alice");
-                                String prettyTimeline = timelineRenderer.render(timeline);
-                                response = prettyTimeline;
-                            } else {
-                                response = "";
-                            }
-                            responseStatusCode = OK;
-                        }
+                        response = new Response("", BAD_REQUEST);
                 }
 
-                httpExchange.sendResponseHeaders(responseStatusCode, response.length());
+                httpExchange.sendResponseHeaders(response.statusCode(), response.body().length());
                 final OutputStream outputStream = httpExchange.getResponseBody();
-                outputStream.write(response.getBytes(StandardCharsets.UTF_8));
+                outputStream.write(response.body().getBytes(StandardCharsets.UTF_8));
                 outputStream.close();
             } catch (final Throwable e) {
                 e.printStackTrace();
@@ -152,5 +121,48 @@ public class SocialNetworkServer {
         public static String toString(final InputStream input) throws IOException {
             return new String(input.readAllBytes(), StandardCharsets.UTF_8);
         }
+    }
+
+    private Response baseEndpoint(final String requestMethod, final String requestBody, final String urlPathPart) {
+
+        logger.info("requestMethod: " + requestMethod + " urlPathPart: " + urlPathPart + " requestBody: " + requestBody);
+
+        if ("GET".equals(requestMethod)) {
+            final String responseBody;
+            final String username = StringUtils.removeStart(urlPathPart, "/");
+            if ("alice".equals(username.toLowerCase(Locale.ROOT))) {
+                final List<Post> timeline = postStore.readTimeline("alice");
+                final String prettyTimeline = timelineRenderer.render(timeline);
+                responseBody = prettyTimeline;
+            } else {
+                responseBody = "";
+            }
+            return new Response(responseBody, OK);
+        } else {
+            return new Response(requestMethod + " NOT SUPPORTED", BAD_REQUEST);
+        } 
+    }
+
+    private Response postEndpoint(final String requestMethod, final String urlPathPart, final String requestBody) {
+        logger.info("requestMethod: " + requestMethod + " urlPathPart: " + urlPathPart + " requestBody: " + requestBody);
+
+        if ("POST".equals(requestMethod)) {
+            final String urlSegmentTail = StringUtils.removeStart(urlPathPart, "/posting");
+            logger.info("Posting!");
+            final String username = StringUtils.removeStart(urlSegmentTail, "/");
+
+            logger.info("username: " + username);
+            final int responseStatusCode;
+            if (StringUtils.isEmpty(username)) {
+                responseStatusCode = BAD_REQUEST;
+            } else {
+                responseStatusCode = ACCEPTED;
+                final ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(clock.instant(), clock.getZone());
+                postStore.persist(new Post(username, requestBody, zonedDateTime));
+            }
+            return new Response("", responseStatusCode);
+        } else {
+            return new Response(requestMethod + " NOT SUPPORTED", BAD_REQUEST);
+        } 
     }
 }

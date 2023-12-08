@@ -37,9 +37,13 @@ class SocialNetworkServerTest {
 
     @Mock PostStore postStore;
 
+
+
     @Test @DisplayName("will accept posted message.")
     void willAcceptPostedMessage() {
-        final Clock clock = Clock.fixed(ZonedDateTime.parse("2023-11-03T12:05:48.091942100Z").toInstant(), ZoneId.of("UTC"));
+        Instant fixedInstant = ZonedDateTime.parse("2023-11-03T12:05:48.091942100Z[GMT]").toInstant();
+        ZoneId zoneId = ZoneId.of("UTC");
+        final Clock clock = Clock.fixed(fixedInstant, zoneId);
 
         final int port = 8088;
 
@@ -55,9 +59,7 @@ class SocialNetworkServerTest {
         .then()
                 .statusCode(Response.Status.ACCEPTED.getStatusCode());
 
-        // TODO GMT???
-        // TODO tolerate X milliseconds creation time -> argument captor for post
-        verify(postStore).persist(eq(new Post("Bob", "Hello World!", ZonedDateTime.parse("2023-11-03T12:05:48.091942100Z"))));
+        verify(postStore).persist(eq(new Post("Bob", "Hello World!", ZonedDateTime.ofInstant(fixedInstant, zoneId))));
     }
 
     @Test @DisplayName("will not accept posted message without username.")
