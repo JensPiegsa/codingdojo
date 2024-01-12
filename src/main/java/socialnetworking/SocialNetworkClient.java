@@ -21,15 +21,19 @@ public class SocialNetworkClient {
     }
 
     public static void main(final String[] args) {
-        
-        final SocialNetworkClient client = new SocialNetworkClient("http://localhost:8087");
-        
-        if (args.length >= 2) {
 
+        if (args.length == 0) {
+            System.out.println("usage: missing arguments haha");
         } else {
-            final String username = args[0];
-            final String timeline = client.reading(username);
-            System.out.println(timeline);
+            final SocialNetworkClient client = new SocialNetworkClient("http://localhost:8087");
+            
+            if (args.length >= 2) {
+    
+            } else {
+                final String username = args[0];
+                final String timeline = client.reading(username);
+                System.out.println(timeline);
+            } 
         } 
     }
 

@@ -102,8 +102,11 @@ public class SocialNetworkServer {
                     case "posting":
                         response = postEndpoint(requestMethod, urlPathPart, requestBody);
                         break;
+                    case "timeline":
+                        response = timelineEndpoint(requestMethod, urlPathPart, requestBody);
+                        break;
                     case null:
-                        response = baseEndpoint(requestMethod, requestBody, urlPathPart);
+                        response = baseEndpoint(requestMethod, urlPathPart, requestBody);
                         break;
                     default:
                         response = new Response("", BAD_REQUEST);
@@ -123,13 +126,18 @@ public class SocialNetworkServer {
         }
     }
 
-    private Response baseEndpoint(final String requestMethod, final String requestBody, final String urlPathPart) {
+    private Response baseEndpoint(String requestMethod, String urlPathPart, String requestBody) {
+        return new Response(requestMethod + " NOT SUPPORTED", BAD_REQUEST);
+    }
+
+    private Response timelineEndpoint(final String requestMethod, final String urlPathPart, final String requestBody) {
 
         logger.info("requestMethod: " + requestMethod + " urlPathPart: " + urlPathPart + " requestBody: " + requestBody);
 
         if ("GET".equals(requestMethod)) {
+            final String urlSegmentTail = StringUtils.removeStart(urlPathPart, "/timeline");
             final String responseBody;
-            final String username = StringUtils.removeStart(urlPathPart, "/");
+            final String username = StringUtils.removeStart(urlSegmentTail, "/");
             if ("alice".equals(username.toLowerCase(Locale.ROOT))) {
                 final List<Post> timeline = postStore.readTimeline("alice");
                 final String prettyTimeline = timelineRenderer.render(timeline);

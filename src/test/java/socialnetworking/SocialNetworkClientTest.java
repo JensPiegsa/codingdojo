@@ -7,6 +7,10 @@ import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+
 @WireMockTest
 class SocialNetworkClientTest {
 
@@ -114,6 +118,34 @@ class SocialNetworkClientTest {
 
             // TODO get status code 202 if user exists, 4xx if no user found
             verify(postRequestedFor(urlEqualTo("/sns/" + endpoint + "/" + username)));
+        }
+
+
+    }
+
+    @Nested @DisplayName("Malformed Arguments")
+    class MalformedArguments {
+
+        PrintStream originalOut;
+        ByteArrayOutputStream outContent;
+        @BeforeEach
+        void setUp() {
+            outContent = new ByteArrayOutputStream();
+            originalOut = System.out;
+            System.setOut(new PrintStream(outContent, true, StandardCharsets.UTF_8));
+        }
+
+        @AfterEach
+        void tearDown() {
+            System.setOut(originalOut);
+        }
+
+        @Test @DisplayName("show usage information.")
+        void showUsageInformation() {
+            
+            SocialNetworkClient.main(new String[]{});
+
+            then(outContent.toString()).contains("usage");
         }
 
 

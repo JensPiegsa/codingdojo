@@ -1,5 +1,6 @@
 package socialnetworking;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,14 +8,17 @@ import java.util.List;
  */
 public class InMemoryPostStore implements PostStore {
     
+    private List<Post> posts = new ArrayList<>();
     @Override
     public void persist(final Post post) {
-        
+        posts.add(post);
     }
 
     @Override
-    public List<Post> readTimeline(final String alice) {
-        return null;
+    public List<Post> readTimeline(final String author) {
+        return posts.stream()
+                .filter(post -> author.equals(post.getUsername()))
+                .toList();
     }
 }
 
