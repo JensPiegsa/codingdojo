@@ -94,7 +94,7 @@ class SocialNetworkServerTest {
         given()
                 .accept(ContentType.TEXT)
         .when()
-                .get("http://localhost:" + port + "/sns/alice")
+                .get("http://localhost:" + port + "/sns/timeline/alice")
         .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body(equalTo("I love the weather today (7 minutes ago)"));

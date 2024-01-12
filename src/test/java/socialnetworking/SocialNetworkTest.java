@@ -47,11 +47,11 @@ public class SocialNetworkTest {
         @Test @DisplayName("read non-empty timeline of user.")
         void readNonEmptyTimelineOfUser() {
             
-            // Alice's client 
+            // Alice's client: post a message
             final String username = "Alice";
             SocialNetworkClient.main(new String[]{username, "->", "I", "love", "weather", "today"});
             
-            // Bob's client
+            // Bob's client: reads Alice's timeline
             final String[] args = {"Alice"};
             SocialNetworkClient.main(args);
 
