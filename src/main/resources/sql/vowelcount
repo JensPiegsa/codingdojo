@@ -1,0 +1,26 @@
+# Vowel Count
+# https://www.codewars.com/kata/54ff3102c1bad923760001f3/
+
+use codingdojo;
+
+SELECT str,
+       LENGTH(str) - LENGTH(
+               REPLACE(
+                       REPLACE(
+                               REPLACE(
+                                       REPLACE(
+                                               REPLACE(str, 'a', ''),
+                                               'e', ''),
+                                       'i', ''),
+                               'o', ''),
+                       'u', '')
+                     ) AS res
+FROM getcount;
+
+SELECT str,
+       LENGTH(str) - LENGTH(REGEXP_REPLACE(str, '[aeiou]', '')) AS res
+FROM getcount;
+
+SELECT str,
+       LENGTH(REGEXP_REPLACE(str, '[^aeiou]', '')) AS res
+FROM getcount;
