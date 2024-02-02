@@ -41,13 +41,15 @@ class SocialNetworkClientTest {
         void canReadSingleLineTimelineFromServer(final WireMockRuntimeInfo wiremockRuntimeInfo) {
 
             final String endpoint = "reading";
-            final String username = "bob";
+            final String author = "alice";
             final String resultBodyContent = "Alice - I love the weather today (5 minutes ago)";
-            stubFor(get("/sns/" + endpoint + "/" + username).withHeader("Accept", containing("text/plain")).willReturn(ok(resultBodyContent)));
+            stubFor(get("/sns/" + endpoint + "/" + author)
+                    .withHeader("Accept", containing("text/plain"))
+                    .willReturn(ok(resultBodyContent)));
 
-            String output = client.reading(username);
+            String output = client.reading(author);
 
-            verifyGetEndpointWithUser(endpoint, username);
+            verifyGetEndpointWithUser(endpoint, author);
             then(output).isEqualTo("Alice - I love the weather today (5 minutes ago)");
         }
 

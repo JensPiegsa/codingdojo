@@ -9,6 +9,7 @@ import java.util.List;
 public class InMemoryPostStore implements PostStore {
     
     private List<Post> posts = new ArrayList<>();
+    
     @Override
     public void persist(final Post post) {
         posts.add(post);

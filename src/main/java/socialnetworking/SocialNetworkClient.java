@@ -1,5 +1,7 @@
 package socialnetworking;
 
+import static java.util.stream.Collectors.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,8 +10,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class SocialNetworkClient {
@@ -27,10 +31,11 @@ public class SocialNetworkClient {
         } else {
             final SocialNetworkClient client = new SocialNetworkClient("http://localhost:8087");
             
+            final String username = args[0];
             if (args.length >= 2) {
-    
+                final String message = Arrays.stream(args).skip(2L).collect(joining(" "));
+                client.post(username, message);
             } else {
-                final String username = args[0];
                 final String timeline = client.reading(username);
                 System.out.println(timeline);
             } 
@@ -38,10 +43,7 @@ public class SocialNetworkClient {
     }
 
     public void post(final String username, final String message) {
-
         Map<String, List<Post>> postings;
-        
-        //throw new IllegalStateException("not yet implemented");
 
         httpPost("posting", username, message);
     }
@@ -51,8 +53,8 @@ public class SocialNetworkClient {
         httpPost("follows", username, message);
     }
 
-    public String reading(final String username) {
-        return httpGet(username, "reading");
+    public String reading(final String author) {
+        return httpGet(author, "reading");
     }
 
     public String wall(String username) {
