@@ -8,38 +8,35 @@ public class Runes {
 
     public static int solveExpression(final String expression) {
 
-        final int missingDigit = -1;
-
-        //Write code to determine the missing digit or unknown rune
-        //Expression will always be in the form
-        //(number)[operator](number)=(number)
-        //Unknown digit will not be the same as any other digits used in expression
-
-		for (int i = 0; i <= 9; i++) {
-			if (evaluateExpression(replaceQuestionMark(expression, i))) {
+        for (int i = 0; i <= 9; i++) {
+			if (!containsDigit(expression, i) 
+					&& evaluateExpression(replaceQuestionMark(expression, i))) {
 				return i;
 			}
 		}
 
-
-        return missingDigit;
+        return -1;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
 	public static boolean evaluateExpression(final String expression) {
-		final Pattern pattern = Pattern.compile("(-?[0-9]+)([+*-])(-?[0-9]+)=(-?[0-9]+)");
+		final Pattern pattern = Pattern.compile("(-?[0-9]+)" +
+												"([+*-])" +
+												"(-?[0-9]+)" +
+												"=" +
+												"(-?[0-9]+)");
 		final Matcher matcher = pattern.matcher(expression);
 		matcher.find();
 		// https://stackoverflow.com/questions/8938498/get-the-index-of-a-pattern-in-a-string-using-regex/8938549#8938549
-		String firsOperandString = matcher.group(1);
-		final int firstOperand = Integer.parseInt(firsOperandString);
+		final String firstOperandString = matcher.group(1);
+		final int firstOperand = Integer.parseInt(firstOperandString);
 		final String operator = matcher.group(2);
-		String secondOperandString = matcher.group(3);
+		final String secondOperandString = matcher.group(3);
 		final int secondOperand = Integer.parseInt(secondOperandString);
-		String resultString = matcher.group(4);
+		final String resultString = matcher.group(4);
 		final int result = Integer.parseInt(resultString);
 
-		if (firsOperandString.startsWith("00")
+		if (firstOperandString.startsWith("00")
 			|| secondOperandString.startsWith("00")
 			|| resultString.startsWith("00")) {
 			return false;
@@ -55,5 +52,9 @@ public class Runes {
 
 	public static String replaceQuestionMark(final String expressionWithQuestionMark, final int digitValue) {
 		return expressionWithQuestionMark.replace("?", String.valueOf(digitValue));
+	}
+
+	static boolean containsDigit(final String expression, final int digit) {
+		return expression.contains(String.valueOf(digit));
 	}
 }
