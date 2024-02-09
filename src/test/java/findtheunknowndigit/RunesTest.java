@@ -8,9 +8,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * <a href="https://www.codewars.com/kata/546d15cebed2e10334000ed9/train/java">https://www.codewars.com/kata/546d15cebed2e10334000ed9/train/java</a>
+ */
 class RunesTest {
 
-// https://www.codewars.com/kata/546d15cebed2e10334000ed9/train/java
 
     @ParameterizedTest
     @DisplayName("simple evaluateExpression without '?'")
@@ -38,12 +40,22 @@ class RunesTest {
     @ParameterizedTest
     @DisplayName("does equation contains digit")
     @CsvSource({
-            "true,       1+1=2",
-            "false,      1+1=3",
+            "true,       1+1=2, 2",
+            "false,      1+1=3, 7",
     })
-    void doesEquationContainsDigit(int i, int result) {
-
+    void doesEquationContainsDigit(final boolean expected, final String expression, final int digit) {
+        assertThat(Runes.containsDigit(expression, digit)).isEqualTo(expected);
     }
+
+    @ParameterizedTest
+    @DisplayName("solve expressions")
+    @CsvSource({
+            "??*1=??,2",
+    })
+    void solveExpressions(final String expression, final int expected) {
+        assertThat(Runes.solveExpression(expression)).isEqualTo(expected);
+    }
+
 
     @DisplayName("Sample tests")
     @Test
