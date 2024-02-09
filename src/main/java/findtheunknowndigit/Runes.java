@@ -36,9 +36,12 @@ public class Runes {
 		final String resultString = matcher.group(4);
 		final int result = Integer.parseInt(resultString);
 
-		if (firstOperandString.startsWith("00")
-			|| secondOperandString.startsWith("00")
-			|| resultString.startsWith("00")) {
+		if ((firstOperandString.startsWith("0") && !firstOperandString.equals("0"))
+			|| (secondOperandString.startsWith("0") && !secondOperandString.equals("0"))
+			|| (resultString.startsWith("0") && !resultString.equals("0"))
+			|| (firstOperandString.startsWith("-0"))
+			|| (secondOperandString.startsWith("-0"))
+			|| (resultString.startsWith("-0"))) {
 			return false;
 		}
 

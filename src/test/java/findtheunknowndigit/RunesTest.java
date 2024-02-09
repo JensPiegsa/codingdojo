@@ -51,6 +51,7 @@ class RunesTest {
     @DisplayName("solve expressions")
     @CsvSource({
             "??*1=??,2",
+            "-?56373--9216=-?47157, 8"
     })
     void solveExpressions(final String expression, final int expected) {
         assertThat(Runes.solveExpression(expression)).isEqualTo(expected);
