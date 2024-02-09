@@ -35,6 +35,16 @@ class RunesTest {
                 .isEqualTo(expected);
     }
 
+    @ParameterizedTest
+    @DisplayName("does equation contains digit")
+    @CsvSource({
+            "true,       1+1=2",
+            "false,      1+1=3",
+    })
+    void doesEquationContainsDigit(int i, int result) {
+
+    }
+
     @DisplayName("Sample tests")
     @Test
     void testSample() {

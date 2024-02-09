@@ -27,7 +27,11 @@ public class Runes {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
 	public static boolean evaluateExpression(final String expression) {
-		final Pattern pattern = Pattern.compile("(-?[0-9]+)([+*-])(-?[0-9]+)=(-?[0-9]+)");
+		final Pattern pattern = Pattern.compile("(-?[0-9]+)" +
+												"([+*-])" +
+												"(-?[0-9]+)" +
+												"=" +
+												"(-?[0-9]+)");
 		final Matcher matcher = pattern.matcher(expression);
 		matcher.find();
 		// https://stackoverflow.com/questions/8938498/get-the-index-of-a-pattern-in-a-string-using-regex/8938549#8938549
