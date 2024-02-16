@@ -1,6 +1,5 @@
 package findtheunknowndigit;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,12 +35,7 @@ public class Runes {
 		final String resultString = matcher.group(4);
 		final int result = Integer.parseInt(resultString);
 
-		if ((firstOperandString.startsWith("0") && !firstOperandString.equals("0"))
-			|| (secondOperandString.startsWith("0") && !secondOperandString.equals("0"))
-			|| (resultString.startsWith("0") && !resultString.equals("0"))
-			|| (firstOperandString.startsWith("-0"))
-			|| (secondOperandString.startsWith("-0"))
-			|| (resultString.startsWith("-0"))) {
+		if (!isValidNumber(firstOperandString) || !isValidNumber(secondOperandString) || !isValidNumber(resultString)) {
 			return false;
 		}
 
@@ -52,6 +46,13 @@ public class Runes {
 			default -> throw new IllegalArgumentException("unexpected: " + expression);
 		};
     }
+
+	private static boolean isValidNumber(final String operand) {
+		final boolean isSingleZeroDigit = "0".equals(operand);
+		final boolean hasLeadingZero = operand.startsWith("0");
+		final boolean isUnsignedZero = !operand.startsWith("-0");
+		return (isSingleZeroDigit || !hasLeadingZero) && isUnsignedZero;
+	}
 
 	public static String replaceQuestionMark(final String expressionWithQuestionMark, final int digitValue) {
 		return expressionWithQuestionMark.replace("?", String.valueOf(digitValue));
