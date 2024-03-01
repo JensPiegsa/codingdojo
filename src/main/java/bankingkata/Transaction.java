@@ -1,4 +1,6 @@
 package bankingkata;
 
-public class Transaction {
+import java.time.Instant;
+
+public record Transaction(Instant instant, int amount) {
 }
