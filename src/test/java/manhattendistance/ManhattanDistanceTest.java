@@ -24,7 +24,6 @@ class ManhattanDistanceTest {
 
         final Point firstPoint = new Point(x1,y1);
         final Point secondPoint = new Point(x2,y2);
-        final Point thirdPoint = Point.at(x2, y2);
 
         final int result = ManhattanDistance.calculate(firstPoint, secondPoint);
 
