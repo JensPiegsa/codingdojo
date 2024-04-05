@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -60,10 +61,17 @@ class OhceTest {
         System.setIn(new BufferedInputStream(new ByteArrayInputStream(" ".getBytes(StandardCharsets.UTF_8))));
     	
         Ohce.main(new String[]{"Pedro"});
-        
+
         then(outStream.toString()).startsWith("¡Buenos días Pedro!");
     }
-    
+
+    @Test @DisplayName("greets and reverses input.")
+    void greetsAndReversesInput() {
+        ohce.start();
+
+        BDDMockito.verify(greeter).greet();
+    }
+
     
     @AfterEach
     void tearDown() {

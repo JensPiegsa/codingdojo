@@ -6,9 +6,14 @@ package ohce;
 public class Ohce {
     Greeter greeter;
     InputReverser inputReverser;
+
+    public Ohce(Greeter greeter, InputReverser inputReverser) {
+        this.greeter = greeter;
+        this.inputReverser = inputReverser;
+    }
     
     public static void main(final String[] args) {
-        new Ohce().start();
+        new Ohce(null, new InputReverser()).start();
     }
 
     public void start() {
