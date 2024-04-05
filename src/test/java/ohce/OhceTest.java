@@ -1,34 +1,30 @@
 package ohce;
 
-import static org.assertj.core.api.BDDAssertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willCallRealMethod;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 
 /**
- * @author Jens Piegsa
+ * <a href="https://kata-log.rocks/ohce-kata">https://kata-log.rocks/ohce-kata</a>
  */
 @ExtendWith(MockitoExtension.class)
+@DisplayName("An Ohce")
 class OhceTest {
+    
+    String name = "Pedro";
     
     @Mock private Greeter greeter;
     @Mock private InputReverser inputReverser;
-
+    @Mock private Saluter saluter;
 
     @InjectMocks
     private Ohce ohce;
@@ -38,41 +34,22 @@ class OhceTest {
     @BeforeEach
     void setUp() {
         originalOut = System.out;
+        ohce = new Ohce(greeter, inputReverser, saluter, name);
     }
 
-    @Test @DisplayName("ohce reverses input.")
-    void ohceReversesInput() {
-        willCallRealMethod().given(inputReverser).reverser();
 
-        final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
-        System.setOut(new PrintStream(outStream, true, StandardCharsets.UTF_8));
-        System.setIn(new BufferedInputStream(new ByteArrayInputStream("echo".getBytes(StandardCharsets.UTF_8))));
+    @Test @DisplayName("greets, reverses and salutes in order.")
+    void greetsReversesAndSalutesInOrder() {
+        
+        final InOrder inOrder = BDDMockito.inOrder(greeter, inputReverser, saluter);
 
         ohce.start();
 
-        then(outStream.toString()).startsWith("ohce");
-    }
-    
-    @Test @DisplayName("greeter greets person in spanish.")
-    void greeterGreetsPersonInSpanish() {
-        final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outStream, true, StandardCharsets.UTF_8));
-        System.setIn(new BufferedInputStream(new ByteArrayInputStream(" ".getBytes(StandardCharsets.UTF_8))));
-    	
-        Ohce.main(new String[]{"Pedro"});
-
-        then(outStream.toString()).startsWith("¡Buenos días Pedro!");
+        inOrder.verify(greeter).greet("Pedro");
+        inOrder.verify(inputReverser).reverse();
+        inOrder.verify(saluter).salute("Pedro");
     }
 
-    @Test @DisplayName("greets and reverses input.")
-    void greetsAndReversesInput() {
-        ohce.start();
-
-        BDDMockito.verify(greeter).greet();
-    }
-
-    
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);

@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class InputReverser {
-    public void reverser() {
+    public void reverse() {
         final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
 
         final String nextLine = scanner.nextLine();
