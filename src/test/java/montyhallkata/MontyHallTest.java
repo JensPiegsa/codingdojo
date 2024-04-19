@@ -3,6 +3,8 @@ package montyhallkata;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.BDDAssertions.then;
+
 class MontyHallTest {
 
     @Test @DisplayName("game model.")
@@ -11,7 +13,10 @@ class MontyHallTest {
         int firstDoorSelection = 1;
         MontyHallGame montyHallGame = new MontyHallGame();
 
-        montyHallGame.openDoor(firstDoorSelection);
+        String result = montyHallGame.openDoor(firstDoorSelection);
+        then(result).isIn("Goat", "Prize");
     }
+
+
 
 }
