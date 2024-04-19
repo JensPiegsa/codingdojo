@@ -2,18 +2,18 @@ package montyhallkata;
 
 import org.jetbrains.annotations.Range;
 
-import java.util.Random;
-
 public class MontyHallGame {
 
+    private final RandomNumberGenerator randomNumberGenerator;
     private int selectedDoor;
     private int prizeDoor;
 
-    public MontyHallGame() {
-        prizeDoor = new Random().nextInt(3);
+    public MontyHallGame(final RandomNumberGenerator randomNumberGenerator) {
+        this.randomNumberGenerator = randomNumberGenerator;
+        prizeDoor = this.randomNumberGenerator.nextInt(3);
     }
 
-    public void playersFirstSelection(@Range(from=0, to=2) final int selectedDoor) {
+    public void playersFirstSelection(@Range(from = 0, to = 2) final int selectedDoor) {
         this.selectedDoor = selectedDoor;
     }
 

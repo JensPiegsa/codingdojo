@@ -4,45 +4,47 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.mock;
 
 class MontyHallGameTest {
 
     @Test @DisplayName("play game player keeps selection")
     void playGamePlayerKeepsSelection() {
 
-        int firstDoorSelection = 1;
-        MontyHallGame montyHallGame = new MontyHallGame();
+        final int firstDoorSelection = 1;
+        final MontyHallGame montyHallGame = new MontyHallGame(new RandomNumberGenerator());
 
         montyHallGame.playersFirstSelection(firstDoorSelection);
 
-        int openDoor = montyHallGame.gameMasterOpensDoor();
+        final int openDoor = montyHallGame.gameMasterOpensDoor();
 
         then(openDoor).isNotEqualTo(firstDoorSelection);
 
-        boolean playerWins = montyHallGame.playerKeepsSelection();
+        final boolean playerWins = montyHallGame.playerKeepsSelection();
     }
 
     @Test @DisplayName("play game player switches selection")
     void playGamePlayerSwitchesSelection() {
 
-        int firstDoorSelection = 1;
-        MontyHallGame montyHallGame = new MontyHallGame();
+        final int firstDoorSelection = 1;
+        final MontyHallGame montyHallGame = new MontyHallGame(new RandomNumberGenerator());
 
         montyHallGame.playersFirstSelection(firstDoorSelection);
 
-        int openDoor = montyHallGame.gameMasterOpensDoor();
+        final int openDoor = montyHallGame.gameMasterOpensDoor();
 
         then(openDoor).isNotEqualTo(firstDoorSelection);
 
-        boolean playerWins = montyHallGame.playerSwitchesSelection();
+        final boolean playerWins = montyHallGame.playerSwitchesSelection();
     }
-
-    @Test @DisplayName("select impossible door.")
-    void selectImpossibleDoor() {
-        int firstDoorSelection = 3;
-        MontyHallGame montyHallGame = new MontyHallGame();
-
-        montyHallGame.playersFirstSelection(firstDoorSelection);
+    
+    @Test @DisplayName("test")
+    void test() {
+        RandomNumberGenerator randomNumberGenerator = mock(RandomNumberGenerator.class);
+        final MontyHallGame game = new MontyHallGame(randomNumberGenerator);
+        given(randomNumberGenerator.nextInt(anyInt())).willReturn(0);
+        game.playersFirstSelection(1);
     }
-
 }
