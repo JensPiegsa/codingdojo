@@ -154,6 +154,12 @@
 			<artifactId>threeten-extra</artifactId>
 			<version>1.7.2</version>
 		</dependency>
+		<!-- IntelliJ Annotation-->
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>24.1.0</version>
+		</dependency>
 	</dependencies>
 	
 	<repositories>

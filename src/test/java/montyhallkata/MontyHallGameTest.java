@@ -13,10 +13,20 @@ class MontyHallGameTest {
         int firstDoorSelection = 1;
         MontyHallGame montyHallGame = new MontyHallGame();
 
-        String result = montyHallGame.openDoor(firstDoorSelection);
-        then(result).isIn("Goat", "Prize");
+        montyHallGame.selectDoor(firstDoorSelection);
+
+        int selectedDoor = montyHallGame.openDoor();
+
+        then(selectedDoor).isNotEqualTo(firstDoorSelection);
     }
 
-    
+    @Test @DisplayName("select impossible door.")
+    void selectImpossibleDoor() {
+        int firstDoorSelection = 3;
+        MontyHallGame montyHallGame = new MontyHallGame();
+
+        montyHallGame.selectDoor(firstDoorSelection);
+
+    }
 
 }
