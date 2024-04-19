@@ -13,11 +13,19 @@ public class MontyHallGame {
         prizeDoor = new Random().nextInt(3);
     }
 
-    public void selectDoor(@Range(from=0, to=2) final int selectedDoor) {
+    public void playersFirstSelection(@Range(from=0, to=2) final int selectedDoor) {
         this.selectedDoor = selectedDoor;
     }
 
-    public int openDoor() {
+    public int gameMasterOpensDoor() {
         return 0;
+    }
+
+    public boolean playerKeepsSelection() {
+        return false;
+    }
+
+    public boolean playerSwitchesSelection() {
+        return false;
     }
 }

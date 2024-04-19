@@ -7,17 +7,34 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 class MontyHallGameTest {
 
-    @Test @DisplayName("game model.")
-    void gameModel() {
+    @Test @DisplayName("play game player keeps selection")
+    void playGamePlayerKeepsSelection() {
 
         int firstDoorSelection = 1;
         MontyHallGame montyHallGame = new MontyHallGame();
 
-        montyHallGame.selectDoor(firstDoorSelection);
+        montyHallGame.playersFirstSelection(firstDoorSelection);
 
-        int selectedDoor = montyHallGame.openDoor();
+        int openDoor = montyHallGame.gameMasterOpensDoor();
 
-        then(selectedDoor).isNotEqualTo(firstDoorSelection);
+        then(openDoor).isNotEqualTo(firstDoorSelection);
+
+        boolean playerWins = montyHallGame.playerKeepsSelection();
+    }
+
+    @Test @DisplayName("play game player switches selection")
+    void playGamePlayerSwitchesSelection() {
+
+        int firstDoorSelection = 1;
+        MontyHallGame montyHallGame = new MontyHallGame();
+
+        montyHallGame.playersFirstSelection(firstDoorSelection);
+
+        int openDoor = montyHallGame.gameMasterOpensDoor();
+
+        then(openDoor).isNotEqualTo(firstDoorSelection);
+
+        boolean playerWins = montyHallGame.playerSwitchesSelection();
     }
 
     @Test @DisplayName("select impossible door.")
@@ -25,8 +42,7 @@ class MontyHallGameTest {
         int firstDoorSelection = 3;
         MontyHallGame montyHallGame = new MontyHallGame();
 
-        montyHallGame.selectDoor(firstDoorSelection);
-
+        montyHallGame.playersFirstSelection(firstDoorSelection);
     }
 
 }
