@@ -1,5 +1,9 @@
 package montyhallkata;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.jetbrains.annotations.Range;
 
 public class MontyHallGame {
@@ -7,6 +11,7 @@ public class MontyHallGame {
     private final RandomNumberGenerator randomNumberGenerator;
     private int selectedDoor;
     private int prizeDoor;
+    private int openDoor;
 
     public MontyHallGame(final RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
@@ -18,14 +23,26 @@ public class MontyHallGame {
     }
 
     public int gameMasterOpensDoor() {
-        return 0;
+        final List<Integer> doors = new ArrayList<>(List.of(0, 1, 2));
+        doors.removeAll(List.of(selectedDoor, prizeDoor));
+        if (selectedDoor != prizeDoor) {
+            openDoor = doors.getFirst();
+        } else {
+            int option = randomNumberGenerator.nextInt(2);
+            openDoor = doors.get(option);
+        }
+        return openDoor;
     }
 
     public boolean playerKeepsSelection() {
-        return false;
+        return selectedDoor == prizeDoor;
     }
 
     public boolean playerSwitchesSelection() {
-        return false;
+        final List<Integer> doors = new ArrayList<>(List.of(0, 1, 2));
+        doors.removeAll(List.of(selectedDoor, openDoor));
+        selectedDoor = doors.getFirst();
+        
+        return selectedDoor == prizeDoor;
     }
 }

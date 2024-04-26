@@ -43,22 +43,25 @@ class MontyHallGameTest {
     }
     
     @ParameterizedTest
-    @DisplayName("method: playerKeepsSelection")
-    @CsvSource({"0, true, false",
-                "1, true, true",
-                "0, false, true",
-                "1, false, true",
+    @DisplayName("method: playerKeepsDoor")
+    @CsvSource({"0, 0, 0, true, true",
+                "0, 1, 0, true, false",
+                "0, 0, 0, false, false",
+                "0, 1, 0, false, true",
+                "0, 1, 1, false, true",
     })
-    void test(int playerFirstSelection, boolean playerKeepsSelection, boolean expectedPrize) {
+    void test(int priceDoor, int playerDoor, int gameMasterOption, boolean playerKeepsDoor, boolean expectedPrize) {
+        
         RandomNumberGenerator randomNumberGenerator = mock(RandomNumberGenerator.class);
         final MontyHallGame game = new MontyHallGame(randomNumberGenerator);
-        given(randomNumberGenerator.nextInt(anyInt())).willReturn(0);
-        game.playersFirstSelection(playerFirstSelection);
+        given(randomNumberGenerator.nextInt(anyInt())).willReturn(priceDoor, gameMasterOption);
+
+        game.playersFirstSelection(playerDoor);
 
         game.gameMasterOpensDoor();
 
         boolean result;
-        if (playerKeepsSelection) {
+        if (playerKeepsDoor) {
             result = game.playerKeepsSelection();
         } else {
             result = game.playerSwitchesSelection();
