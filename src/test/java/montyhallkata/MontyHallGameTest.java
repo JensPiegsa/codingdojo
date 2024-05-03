@@ -16,7 +16,7 @@ class MontyHallGameTest {
     void playGamePlayerKeepsSelection() {
 
         final int firstDoorSelection = 1;
-        final MontyHallGame montyHallGame = new MontyHallGame(new RandomNumberGenerator());
+        final MontyHallGame montyHallGame = new MontyHallGame(new RandomNumberGenerator(), new RandomNumberGenerator());
 
         montyHallGame.playersFirstSelection(firstDoorSelection);
 
@@ -31,7 +31,7 @@ class MontyHallGameTest {
     void playGamePlayerSwitchesSelection() {
 
         final int firstDoorSelection = 1;
-        final MontyHallGame montyHallGame = new MontyHallGame(new RandomNumberGenerator());
+        final MontyHallGame montyHallGame = new MontyHallGame(new RandomNumberGenerator(), new RandomNumberGenerator());
 
         montyHallGame.playersFirstSelection(firstDoorSelection);
 
@@ -50,11 +50,14 @@ class MontyHallGameTest {
                 "0, 1, 0, false, true",
                 "0, 1, 1, false, true",
     })
-    void test(int priceDoor, int playerDoor, int gameMasterOption, boolean playerKeepsDoor, boolean expectedPrize) {
-        
-        RandomNumberGenerator randomNumberGenerator = mock(RandomNumberGenerator.class);
-        final MontyHallGame game = new MontyHallGame(randomNumberGenerator);
-        given(randomNumberGenerator.nextInt(anyInt())).willReturn(priceDoor, gameMasterOption);
+    void test(int prizeDoor, int playerDoor, int gameMasterOption,
+              boolean playerKeepsDoor, boolean expectedPrize) {
+
+        RandomNumberGenerator randomNumberGeneratorPrizeDoor = mock(RandomNumberGenerator.class);
+        RandomNumberGenerator randomNumberGeneratorGameMaster = mock(RandomNumberGenerator.class);
+        final MontyHallGame game = new MontyHallGame(randomNumberGeneratorPrizeDoor, randomNumberGeneratorGameMaster);
+        given(randomNumberGeneratorPrizeDoor.nextInt(anyInt())).willReturn(prizeDoor);
+        given(randomNumberGeneratorGameMaster.nextInt(anyInt())).willReturn(gameMasterOption);
 
         game.playersFirstSelection(playerDoor);
 

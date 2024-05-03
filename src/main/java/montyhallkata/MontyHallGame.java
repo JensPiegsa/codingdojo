@@ -2,20 +2,21 @@ package montyhallkata;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.jetbrains.annotations.Range;
 
 public class MontyHallGame {
 
-    private final RandomNumberGenerator randomNumberGenerator;
+    private final RandomNumberGenerator randomNumberGeneratorPrizeDoor;
+    private final RandomNumberGenerator randomNumberGeneratorGameMaster;
     private int selectedDoor;
     private int prizeDoor;
     private int openDoor;
 
-    public MontyHallGame(final RandomNumberGenerator randomNumberGenerator) {
-        this.randomNumberGenerator = randomNumberGenerator;
-        prizeDoor = this.randomNumberGenerator.nextInt(3);
+    public MontyHallGame(final RandomNumberGenerator randomNumberGeneratorPrizeDoor, RandomNumberGenerator randomNumberGeneratorGameMaster) {
+        this.randomNumberGeneratorPrizeDoor = randomNumberGeneratorPrizeDoor;
+        this.randomNumberGeneratorGameMaster = randomNumberGeneratorGameMaster;
+        prizeDoor = this.randomNumberGeneratorPrizeDoor.nextInt(3);
     }
 
     public void playersFirstSelection(@Range(from = 0, to = 2) final int selectedDoor) {
@@ -25,10 +26,10 @@ public class MontyHallGame {
     public int gameMasterOpensDoor() {
         final List<Integer> doors = new ArrayList<>(List.of(0, 1, 2));
         doors.removeAll(List.of(selectedDoor, prizeDoor));
+            int option = randomNumberGeneratorGameMaster.nextInt(2);
         if (selectedDoor != prizeDoor) {
             openDoor = doors.getFirst();
         } else {
-            int option = randomNumberGenerator.nextInt(2);
             openDoor = doors.get(option);
         }
         return openDoor;
