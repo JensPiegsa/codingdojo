@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * see:  
  */
 class GildedRoseTest {
+
+    @Test @DisplayName("new requirements")
+    void newRequirements() {
+        fail();
+        // see requirements
+    }
 
     @Test @DisplayName("can age item.")
     void canAgeItem() {
@@ -87,7 +94,7 @@ class GildedRoseTest {
     @ParameterizedTest(name = "Testfall {index}: {0}")
     @DisplayName("\"Sulfuras\", being a legendary item, never has to be sold or decreases in Quality")
     @ValueSource(strings = {
-//            "Sulfuras",
+            "Sulfuras",
             "Sulfuras, Hand of Ragnaros"
     })
     void sulfurasNeverHasToBeSoldOrDecreasesInQuality(String itemName) {
@@ -104,21 +111,24 @@ class GildedRoseTest {
     @Nested @DisplayName("Backstage passes")
     class BackstagePasses {
 
-        @ParameterizedTest @DisplayName("Quality increases by 2 when there are 10 days or less.")
-        @ValueSource(strings = {
-//                "Backstage passes",
-                "Backstage passes to a TAFKAL80ETC concert"
-        })
-        void qualityIncreasesBy2WhenThereAre10DaysOrLess(String itemName) {
-            final Item backstagePasses = new Item(itemName, 10, 40);
-            final GildedRose app = new GildedRose(new Item[]{backstagePasses});
+    }
+    @ParameterizedTest @DisplayName("Quality increases by 2 when there are 10 days or less.")
+    @CsvSource({
+            "Backstage passes,                          10, 40, 42",
+            "Backstage passes to a TAFKAL80ETC concert, 10, 40, 42",
+            "Backstage passes,                           5, 40, 43",
+            "Backstage passes to a TAFKAL80ETC concert,  1, 40, 43",
+            "Backstage passes to a TAFKAL80ETC concert,  0, 40,  0",
+            "Backstage passes,                           1, 40, 43",
+            "Backstage passes,                           0, 40,  0"
+    })
+    void qualityIncreasesBy2WhenThereAre10DaysOrLess(String itemName, int sellIn, int quality, int expectedQuality) {
+        final Item backstagePasses = new Item(itemName, sellIn, quality);
+        final GildedRose app = new GildedRose(new Item[]{backstagePasses});
 
-            app.updateQuality();
+        app.updateQuality();
 
-            final Item updated = app.items[0];
-            then(updated.quality).isEqualTo(42);
-        }
-
-
+        final Item updated = app.items[0];
+        then(updated.quality).isEqualTo(expectedQuality);
     }
 }
