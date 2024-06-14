@@ -39,7 +39,6 @@
 				<artifactId>byte-buddy</artifactId>
 				<version>1.14.9</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -160,8 +159,39 @@
 			<artifactId>annotations</artifactId>
 			<version>24.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-maven</artifactId>
+			<version>1.16.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-	
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.16.1</version>
+				<configuration>
+					<targetClasses>
+						<param>gildedrose2.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>gildedrose2.*</param>
+					</targetTests>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-junit5-plugin</artifactId>
+						<version>1.2.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
 	<repositories>
 		<repository>
 			<id>jitpack.io</id>
