@@ -1,66 +1,52 @@
 package gildedrose2;
 
 class GildedRose {
-    
-    public static final String SULFURAS = "Sulfuras";
-    public static final String BACKSTAGE_PASSES = "Backstage passes";
-    public static final String AGED_BRIE = "Aged Brie";
+
     Item[] items;
 
-    public GildedRose(Item[] items) {
+    public GildedRose(final Item[] items) {
         this.items = items;
     }
 
+    // TODO refactor:
+    // option 1: join nested ifs
+    // option 2: find duplicated code and refactor methods
     public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            if (!items[i].name.equals(AGED_BRIE)
-                    && !items[i].name.startsWith(BACKSTAGE_PASSES)) {
-                if (items[i].quality > 0) {
-                    if (!items[i].name.startsWith(SULFURAS)) {
-                        items[i].quality = items[i].quality - 1;
-                    }
+        for (final Item item : items) {
+            if (!item.isAgedBrie() && !item.isBackstagePasses()) {
+                if (!item.isSulfuras() && item.isQualityPositive()) {
+                    item.decreaseQualityByOne();
                 }
             } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1;
+                
+                item.increaseQualityByOneSafely();
 
-                    if (items[i].name.startsWith(BACKSTAGE_PASSES)) {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
+                if (item.isBackstagePasses())
+                    if (item.isQualityBelowMax()) {
+                        if (item.isSellInSmallerEleven()) {
+                            item.increaseQualityByOneSafely();
                         }
 
-                        if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
+                        if (item.isSellInSmallerSix()) {
+                            item.increaseQualityByOneSafely();
                         }
                     }
-                }
             }
 
-            if (!items[i].name.startsWith(SULFURAS)) {
-                items[i].sellIn = items[i].sellIn - 1;
+            if (!item.isSulfuras()) {
+                item.decreaseSellInByOne();
             }
 
-            if (items[i].sellIn < 0) {
-                if (!items[i].name.equals(AGED_BRIE)) {
-                    if (!items[i].name.startsWith(BACKSTAGE_PASSES)) {
-                        if (items[i].quality > 0) {
-                            if (!items[i].name.startsWith(SULFURAS)) {
-                                items[i].quality = items[i].quality - 1;
-                            }
-                        }
-                    } else {
-                        items[i].quality = 0;
-                    }
-                } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1;
-                    }
+            if (item.isSellInNegative()) {
+                if (item.isAgedBrie()) {
+                    item.increaseQualityByOneSafely();
+                } else if (item.isBackstagePasses()) {
+                    item.resetQuality();
+                } else if (!item.isSulfuras() && item.isQualityPositive()) {
+                    item.decreaseQualityByOne();
                 }
             }
         }
     }
+
 }

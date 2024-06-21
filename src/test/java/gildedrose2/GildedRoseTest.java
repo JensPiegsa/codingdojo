@@ -11,17 +11,27 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * see:  
  */
 class GildedRoseTest {
 
-    @Test @DisplayName("new requirements")
-    void newRequirements() {
-        fail();
-        // see requirements
+    @Disabled
+    @ParameterizedTest @DisplayName("Conjured item decreases doubled in quality.")
+    @CsvSource({
+            "nonConjured,  1, 40, 39",
+            "Conjured,     1, 40, 38",
+            "nonConjured,  0, 40, 38",
+            "Conjured,     0, 40, 36"
+    })
+    void conjuredItemDecreasesDoubledInQuality(String itemName, int sellIn, int quality, int expectedQuality) {
+        final Item[] items = { new Item(itemName, sellIn, quality) };
+        final GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        then(items[0].quality).isEqualTo(expectedQuality);
     }
 
     @Test @DisplayName("can age item.")
