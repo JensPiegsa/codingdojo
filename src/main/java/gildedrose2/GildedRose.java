@@ -18,7 +18,7 @@ class GildedRose {
                     item.decreaseQualityByOne();
                 }
             } else {
-                
+
                 item.increaseQualityByOneSafely();
 
                 if (item.isBackstagePasses())
@@ -42,9 +42,12 @@ class GildedRose {
                     item.increaseQualityByOneSafely();
                 } else if (item.isBackstagePasses()) {
                     item.resetQuality();
-                } else if (!item.isSulfuras() && item.isQualityPositive()) {
+                } else if (item.isSulfuras()) {
+                    // continue;
+                } else if (item.isQualityPositive()) {
                     item.decreaseQualityByOne();
                 }
+
             }
         }
     }
