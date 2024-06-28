@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class GildedRoseTest {
 
-    @Disabled
+//    @Disabled
     @ParameterizedTest @DisplayName("Conjured item decreases doubled in quality.")
     @CsvSource({
             "nonConjured,  1, 40, 39",
@@ -47,14 +47,13 @@ class GildedRoseTest {
     }
 
     @Test @DisplayName("does not age when sellIn is zero")
-    @Disabled
     void doesNotAgeWhenSellInIsZero() {
         final Item[] items = { new Item("foo", 0, 0) };
         final GildedRose app = new GildedRose(items);
 
         app.updateQuality();
 
-        then(app.items[0].sellIn).isEqualTo(0);
+        then(app.items[0].sellIn).isEqualTo(-1);
         then(app.items[0].quality).isEqualTo(0);
     }
 

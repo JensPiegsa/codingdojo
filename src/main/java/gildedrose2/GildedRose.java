@@ -17,16 +17,6 @@ class GildedRose {
 
                 item.increaseQualityByOneSafely();
 
-                if (item.isBackstagePasses())
-                    if (item.isQualityBelowMax()) {
-                        if (item.isSellInSmallerEleven()) {
-                            item.increaseQualityByOneSafely();
-                        }
-
-                        if (item.isSellInSmallerSix()) {
-                            item.increaseQualityByOneSafely();
-                        }
-                    }
             } else if (item.isBackstagePasses()) {
 
                 item.increaseQualityByOneSafely();
