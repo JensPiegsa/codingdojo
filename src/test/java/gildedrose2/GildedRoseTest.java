@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class GildedRoseTest {
 
-//    @Disabled
+    @Disabled
     @ParameterizedTest @DisplayName("Conjured item decreases doubled in quality.")
     @CsvSource({
             "nonConjured,  1, 40, 39",

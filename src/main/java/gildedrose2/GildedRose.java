@@ -32,25 +32,25 @@ class GildedRose {
             } else if (item.isSulfuras()) {
                 // nothing to do
             } else {
-                if (item.isQualityPositive()) {
-                    item.decreaseQualityByOne();
-                }
+                item.decreaseQualityByOneSafely();
             }
 
             if (!item.isSulfuras()) {
                 item.decreaseSellInByOne();
             }
 
-            if (item.isSellInNegative()) {
-                if (item.isAgedBrie()) {
+            if (item.isAgedBrie()) {
+                if (item.isSellInNegative()) {
                     item.increaseQualityByOneSafely();
-                } else if (item.isBackstagePasses()) {
-                    item.resetQuality();
-                } else if (item.isSulfuras()) {
-                    // continue;
-                } else if (item.isQualityPositive()) {
-                    item.decreaseQualityByOne();
                 }
+            } else if (item.isBackstagePasses()) {
+                if (item.isSellInNegative()) {
+                    item.resetQuality();
+                }
+            } else if (item.isSulfuras()) {
+                // continue;
+            } else if (item.isSellInNegative()) {
+                item.decreaseQualityByOneSafely();
             }
         }
     }

@@ -59,9 +59,15 @@ public class Item {
         return name.startsWith(SULFURAS);
     }
 
-    void increaseQualityByOneSafely() {
+    public void increaseQualityByOneSafely() {
         if (isQualityBelowMax()) {
             quality++;
+        }
+    }
+
+    public void decreaseQualityByOneSafely() {
+        if (isQualityPositive()) {
+            decreaseQualityByOne();
         }
     }
 
