@@ -13,14 +13,15 @@ class GildedRose {
     // option 2: find duplicated code and refactor methods
     public void updateQuality() {
         for (final Item item : items) {
+            
             if (item.isAgedBrie()) {
-
                 item.increaseQualityByOneSafely();
-
+                item.decreaseSellInByOne();
+                if (item.isSellInNegative()) {
+                    item.increaseQualityByOneSafely();
+                }
             } else if (item.isBackstagePasses()) {
-
                 item.increaseQualityByOneSafely();
-                
                 if (item.isQualityBelowMax()) {
                     if (item.isSellInSmallerEleven()) {
                         item.increaseQualityByOneSafely();
@@ -29,28 +30,18 @@ class GildedRose {
                         item.increaseQualityByOneSafely();
                     }
                 }
-            } else if (item.isSulfuras()) {
-                // nothing to do
-            } else {
-                item.decreaseQualityByOneSafely();
-            }
-
-            if (!item.isSulfuras()) {
                 item.decreaseSellInByOne();
-            }
-
-            if (item.isAgedBrie()) {
-                if (item.isSellInNegative()) {
-                    item.increaseQualityByOneSafely();
-                }
-            } else if (item.isBackstagePasses()) {
                 if (item.isSellInNegative()) {
                     item.resetQuality();
                 }
             } else if (item.isSulfuras()) {
-                // continue;
-            } else if (item.isSellInNegative()) {
+                // nothing to do
+            } else {
                 item.decreaseQualityByOneSafely();
+                item.decreaseSellInByOne();
+                if (item.isSellInNegative()) {
+                    item.decreaseQualityByOneSafely();
+                }
             }
         }
     }
