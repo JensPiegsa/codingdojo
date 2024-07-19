@@ -17,37 +17,37 @@ public class ItemProcessor {
         if (isSulfuras()) {
             // nothing to do
         } else if (isAgedBrie()) {
-            if (isSellInZero()) {
+            decreaseSellInByOne();
+            if (isSellIn(-1)) {
                 increaseQualitySafelyBy(2);
             } else {
                 increaseQualitySafelyBy(1);
             }
-            decreaseSellInByOne();
         } else if (isBackstagePasses()) {
-            if (isSellInBetweenInclusive(7, 11)) {
+            decreaseSellInByOne();
+            if (isSellInBetweenInclusive(6, 10)) {
                 increaseQualitySafelyBy(2);
-            } else if (isSellInBetweenInclusive(1, 6)) {
+            } else if (isSellInBetweenInclusive(0, 5)) {
                 increaseQualitySafelyBy(3);
-            } else if (isSellInZero()) {
+            } else if (isSellIn(-1)) {
                 resetQuality();
             } else {
                 increaseQualitySafelyBy(1);
             }
-            decreaseSellInByOne();
         } else if (isConjured()) {
-            if (isSellInZero()) {
+            decreaseSellInByOne();
+            if (isSellIn(-1)) {
                 decreaseQualitySafelyBy(4);
             } else {
                 decreaseQualitySafelyBy(2);
             }
-            decreaseSellInByOne();
         } else { // default item
-            if (isSellInZero()) {
+            decreaseSellInByOne();
+            if (isSellIn(-1)) {
                 decreaseQualitySafelyBy(2);
             } else {
                 decreaseQualitySafelyBy(1);
             }
-            decreaseSellInByOne();
         }
     }
 
@@ -59,28 +59,8 @@ public class ItemProcessor {
         return item.sellIn >= lowerBoundInclusive && item.sellIn <= upperBoundInclusive;
     }
 
-    private boolean isSellInZero() {
-        return item.sellIn == 0;
-    }
-
-    public boolean isSellInSmallerSix() {
-        return item.sellIn < 6;
-    }
-
-    public boolean isSellInSmallerEleven() {
-        return item.sellIn < 11;
-    }
-
-    public void decreaseQualityByOne() {
-        item.quality--;
-    }
-
-    public boolean isQualityPositive() {
-        return item.quality > 0;
-    }
-
-    public boolean isQualityBelowMax() {
-        return item.quality < MAXIMUM_QUALITY;
+    private boolean isSellIn(int i) {
+        return item.sellIn == i;
     }
 
     @Override
