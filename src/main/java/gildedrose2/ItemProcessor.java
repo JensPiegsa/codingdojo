@@ -17,16 +17,13 @@ public class ItemProcessor {
         if (isSulfuras()) {
             // nothing to do
         } else if (isAgedBrie()) {
-            // update quality
             if (isSellInZero()) {
                 increaseQualitySafelyBy(2);
             } else {
                 increaseQualitySafelyBy(1);
             }
-            // update sell-in
             decreaseSellInByOne();
         } else if (isBackstagePasses()) {
-            // update quality
             if (isSellinBetweenSevenAndEleven()) {
                 increaseQualitySafelyBy(2);
             } else if (isSellInBetweenOneAndSix()) {
@@ -36,25 +33,20 @@ public class ItemProcessor {
             } else {
                 increaseQualitySafelyBy(1);
             }
-            // update sell-in
             decreaseSellInByOne();
         } else if (isConjured()) {
-            // update quality
             if (isSellInZero()) {
                 decreaseQualitySafelyBy(4);
             } else {
                 decreaseQualitySafelyBy(2);
             }
-            // update sell-in
             decreaseSellInByOne();
         } else { // default item
-            // update quality
             if (isSellInZero()) {
                 decreaseQualitySafelyBy(2);
             } else {
                 decreaseQualitySafelyBy(1);
             }
-            // update sell-in
             decreaseSellInByOne();
         }
     }
