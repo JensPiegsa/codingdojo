@@ -126,4 +126,14 @@ class ItemProcessorTest {
 
         then(backstagePasses.getQuality()).isEqualTo(expectedQuality);
     }
+
+    @Test
+    @DisplayName("Negative Sell-In should result in double quality decrease")
+    void negativeSellInShouldResultInDoubleQualityDecrease() {
+        final ItemProcessor backstagePasses = new ItemProcessor(new Item("Item", -1, 4));
+        backstagePasses.updateQualityAndSellIn();
+
+        then(backstagePasses.getSellIn()).isEqualTo(-2);
+        then(backstagePasses.getQuality()).isEqualTo(2);
+    }
 }

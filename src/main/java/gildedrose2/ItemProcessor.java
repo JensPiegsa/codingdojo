@@ -1,6 +1,7 @@
 package gildedrose2;
 
 public class ItemProcessor {
+    
     public static final int MAXIMUM_QUALITY = 50;
     public static final String SULFURAS = "Sulfuras";
     public static final String BACKSTAGE_PASSES = "Backstage passes";
@@ -17,45 +18,37 @@ public class ItemProcessor {
         if (isSulfuras()) {
             // nothing to do
         } else if (isAgedBrie()) {
-            // update quality
-            if (isSellInZero()) {
+            decreaseSellInByOne();
+            if (isSellInNegative()) {
                 increaseQualitySafelyBy(2);
             } else {
                 increaseQualitySafelyBy(1);
             }
-            // update sell-in
-            decreaseSellInByOne();
         } else if (isBackstagePasses()) {
-            // update quality
-            if (isSellinBetweenSevenAndEleven()) {
+            decreaseSellInByOne();
+            if (isSellInBetweenInclusive(6, 10)) {
                 increaseQualitySafelyBy(2);
-            } else if (isSellInBetweenOneAndSix()) {
+            } else if (isSellInBetweenInclusive(0, 5)) {
                 increaseQualitySafelyBy(3);
-            } else if (isSellInZero()) {
+            } else if (isSellInNegative()) {
                 resetQuality();
             } else {
                 increaseQualitySafelyBy(1);
             }
-            // update sell-in
-            decreaseSellInByOne();
         } else if (isConjured()) {
-            // update quality
-            if (isSellInZero()) {
+            decreaseSellInByOne();
+            if (isSellInNegative()) {
                 decreaseQualitySafelyBy(4);
             } else {
                 decreaseQualitySafelyBy(2);
             }
-            // update sell-in
-            decreaseSellInByOne();
         } else { // default item
-            // update quality
-            if (isSellInZero()) {
+            decreaseSellInByOne();
+            if (isSellInNegative()) {
                 decreaseQualitySafelyBy(2);
             } else {
                 decreaseQualitySafelyBy(1);
             }
-            // update sell-in
-            decreaseSellInByOne();
         }
     }
 
@@ -63,36 +56,12 @@ public class ItemProcessor {
         item.quality = Math.max(item.quality - count, 0);
     }
 
-    private boolean isSellInBetweenOneAndSix() {
-        return item.sellIn <= 6 && item.sellIn >= 1;
+    private boolean isSellInBetweenInclusive(final int lowerBoundInclusive, final int upperBoundInclusive) {
+        return item.sellIn >= lowerBoundInclusive && item.sellIn <= upperBoundInclusive;
     }
 
-    private boolean isSellinBetweenSevenAndEleven() {
-        return item.sellIn <= 11 && item.sellIn >= 7;
-    }
-
-    private boolean isSellInZero() {
-        return item.sellIn == 0;
-    }
-
-    public boolean isSellInSmallerSix() {
-        return item.sellIn < 6;
-    }
-
-    public boolean isSellInSmallerEleven() {
-        return item.sellIn < 11;
-    }
-
-    public void decreaseQualityByOne() {
-        item.quality--;
-    }
-
-    public boolean isQualityPositive() {
-        return item.quality > 0;
-    }
-
-    public boolean isQualityBelowMax() {
-        return item.quality < MAXIMUM_QUALITY;
+    private boolean isSellInNegative() {
+        return item.sellIn < 0;
     }
 
     @Override
@@ -120,16 +89,12 @@ public class ItemProcessor {
         return item.name.startsWith(SULFURAS);
     }
 
-    private void increaseQualitySafelyBy(int count) {
+    private void increaseQualitySafelyBy(final int count) {
         item.quality = Math.min(MAXIMUM_QUALITY, item.quality + count);
     }
 
     public void decreaseSellInByOne() {
         item.sellIn -= 1;
-    }
-
-    public boolean isSellInNegative() {
-        return item.sellIn < 0;
     }
 
     public int getQuality() {
