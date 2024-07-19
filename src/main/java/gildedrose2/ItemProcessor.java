@@ -24,9 +24,9 @@ public class ItemProcessor {
             }
             decreaseSellInByOne();
         } else if (isBackstagePasses()) {
-            if (isSellinBetweenSevenAndEleven()) {
+            if (isSellInBetweenInclusive(7, 11)) {
                 increaseQualitySafelyBy(2);
-            } else if (isSellInBetweenOneAndSix()) {
+            } else if (isSellInBetweenInclusive(1, 6)) {
                 increaseQualitySafelyBy(3);
             } else if (isSellInZero()) {
                 resetQuality();
@@ -55,12 +55,8 @@ public class ItemProcessor {
         item.quality = Math.max(item.quality - count, 0);
     }
 
-    private boolean isSellInBetweenOneAndSix() {
-        return item.sellIn <= 6 && item.sellIn >= 1;
-    }
-
-    private boolean isSellinBetweenSevenAndEleven() {
-        return item.sellIn <= 11 && item.sellIn >= 7;
+    private boolean isSellInBetweenInclusive(final int lowerBoundInclusive, final int upperBoundInclusive) {
+        return item.sellIn >= lowerBoundInclusive && item.sellIn <= upperBoundInclusive;
     }
 
     private boolean isSellInZero() {
