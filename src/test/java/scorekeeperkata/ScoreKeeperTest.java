@@ -1,5 +1,11 @@
 package scorekeeperkata;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ScoreKeeperTest {
@@ -23,5 +29,15 @@ void scoreTeamB3()
 String getScore()
 
      */
+
+    @Test @DisplayName("score keeper can get score.")
+    void scoreKeeperCanGetScore() {
+        ScoreKeeper scoreKeeper = new ScoreKeeper();
+
+        String score = scoreKeeper.getScore();
+
+        Pattern pattern = Pattern.compile("[0-9]{3}:[0-9]{3}");
+        then(pattern.matcher(score).find()).isTrue();
+    }
 
 }
