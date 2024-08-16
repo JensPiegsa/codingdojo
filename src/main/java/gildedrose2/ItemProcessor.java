@@ -1,6 +1,7 @@
 package gildedrose2;
 
 public class ItemProcessor {
+    
     public static final int MAXIMUM_QUALITY = 50;
     public static final String SULFURAS = "Sulfuras";
     public static final String BACKSTAGE_PASSES = "Backstage passes";
@@ -18,7 +19,7 @@ public class ItemProcessor {
             // nothing to do
         } else if (isAgedBrie()) {
             decreaseSellInByOne();
-            if (isSellIn(-1)) {
+            if (isSellInNegative()) {
                 increaseQualitySafelyBy(2);
             } else {
                 increaseQualitySafelyBy(1);
@@ -29,21 +30,21 @@ public class ItemProcessor {
                 increaseQualitySafelyBy(2);
             } else if (isSellInBetweenInclusive(0, 5)) {
                 increaseQualitySafelyBy(3);
-            } else if (isSellIn(-1)) {
+            } else if (isSellInNegative()) {
                 resetQuality();
             } else {
                 increaseQualitySafelyBy(1);
             }
         } else if (isConjured()) {
             decreaseSellInByOne();
-            if (isSellIn(-1)) {
+            if (isSellInNegative()) {
                 decreaseQualitySafelyBy(4);
             } else {
                 decreaseQualitySafelyBy(2);
             }
         } else { // default item
             decreaseSellInByOne();
-            if (isSellIn(-1)) {
+            if (isSellInNegative()) {
                 decreaseQualitySafelyBy(2);
             } else {
                 decreaseQualitySafelyBy(1);
@@ -59,8 +60,8 @@ public class ItemProcessor {
         return item.sellIn >= lowerBoundInclusive && item.sellIn <= upperBoundInclusive;
     }
 
-    private boolean isSellIn(int i) {
-        return item.sellIn == i;
+    private boolean isSellInNegative() {
+        return item.sellIn < 0;
     }
 
     @Override
@@ -88,16 +89,12 @@ public class ItemProcessor {
         return item.name.startsWith(SULFURAS);
     }
 
-    private void increaseQualitySafelyBy(int count) {
+    private void increaseQualitySafelyBy(final int count) {
         item.quality = Math.min(MAXIMUM_QUALITY, item.quality + count);
     }
 
     public void decreaseSellInByOne() {
         item.sellIn -= 1;
-    }
-
-    public boolean isSellInNegative() {
-        return item.sellIn < 0;
     }
 
     public int getQuality() {
