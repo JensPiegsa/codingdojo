@@ -1,9 +1,6 @@
 package trivia.uglytrivia;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
@@ -15,37 +12,60 @@ public final class Game {
     int[] purses = new int[6];
     boolean[] inPenaltyBox = new boolean[6];
 
-    LinkedList<String> popQuestions = new LinkedList<>();
-    LinkedList<String> scienceQuestions = new LinkedList<>();
-    LinkedList<String> sportsQuestions = new LinkedList<>();
-    LinkedList<String> rockQuestions = new LinkedList<>();
+    Map<String, LinkedList<String>> questions = new HashMap<>();
 
     int currentPlayer;
-    boolean isGettingOutOfPenaltyBox;
 
     public Game(final Random rand) {
         this.rand = rand;
+        questions.put("Pop", new LinkedList<>());
+        questions.put("Science", new LinkedList<>());
+        questions.put("Sports", new LinkedList<>());
+        questions.put("Rock", new LinkedList<>());
+
         IntStream.range(0, 50).forEach(i -> {
-            popQuestions.addLast("Pop Question " + i);
-            scienceQuestions.addLast("Science Question " + i);
-            sportsQuestions.addLast("Sports Question " + i);
-            rockQuestions.addLast("Rock Question " + i);
+            questions.get("Pop").addLast( "Pop Question " + i);
+            questions.get("Science").addLast( "Science Question " + i);
+            questions.get("Sports").addLast( "Sports Question " + i);
+            questions.get("Rock").addLast( "Rock Question " + i);
         });
     }
 
     public void play() {
+        boolean winner = false;
 
-        boolean winner;
         do {
+            boolean isGettingOutOfPenaltyBox;
+            boolean finished = false;
+            int roll = rollW6();
 
-            roll(rand.nextInt(5) + 1);
+            isGettingOutOfPenaltyBox = roll % 2 == 1;
+            if (isInPenaltyBox() && !isGettingOutOfPenaltyBox) {
+                System.out.println(currentPlayer() + " is not getting out of the penalty box");
+                finished = true;
+            }
+            if (isInPenaltyBox() && isGettingOutOfPenaltyBox) {
+                System.out.println(currentPlayer() + " is getting out of the penalty box");
+            }
+            if (!finished) {
+                incrementPlace(roll);
+                System.out.println(currentPlayer() + "'s new location is " + currentPlace());
+                System.out.println("The category is " + currentCategory());
+                askQuestion();
+            }
 
             if (rand.nextInt(9) == 7) {
-                wrongAnswer();
-                winner = false;
-            } else {
-                winner = !wasCorrectlyAnswered();
+                System.out.println("Question was incorrectly answered");
+                System.out.println(currentPlayer() + " was sent to the penalty box");
+                putIntoPenaltyBox(currentPlayer);
+            } else if (!isInPenaltyBox() || isGettingOutOfPenaltyBox) {
+                System.out.println("Answer was correct!!!!");
+                incrementGold();
+                System.out.println(currentPlayer() + " now has " + currentGold() + " Gold Coins.");
+
+                winner = !didPlayerWin();
             }
+            nextPlayer();
 
         } while (!winner);
 
@@ -67,70 +87,37 @@ public final class Game {
         return players.size();
     }
 
-    public void roll(final int roll) {
+    private int rollW6() {
+        int roll = rand.nextInt(5) + 1;
         System.out.println(currentPlayer() + " is the current player");
         System.out.println("They have rolled a " + roll);
-
-        if (isInPenaltyBox()) {
-            if (roll % 2 == 0) {
-                System.out.println(currentPlayer() + " is not getting out of the penalty box");
-                isGettingOutOfPenaltyBox = false;
-                return;
-            } else {
-                isGettingOutOfPenaltyBox = true;
-                System.out.println(currentPlayer() + " is getting out of the penalty box");
-            }
-        }
-        incrementPlace(roll);
-        System.out.println(currentPlayer() + "'s new location is " + currentPlace());
-        System.out.println("The category is " + currentCategory());
-        askQuestion();
+        return roll;
     }
 
     private void incrementPlace(final int roll) {
-        places[currentPlayer] += roll;
-        checkOverflow();
+        places[currentPlayer] = (places[currentPlayer] + roll) % 12;
     }
 
     private int currentPlace() {
         return places[currentPlayer];
     }
 
-    private void checkOverflow() {
-        if (currentPlace() > 11) {
-            places[currentPlayer] -= 12;
-        }
-    }
-
     private void askQuestion() {
         final String currentCategory = currentCategory();
-        switch (currentCategory) {
-            case "Pop" -> System.out.println(popQuestions.removeFirst());
-            case "Science" -> System.out.println(scienceQuestions.removeFirst());
-            case "Sports" -> System.out.println(sportsQuestions.removeFirst());
-            case "Rock" -> System.out.println(rockQuestions.removeFirst());
-            default -> throw new IllegalStateException("Unexpected value: " + currentCategory);
-        }
+        String question = questions.get(currentCategory).removeFirst();
+        System.out.println(question);
     }
 
 
     private String currentCategory() {
-        final int place = currentPlace();
+        final int place = currentPlace() % 4;
         return switch (place) {
-            case 0, 4, 8 -> "Pop";
-            case 1, 5, 9 -> "Science";
-            case 2, 6, 10 -> "Sports";
-            default -> "Rock";
+            case 0 -> "Pop";
+            case 1 -> "Science";
+            case 2 -> "Sports";
+            case 3 -> "Rock";
+            default -> throw new IllegalStateException("Unexpected value: " + place);
         };
-    }
-
-    public boolean wasCorrectlyAnswered() {
-        if (!isInPenaltyBox() || isGettingOutOfPenaltyBox) {
-            return correctAnswer();
-        } else {
-            nextPlayer();
-            return true;
-        }
     }
 
     private boolean isInPenaltyBox() {
@@ -139,17 +126,6 @@ public final class Game {
 
     private void nextPlayer() {
         currentPlayer = (currentPlayer + 1) % players.size();
-    }
-
-    private boolean correctAnswer() {
-        System.out.println("Answer was correct!!!!");
-        incrementGold();
-        System.out.println(currentPlayer() + " now has " + currentGold() + " Gold Coins.");
-
-        final boolean winner = didPlayerWin();
-        nextPlayer();
-
-        return winner;
     }
 
     private void incrementGold() {
@@ -164,11 +140,8 @@ public final class Game {
         return players.get(currentPlayer);
     }
 
-    public void wrongAnswer() {
-        System.out.println("Question was incorrectly answered");
-        System.out.println(currentPlayer() + " was sent to the penalty box");
-        inPenaltyBox[currentPlayer] = true;
-        nextPlayer();
+    private void putIntoPenaltyBox(int player) {
+        inPenaltyBox[player] = true;
     }
 
 
