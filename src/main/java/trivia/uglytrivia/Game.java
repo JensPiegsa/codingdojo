@@ -36,25 +36,23 @@ public final class Game {
 
         do {
             boolean isGettingOutOfPenaltyBox;
-            boolean finished = false;
-            int roll = rollW6();
+            int roll = rollDiceWith6Sides();
 
             isGettingOutOfPenaltyBox = roll % 2 == 1;
             if (isInPenaltyBox() && !isGettingOutOfPenaltyBox) {
                 System.out.println(currentPlayer() + " is not getting out of the penalty box");
-                finished = true;
             }
             if (isInPenaltyBox() && isGettingOutOfPenaltyBox) {
                 System.out.println(currentPlayer() + " is getting out of the penalty box");
             }
-            if (!finished) {
+            if (!isInPenaltyBox() || isGettingOutOfPenaltyBox) {
                 incrementPlace(roll);
                 System.out.println(currentPlayer() + "'s new location is " + currentPlace());
                 System.out.println("The category is " + currentCategory());
                 askQuestion();
             }
 
-            if (rand.nextInt(9) == 7) {
+            if (playerHasIncorrectAnswer()) {
                 System.out.println("Question was incorrectly answered");
                 System.out.println(currentPlayer() + " was sent to the penalty box");
                 putIntoPenaltyBox(currentPlayer);
@@ -71,23 +69,24 @@ public final class Game {
 
     }
 
+    private boolean playerHasIncorrectAnswer() {
+        return rand.nextInt(9) == 7;
+    }
+
     public boolean add(final String playerName) {
 
         players.add(playerName);
-        places[howManyPlayers()] = 0;
-        purses[howManyPlayers()] = 0;
-        inPenaltyBox[howManyPlayers()] = false;
+        final int numberOfPlayers = players.size();
+        places[numberOfPlayers] = 0;
+        purses[numberOfPlayers] = 0;
+        inPenaltyBox[numberOfPlayers] = false;
 
         System.out.println(playerName + " was added");
-        System.out.println("They are player number " + players.size());
+        System.out.println("They are player number " + numberOfPlayers);
         return true;
     }
 
-    public int howManyPlayers() {
-        return players.size();
-    }
-
-    private int rollW6() {
+    private int rollDiceWith6Sides() {
         int roll = rand.nextInt(5) + 1;
         System.out.println(currentPlayer() + " is the current player");
         System.out.println("They have rolled a " + roll);
