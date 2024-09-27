@@ -18,4 +18,12 @@ public class Category {
     public BigDecimal getTaxPercentage() {
         return taxPercentage;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", taxPercentage=" + taxPercentage +
+                '}';
+    }
 }

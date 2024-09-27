@@ -38,4 +38,13 @@ public class Product {
     public int hashCode() {
         return Objects.hash(name, price, category);
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", category=" + category +
+                '}';
+    }
 }

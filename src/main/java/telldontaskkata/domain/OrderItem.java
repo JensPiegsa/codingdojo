@@ -53,4 +53,14 @@ public class OrderItem {
     public int hashCode() {
         return Objects.hash(product, quantity, taxedAmount, tax);
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                ", taxedAmount=" + taxedAmount +
+                ", tax=" + tax +
+                '}';
+    }
 }

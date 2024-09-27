@@ -55,8 +55,10 @@ public class OrderCreationUseCaseTest {
         assertThat(insertedOrder.getTax()).isEqualTo(new BigDecimal("2.13"));
         assertThat(insertedOrder.getCurrency()).isEqualTo("EUR");
         assertThat(insertedOrder.getItems()).hasSize(2);
-        assertThat(insertedOrder.getItems().get(0).getProduct().getName()).isEqualTo("salad");
-        assertThat(insertedOrder.getItems().get(0).getProduct().getPrice()).isEqualTo(new BigDecimal("3.56"));
+        Product salad = new Product("salad", new BigDecimal("3.56"), food);
+        assertThat(insertedOrder.getItems().get(0).getProduct()).isEqualTo(salad);
+//        assertThat(insertedOrder.getItems().get(0))..getProduct().getName()).isEqualTo("salad");
+//        assertThat(insertedOrder.getItems().get(0).getProduct().getPrice()).isEqualTo(new BigDecimal("3.56"));
         assertThat(insertedOrder.getItems().get(0).getQuantity()).isEqualTo(2);
         assertThat(insertedOrder.getItems().get(0).getTaxedAmount()).isEqualTo(new BigDecimal("7.84"));
         assertThat(insertedOrder.getItems().get(0).getTax()).isEqualTo(new BigDecimal("0.72"));
