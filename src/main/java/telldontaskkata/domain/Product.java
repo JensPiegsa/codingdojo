@@ -47,4 +47,8 @@ public class Product {
                 ", category=" + category +
                 '}';
     }
+
+    public BigDecimal getTaxPercentage() {
+        return category.getTaxPercentage();
+    }
 }

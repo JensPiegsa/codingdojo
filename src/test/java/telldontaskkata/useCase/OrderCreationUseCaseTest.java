@@ -58,6 +58,9 @@ public class OrderCreationUseCaseTest {
         Product salad = productCatalog.getByName("salad");
         assertThat(insertedOrder.getItems().get(0).getProduct()).isEqualTo(salad);
         assertThat(insertedOrder.getItems().get(0).getQuantity()).isEqualTo(2);
+        // price: "3.56"
+        // tax: "10"
+        // quantity: 2
         assertThat(insertedOrder.getItems().get(0).getTaxedAmount()).isEqualTo(new BigDecimal("7.84"));
         assertThat(insertedOrder.getItems().get(0).getTax()).isEqualTo(new BigDecimal("0.72"));
         Product tomato = productCatalog.getByName("tomato");

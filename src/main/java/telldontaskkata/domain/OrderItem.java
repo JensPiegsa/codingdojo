@@ -1,7 +1,10 @@
 package telldontaskkata.domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
+
+import static java.math.RoundingMode.HALF_UP;
 
 public class OrderItem {
     private Product product;
@@ -26,6 +29,9 @@ public class OrderItem {
     }
 
     public BigDecimal getTaxedAmount() {
+        BigDecimal price = product.getPrice();
+        BigDecimal taxPercentage = product.getTaxPercentage();
+        taxedAmount = price.multiply(taxPercentage.add(new BigDecimal(100))).divide(new BigDecimal(100), HALF_UP).multiply(new BigDecimal(quantity));
         return taxedAmount;
     }
 

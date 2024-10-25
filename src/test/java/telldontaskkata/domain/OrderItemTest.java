@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrderItemTest {
+
     @Test
     void canCalculateTaxAmount() {
         Category smallTax = new Category("smallTax", new BigDecimal(10));
@@ -17,6 +18,6 @@ class OrderItemTest {
         item.setProduct(product);
         item.setQuantity(2);
 
-        assertThat(item.getTaxedAmount()).isEqualTo(new BigDecimal("24.6"));
+        assertThat(item.getTaxedAmount()).isEqualTo(new BigDecimal("270.6"));
     }
 }
