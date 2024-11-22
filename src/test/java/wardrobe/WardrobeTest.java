@@ -7,6 +7,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WardrobeTest {
 
+
+    // https://kata-log.rocks/configure-wardrobe-kata
+
     @Test @DisplayName("new class")
     void newClass() {
         Wardrobe wardrobe = new Wardrobe();
