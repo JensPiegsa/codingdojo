@@ -23,4 +23,10 @@ public class Wardrobe {
                 .mapToInt(WardrobeElement::cost)
                 .sum();
     }
+
+    public Wardrobe copy() {
+        Wardrobe wardrobe = new Wardrobe();
+        wardrobe.allElements.addAll(allElements);
+        return wardrobe;
+    }
 }

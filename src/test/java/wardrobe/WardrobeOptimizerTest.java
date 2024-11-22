@@ -29,8 +29,7 @@ class WardrobeOptimizerTest {
 
         WardrobeElement wardrobeElementSmall = new WardrobeElement(2, 59);
         WardrobeElement wardrobeElementBig = new WardrobeElement(50, 59);
-        final List<WardrobeElement> possibleElements =
-                List.of(wardrobeElementSmall, wardrobeElementBig);
+        final List<WardrobeElement> possibleElements = List.of(wardrobeElementSmall, wardrobeElementBig);
 
         WardrobeElement element = optimizer.findSmallest(possibleElements);
     }
@@ -41,8 +40,7 @@ class WardrobeOptimizerTest {
         final int wallSize = 5;
         final WardrobeOptimizer optimizer = new WardrobeOptimizer(wallSize);
         WardrobeElement wardrobeElement = new WardrobeElement(50, 59);
-        final List<WardrobeElement> possibleElements =
-                List.of(wardrobeElement);
+        final List<WardrobeElement> possibleElements = List.of(wardrobeElement);
         final List<Wardrobe> combinations = optimizer.getAllCombinations(possibleElements);
 
         then(combinations).isEmpty();
@@ -54,12 +52,27 @@ class WardrobeOptimizerTest {
         final int wallSize = 100;
         final WardrobeOptimizer optimizer = new WardrobeOptimizer(wallSize);
         WardrobeElement wardrobeElement = new WardrobeElement(50, 59);
-        final List<WardrobeElement> possibleElements =
-                List.of(wardrobeElement);
+        final List<WardrobeElement> possibleElements = List.of(wardrobeElement);
         final List<Wardrobe> combinations = optimizer.getAllCombinations(possibleElements);
 
         then(combinations).hasSize(1);
-        Wardrobe actualWardrobe = combinations.get(0);
+        Wardrobe actualWardrobe = combinations.getFirst();
         then(actualWardrobe.getTotalWidth()).isEqualTo(100);
+    }
+
+    @Test
+    void canFindMaxElement() {
+        final int wallSize = 5;
+        final WardrobeOptimizer optimizer = new WardrobeOptimizer(wallSize);
+        WardrobeElement one = new WardrobeElement(3, 59);
+        WardrobeElement two = new WardrobeElement(5, 59);
+        final List<WardrobeElement> possibleElements = List.of(one, two);
+
+        final List<Wardrobe> combinations = optimizer.getAllCombinations(possibleElements);
+
+        then(combinations).hasSize(1);
+        Wardrobe actualWardrobe = combinations.getFirst();
+        then(actualWardrobe.getTotalWidth()).isEqualTo(5);
+
     }
 }
