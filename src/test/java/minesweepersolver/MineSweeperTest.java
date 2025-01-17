@@ -25,4 +25,5 @@ class MineSweeperTest {
         assertThat(solvedBoard).isEqualTo("?");
     }
 
+
 }

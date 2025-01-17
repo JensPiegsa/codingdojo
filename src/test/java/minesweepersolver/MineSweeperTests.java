@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.runners.JUnit4;
 
 public class MineSweeperTests {
+
+    // https://www.codewars.com/kata/57ff9d3b8f7dda23130015fa/train/java
+
     /* Data structure for one test: 
      *      0 -> name or comment of the test
      *      1 -> original map
