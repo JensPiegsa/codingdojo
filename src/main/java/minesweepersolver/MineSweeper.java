@@ -1,5 +1,7 @@
 package minesweepersolver;
 
+import java.util.Arrays;
+
 public class MineSweeper {
 
     private final Board board;
@@ -31,7 +33,7 @@ class Board {
     }
 
     private void parse(String boardStr) {
-        String[] rows = boardStr.split("\n");
+        String[] rows = boardStr.strip().split("\n");
 
         board = new int[rows.length][];
 
@@ -90,5 +92,13 @@ class Board {
 
     public int get(int row, int column) {
         return board[row][column];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board otherBoard = (Board) o;
+        return Arrays.deepEquals(board, otherBoard.board);
     }
 }

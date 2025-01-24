@@ -24,4 +24,40 @@ class BoardTest {
         final String string = new Board(board).toString();
         then(string).isEqualTo(board);
     }
+
+    @Test @DisplayName("minimal board of size 1 without mines")
+    void minimalBoardOfSize1WithoutMines() {
+    }
+
+    @Test @DisplayName("minimal board of size 2 without mines")
+    void minimalBoardOfSize2WithoutMines() {
+    }
+
+    @Test @DisplayName("minimal board of size 1 with mines only")
+    void minimalBoardOfSize1WithMinesOnly() {
+    }
+
+    @Test @DisplayName("minimal board of size 2 with mines only")
+    void minimalBoardOfSize2WithMinesOnly() {
+    }
+
+    @Test @DisplayName("minimal board of size 2 with mine")
+    void minimalBoardOfSize2WithMine() {
+    }
+
+    @Test @DisplayName("Compare equal boards")
+    void compareEqualBoards() {
+        Board board1 = new Board("2 x\nx 2");
+        Board board2 = new Board("2 x\nx 2");
+
+        assertThat(board1).isEqualTo(board2);
+    }
+
+    @Test @DisplayName("Compare unequal boards")
+    void compareUnequalBoards() {
+        Board board1 = new Board("2 x\nx 2");
+        Board board2 = new Board("2 x\nx ?");
+
+        assertThat(board1).isNotEqualTo(board2);
+    }
 }
