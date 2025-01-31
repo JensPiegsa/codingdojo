@@ -25,5 +25,31 @@ class MineSweeperTest {
         assertThat(solvedBoard).isEqualTo("?");
     }
 
+    /**
+     *   Input:
+     *   0 1 2 2 1
+     *   0 1 x x 1
+     *   0 1 2 2 1
+     *   0 ? 0 0 0
+     *   0 0 0 0 0
+     *   Expected solution:
+     *   0 1 2 2 1
+     *   0 1 x x 1
+     *   0 1 2 2 1
+     *   0 0 0 0 0
+     *   0 0 0 0 0
+     */
+    @Test
+    void solveReturns() {
+        BoardBuilder builder = BoardBuilder.ofSizeUncovered(5, 5)
+                .withMineAt(1, 2)
+                .withMineAt(1, 3)
+                .coveredAt(3, 1);
 
+        Board boardUncovered = builder.getUncovered();
+
+        final String initialBoard = builder.getCovered().toString();
+        final String solvedBoard = new MineSweeper(initialBoard, 2).solve();
+        assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
+    }
 }

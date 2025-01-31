@@ -31,6 +31,7 @@ class Board {
     public Board(String board) {
         parse(board);
     }
+    public Board(int[][] board) {this.board = board;}
 
     private void parse(String boardStr) {
         String[] rows = boardStr.strip().split("\n");
