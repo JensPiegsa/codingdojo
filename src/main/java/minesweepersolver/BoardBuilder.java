@@ -2,16 +2,21 @@ package minesweepersolver;
 
 public class BoardBuilder {
     public static final int MINE = -1;
+    private final int rows;
+    private final int columns;
     private int[][] board;
     private int[][] uncoveredAreas;
 
-    public BoardBuilder() {}
-
-
-    public BoardBuilder ofSize(int rows, int columns) {
+    private BoardBuilder(int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
         board = new int[rows][columns];
         uncoveredAreas = new int[rows][columns];
-        return this;
+    }
+
+
+    public static BoardBuilder ofSize(int rows, int columns) {
+        return new BoardBuilder(rows, columns);
     }
 
     public BoardBuilder withMineAt(int row, int column) {
@@ -19,7 +24,10 @@ public class BoardBuilder {
 
         board[row][column] = MINE;
 
-        // TODO increase neighbor count by one
+        // top row
+        if (row > 0 && column > 0       && board[row - 1][column - 1] != MINE) board[row - 1][column - 1]++;
+        if (row > 0                     && board[row - 1][column] != MINE)     board[row - 1][column]++;
+        if (row > 0 && column < columns && board[row - 1][column - 1] != MINE) board[row - 1][column - 1]++;
 
         return this;
     }
