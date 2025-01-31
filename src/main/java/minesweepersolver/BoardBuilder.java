@@ -25,9 +25,17 @@ public class BoardBuilder {
         board[row][column] = MINE;
 
         // top row
-        if (row > 0 && column > 0       && board[row - 1][column - 1] != MINE) board[row - 1][column - 1]++;
-        if (row > 0                     && board[row - 1][column] != MINE)     board[row - 1][column]++;
-        if (row > 0 && column < columns && board[row - 1][column - 1] != MINE) board[row - 1][column - 1]++;
+        if (row > 0    && column > 0       && board[row - 1][column - 1] != MINE) board[row - 1][column - 1]++;
+        if (row > 0                        && board[row - 1][column] != MINE)     board[row - 1][column]++;
+        if (row > 0    && column < columns && board[row - 1][column + 1] != MINE) board[row - 1][column + 1]++;
+        // middle row
+        if (              column > 0       && board[row    ][column - 1] != MINE) board[row    ][column - 1]++;
+        if (              column < columns && board[row    ][column + 1] != MINE) board[row    ][column + 1]++;
+        // bottom row
+        if (row < rows && column > 0       && board[row + 1][column - 1] != MINE) board[row + 1][column - 1]++;
+        if (row < rows                     && board[row + 1][column] != MINE)     board[row + 1][column]++;
+        if (row < rows && column < columns && board[row + 1][column + 1] != MINE) board[row + 1][column + 1]++;
+
 
         return this;
     }
@@ -43,7 +51,6 @@ public class BoardBuilder {
 
 
     public Board getUncovered() {
-
-        return null;
+        return new Board(board);
     }
 }
