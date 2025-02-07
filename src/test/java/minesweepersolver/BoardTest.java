@@ -60,4 +60,12 @@ class BoardTest {
 
         assertThat(board1).isNotEqualTo(board2);
     }
+
+    @Test @DisplayName("Can return bounds")
+    void canReturnBounds() {
+        Board board1 = new Board("2 x\nx 3\nx 2");
+
+        assertThat(board1.getRows()).isEqualTo(3);
+        assertThat(board1.getColumns()).isEqualTo(2);
+    }
 }

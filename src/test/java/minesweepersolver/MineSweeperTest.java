@@ -30,8 +30,8 @@ class MineSweeperTest {
      *   0 1 2 2 1
      *   0 1 x x 1
      *   0 1 2 2 1
-     *   0 ? 0 0 0
      *   0 0 0 0 0
+     *   0 ? 0 0 0
      *   Expected solution:
      *   0 1 2 2 1
      *   0 1 x x 1
@@ -44,7 +44,7 @@ class MineSweeperTest {
         BoardBuilder builder = BoardBuilder.ofSizeUncovered(5, 5)
                 .withMineAt(1, 2)
                 .withMineAt(1, 3)
-                .coveredAt(3, 1);
+                .coveredAt(4, 1);
 
         Board boardUncovered = builder.getUncovered();
 

@@ -2,6 +2,9 @@ package minesweepersolver;
 
 import java.util.Arrays;
 
+import static minesweepersolver.Board.COVERED_CHAR;
+import static minesweepersolver.BoardBuilder.MINE;
+
 public class MineSweeper {
 
     private final Board board;
@@ -11,11 +14,66 @@ public class MineSweeper {
     }
     
     public String solve() {
-        if (board.isValid()) {
+//        if (board.isValid()) {
+//            return board.toString();
+//        }
+        try {
+            boolean didStep;
+            do {
+                // Call solver step
+                didStep = solverStep(board);
+            } while (didStep);
+
             return board.toString();
+        } catch (NotSolvableException e) {
+            return "?";
         }
-        return "?";
     }
+
+    private boolean solverStep(Board board) throws NotSolvableException {
+        if (!board.toString().contains(COVERED_CHAR)) return false;
+        
+        for(int row = 0; row < board.getRows(); row++) {
+            for(int col = 0; col < board.getColumns(); col++) {
+                if (tryToUncoverCell(board, row, col)) return true;
+            }
+        }
+
+        throw new NotSolvableException();
+    }
+
+    private static boolean tryToUncoverCell(Board board, int row, int col) {
+        int cell = board.get(row, col);
+        if (cell == Board.COVERED) {
+            int cols = board.getColumns() - 1;
+            int rows = board.getRows() - 1;
+
+            if ((row > 0       && col > 0    && board.get(row-1,col-1) == 0)
+                // top row
+                && (row > 0                  && board.get(row-1,col) == 0)
+                && (row > 0    && col < cols && board.get(row-1,col+1) == 0)
+                // middle row
+                && (              col > 0    && board.get(row,col-1) == 0)
+                && (              col < cols && board.get(row,col+1) == 0)
+                // bottom row
+                && (row < rows && col > 0    && board.get(row+1,col-1) == 0)
+                && (row < rows               && board.get(row+1,col) == 0)
+                && (row < rows && col < cols && board.get(row+1,col+1) == 0)) {
+
+                board.set(row, col, 0);
+                return true;
+            }
+
+            // TODO: all other solution strategies
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+class NotSolvableException extends Exception {
 
 }
 
@@ -101,5 +159,17 @@ class Board {
         if (o == null || getClass() != o.getClass()) return false;
         Board otherBoard = (Board) o;
         return Arrays.deepEquals(board, otherBoard.board);
+    }
+
+    public int getRows() {
+        return board.length;
+    }
+
+    public int getColumns() {
+        return board[0].length;
+    }
+
+    public void set(int row, int col, int cellValue) {
+        board[row][col] = cellValue;
     }
 }
