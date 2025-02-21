@@ -4,6 +4,8 @@ import static org.assertj.core.api.BDDAssertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * @author Jens Piegsa
@@ -27,24 +29,29 @@ class MineSweeperTest {
 
     /**
      *   Input:
-     *   0 1 2 2 1
-     *   0 1 x x 1
-     *   0 1 2 2 1
+     *   0 ? 0 0 0  "0,1"
      *   0 0 0 0 0
-     *   0 ? 0 0 0
+     *   0 0 0 0 0
+     *   0 0 0 0 0
+     *   0 ? 0 0 0  "4,1"
      *   Expected solution:
-     *   0 1 2 2 1
-     *   0 1 x x 1
-     *   0 1 2 2 1
+     *   0 0 0 0 0
+     *   0 0 0 0 0
+     *   0 0 0 0 0
      *   0 0 0 0 0
      *   0 0 0 0 0
      */
-    @Test
-    void solveReturns() {
+    @ParameterizedTest
+    @CsvSource({"4,1","0,1",
+                "1,4","1,0",
+                "2,2",
+                "0,0","0,4","4,0","4,4"})
+
+    void solveReturns(final int coveredRow, final int coveredCol) {
         BoardBuilder builder = BoardBuilder.ofSizeUncovered(5, 5)
-                .withMineAt(1, 2)
-                .withMineAt(1, 3)
-                .coveredAt(4, 1);
+//                .withMineAt(1, 2)
+//                .withMineAt(1, 3)
+                .coveredAt(coveredRow, coveredCol);
 
         Board boardUncovered = builder.getUncovered();
 
@@ -52,4 +59,6 @@ class MineSweeperTest {
         final String solvedBoard = new MineSweeper(initialBoard, 2).solve();
         assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
     }
+
+
 }

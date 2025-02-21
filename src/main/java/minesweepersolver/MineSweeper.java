@@ -14,9 +14,6 @@ public class MineSweeper {
     }
     
     public String solve() {
-//        if (board.isValid()) {
-//            return board.toString();
-//        }
         try {
             boolean didStep;
             do {
@@ -31,11 +28,15 @@ public class MineSweeper {
     }
 
     private boolean solverStep(Board board) throws NotSolvableException {
-        if (!board.toString().contains(COVERED_CHAR)) return false;
+        if (!board.toString().contains(COVERED_CHAR)) {
+            return false;
+        }
         
         for(int row = 0; row < board.getRows(); row++) {
             for(int col = 0; col < board.getColumns(); col++) {
-                if (tryToUncoverCell(board, row, col)) return true;
+                if (tryToUncoverCell(board, row, col)) {
+                    return true;
+                }
             }
         }
 
@@ -48,17 +49,19 @@ public class MineSweeper {
             int cols = board.getColumns() - 1;
             int rows = board.getRows() - 1;
 
-            if ((row > 0       && col > 0    && board.get(row-1,col-1) == 0)
+            if (
                 // top row
-                && (row > 0                  && board.get(row-1,col) == 0)
-                && (row > 0    && col < cols && board.get(row-1,col+1) == 0)
+                   ((row == 0)    || (col == 0)    || (row > 0    && col > 0    && board.get(row-1,col-1) == 0))
+                && ((row == 0)    ||                  (row > 0                  && board.get(row-1,col) == 0))
+                && ((row == 0)    || (col == cols) || (row > 0    && col < cols && board.get(row-1,col+1) == 0))
                 // middle row
-                && (              col > 0    && board.get(row,col-1) == 0)
-                && (              col < cols && board.get(row,col+1) == 0)
+                && (                 (col == 0)    || (              col > 0    && board.get(row,col-1) == 0))
+                && (                 (col == cols) || (              col < cols && board.get(row,col+1) == 0))
                 // bottom row
-                && (row < rows && col > 0    && board.get(row+1,col-1) == 0)
-                && (row < rows               && board.get(row+1,col) == 0)
-                && (row < rows && col < cols && board.get(row+1,col+1) == 0)) {
+                && ((row == rows) || (col == 0)    || (row < rows && col > 0    && board.get(row+1,col-1) == 0))
+                && ((row == rows) ||                  (row < rows               && board.get(row+1,col) == 0))
+                && ((row == rows) || (col == cols) || (row < rows && col < cols && board.get(row+1,col+1) == 0))
+            ) {
 
                 board.set(row, col, 0);
                 return true;
