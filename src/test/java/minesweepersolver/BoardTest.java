@@ -63,9 +63,20 @@ class BoardTest {
 
     @Test @DisplayName("Can return bounds")
     void canReturnBounds() {
-        Board board1 = new Board("2 x\nx 3\nx 2");
+        Board board = new Board("2 x\nx 3\nx 2");
 
-        assertThat(board1.getRows()).isEqualTo(3);
-        assertThat(board1.getColumns()).isEqualTo(2);
+        assertThat(board.getRows()).isEqualTo(3);
+        assertThat(board.getColumns()).isEqualTo(2);
+    }
+
+    @Test @DisplayName("Can count mines for given point.")
+    void canCountMines() {
+        Board board = new Board("1 x\n? 1");
+        int row = 1;
+        int column = 0;
+
+        int minesCount = board.countMinesAroundFor(row,column);
+
+        assertThat(minesCount).isEqualTo(1);
     }
 }

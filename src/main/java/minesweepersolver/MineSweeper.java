@@ -3,7 +3,6 @@ package minesweepersolver;
 import java.util.Arrays;
 
 import static minesweepersolver.Board.COVERED_CHAR;
-import static minesweepersolver.BoardBuilder.MINE;
 
 public class MineSweeper {
 
@@ -51,27 +50,25 @@ public class MineSweeper {
 
             if (
                 // top row
-                   ((row == 0)    || (col == 0)    || (row > 0    && col > 0    && board.get(row-1,col-1) == 0))
-                && ((row == 0)    ||                  (row > 0                  && board.get(row-1,col) == 0))
-                && ((row == 0)    || (col == cols) || (row > 0    && col < cols && board.get(row-1,col+1) == 0))
-                // middle row
-                && (                 (col == 0)    || (              col > 0    && board.get(row,col-1) == 0))
-                && (                 (col == cols) || (              col < cols && board.get(row,col+1) == 0))
-                // bottom row
-                && ((row == rows) || (col == 0)    || (row < rows && col > 0    && board.get(row+1,col-1) == 0))
-                && ((row == rows) ||                  (row < rows               && board.get(row+1,col) == 0))
-                && ((row == rows) || (col == cols) || (row < rows && col < cols && board.get(row+1,col+1) == 0))
+                   ((row > 0    && col > 0    && board.get(row-1,col-1) == 0))
+                || ((row > 0                  && board.get(row-1,col) == 0))
+                || ((row > 0    && col < cols && board.get(row-1,col+1) == 0))
+                // middle rows
+                || ((              col > 0    && board.get(row,col-1) == 0))
+                || ((              col < cols && board.get(row,col+1) == 0))
+                // bottom rows
+                || ((row < rows && col > 0    && board.get(row+1,col-1) == 0))
+                || ((row < rows               && board.get(row+1,col) == 0))
+                || ((row < rows && col < cols && board.get(row+1,col+1) == 0))
             ) {
 
-                board.set(row, col, 0);
+                board.set(row, col, board.countMinesAroundFor(row, col));
                 return true;
             }
 
             // TODO: all other solution strategies
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
 }
@@ -174,5 +171,28 @@ class Board {
 
     public void set(int row, int col, int cellValue) {
         board[row][col] = cellValue;
+    }
+
+    public int countMinesAroundFor(int row, int col) {
+        int cols = getColumns() - 1;
+        int rows = getRows() - 1;
+
+        // top row
+        return
+          ((row > 0    && col > 0    && isMine(row-1,col-1) ) ? 1 : 0)
+        + ((row > 0                  && isMine(row-1,col))        ? 1 : 0)
+        + ((row > 0    && col < cols && isMine(row-1,col+1))  ? 1 : 0)
+        // middle rows
+        + ((              col > 0    && isMine(row,col-1))         ? 1 : 0)
+        + ((              col < cols && isMine(row,col+1))         ? 1 : 0)
+        // bottom rows
+        + ((row < rows && col > 0    && isMine(row+1,col-1))  ? 1 : 0)
+        + ((row < rows               && isMine(row+1,col))        ? 1 : 0)
+        + ((row < rows && col < cols && isMine(row+1,col+1))  ? 1 : 0);
+
+    }
+
+    private boolean isMine(int row, int col) {
+        return board[row][col] == MINE;
     }
 }
