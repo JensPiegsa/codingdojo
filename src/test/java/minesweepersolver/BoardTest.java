@@ -79,4 +79,24 @@ class BoardTest {
 
         assertThat(minesCount).isEqualTo(1);
     }
+
+    @Test @DisplayName("can check neighbour values.")
+    void canCheckNeighbourValues() {
+        Board board = new Board("1 x\nx 2");
+        Position position = Position.of(1, 1);
+
+        boolean value = board.hasNeighbourValue(position, -1);
+
+        then(value).isTrue();
+    }
+
+    @Test @DisplayName("can check neighbour value 2.")
+    void canCheckNeighbourValue2() {
+        Board board = new Board("1 x\nx 2");
+        Position position = Position.of(1, 1);
+
+        boolean value = board.hasNeighbourValue(position, 0);
+
+        then(value).isFalse();
+    }
 }

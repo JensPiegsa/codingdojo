@@ -48,6 +48,11 @@ public class MineSweeper {
             int cols = board.getColumns() - 1;
             int rows = board.getRows() - 1;
 
+            Bounds bounds = new Bounds(0, 0, cols, rows);
+            Position.of(row, col).getNeighbours(bounds);
+
+            // FIXME
+
             if (
                 // top row
                    ((row > 0    && col > 0    && board.get(row-1,col-1) == 0))
@@ -83,6 +88,7 @@ class Board {
     public static final int COVERED = 9;
     private static final String MINE_CHAR = "x";
     private int MINE = -1;
+    private Bounds bounds;
 
     private int[][] board;
 
@@ -110,6 +116,8 @@ class Board {
                 }
             }
         }
+
+        bounds = new Bounds(0, 0, board[0].length-1, board.length-1);
     }
 
     public boolean isValid() {
@@ -153,6 +161,10 @@ class Board {
         return board[row][column];
     }
 
+    public int get(Position position) {
+        return get(position.row(), position.col());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -177,6 +189,8 @@ class Board {
         int cols = getColumns() - 1;
         int rows = getRows() - 1;
 
+        // FIXME
+
         // top row
         return
           ((row > 0    && col > 0    && isMine(row-1,col-1) ) ? 1 : 0)
@@ -194,5 +208,10 @@ class Board {
 
     private boolean isMine(int row, int col) {
         return board[row][col] == MINE;
+    }
+
+    public boolean hasNeighbourValue(Position position, int value) {
+        return position.getNeighbours(bounds)
+                .anyMatch(p -> get(p) == value);
     }
 }
