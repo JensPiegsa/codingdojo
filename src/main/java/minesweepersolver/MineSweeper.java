@@ -7,9 +7,13 @@ import static minesweepersolver.Board.COVERED_CHAR;
 public class MineSweeper {
 
     private final Board board;
+    private final int nMines;
+    private int markedMines;
 
     public MineSweeper(final String board, final int nMines) {
         this.board = new Board(board);
+        this.nMines = nMines;
+        this.markedMines = this.board.countMarkedMines();
     }
     
     public String solve() {
@@ -34,6 +38,8 @@ public class MineSweeper {
         for(int row = 0; row < board.getRows(); row++) {
             for(int col = 0; col < board.getColumns(); col++) {
                 if (tryToUncoverCell(board, row, col)) {
+                    // TODO uncover cell with Game.open(int row, int column)
+                    // set the externally retrieved number
                     return true;
                 }
             }
@@ -42,7 +48,7 @@ public class MineSweeper {
         throw new NotSolvableException();
     }
 
-    private static boolean tryToUncoverCell(Board board, int row, int col) {
+    private boolean tryToUncoverCell(Board board, int row, int col) {
         int cell = board.get(row, col);
         if (cell == Board.COVERED) {
             int cols = board.getColumns() - 1;
@@ -51,27 +57,39 @@ public class MineSweeper {
             Bounds bounds = new Bounds(0, 0, cols, rows);
             Position.of(row, col).getNeighbours(bounds);
 
-            // FIXME
+            if (nMines == markedMines) {
+                return true;
+            }
 
-            if (
-                // top row
-                   ((row > 0    && col > 0    && board.get(row-1,col-1) == 0))
-                || ((row > 0                  && board.get(row-1,col) == 0))
-                || ((row > 0    && col < cols && board.get(row-1,col+1) == 0))
-                // middle rows
-                || ((              col > 0    && board.get(row,col-1) == 0))
-                || ((              col < cols && board.get(row,col+1) == 0))
-                // bottom rows
-                || ((row < rows && col > 0    && board.get(row+1,col-1) == 0))
-                || ((row < rows               && board.get(row+1,col) == 0))
-                || ((row < rows && col < cols && board.get(row+1,col+1) == 0))
-            ) {
-
-                board.set(row, col, board.countMinesAroundFor(row, col));
+            if (board.hasNeighbourValue(new Position(row, col), 0)) {
                 return true;
             }
 
             // TODO: all other solution strategies
+
+            /*
+            Ideen:
+            - Eindeutige Mine markieren
+            - Zahl gleich Anzahl bekannter benachbarter Minen (isSaturated)
+            - Zahl kleiner Anzahl bekannter benachbarter Minen
+            - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
+            - atLeastOneSaturatedNeighbor
+            - Suche nicht-saturierter Zahl deren fehlende Minen der Anzahl unaufgedeckter Nachbarn entspricht
+                -> alle unaufgedeckten Nachbarn als Minen markieren
+            - Aufdecken aller verdeckten Felder, sobald die aufgedeckten Minen der Anzahl der Minen entsprechen
+            - Markieren aller verdeckten Felder als Mine,
+              sobald die Anzahl der verdeckten Felder der Anzahl der verbliebenen Minen entspricht
+
+            - Zusätzliche Datenstruktur zur Speicherung der Anzahl der nicht saturierten Nachbarn
+            - Queue zur Speicherung der nächsten zu bearbeitenden Felder
+            (satisfiedNumberWithCoveredFieldsList & satisfiedNumberWithKnownNeighborsList)
+
+     *   0 0 0 0 0
+     *   0 1 1 1 0
+     *   0 1 * 1 0
+     *   0 1 1 1 0
+     *   0 0 0 0 0
+             */
         }
         return false;
     }
@@ -186,24 +204,13 @@ class Board {
     }
 
     public int countMinesAroundFor(int row, int col) {
-        int cols = getColumns() - 1;
-        int rows = getRows() - 1;
+        return countValuesAroundFor(row, col, MINE);
+    }
 
-        // FIXME
-
-        // top row
-        return
-          ((row > 0    && col > 0    && isMine(row-1,col-1) ) ? 1 : 0)
-        + ((row > 0                  && isMine(row-1,col))        ? 1 : 0)
-        + ((row > 0    && col < cols && isMine(row-1,col+1))  ? 1 : 0)
-        // middle rows
-        + ((              col > 0    && isMine(row,col-1))         ? 1 : 0)
-        + ((              col < cols && isMine(row,col+1))         ? 1 : 0)
-        // bottom rows
-        + ((row < rows && col > 0    && isMine(row+1,col-1))  ? 1 : 0)
-        + ((row < rows               && isMine(row+1,col))        ? 1 : 0)
-        + ((row < rows && col < cols && isMine(row+1,col+1))  ? 1 : 0);
-
+    public int countValuesAroundFor(int row, int col, int value) {
+        return (int) new Position(row, col).getNeighbours(bounds)
+                .filter(p -> get(p) == value)
+                .count();
     }
 
     private boolean isMine(int row, int col) {
@@ -213,5 +220,17 @@ class Board {
     public boolean hasNeighbourValue(Position position, int value) {
         return position.getNeighbours(bounds)
                 .anyMatch(p -> get(p) == value);
+    }
+
+    public int countMarkedMines() {
+        int count = 0;
+        for (int[] rows : board) {
+            for (int cell : rows) {
+                if (cell == MINE) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }

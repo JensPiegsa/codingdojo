@@ -4,6 +4,8 @@ import static org.assertj.core.api.BDDAssertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * @author Jens Piegsa
@@ -98,5 +100,17 @@ class BoardTest {
         boolean value = board.hasNeighbourValue(position, 0);
 
         then(value).isFalse();
+    }
+
+    @ParameterizedTest
+    @DisplayName("can count marked mines.")
+    @CsvSource({
+            "? ?\\nx 2,  1",
+            "? x\\nx 2,  2"
+    })
+    void canCountMarkedMines(String boardStr, int result) {
+        Board board = new Board(boardStr.replace("\\n", "\n"));
+
+        then(board.countMarkedMines()).isEqualTo(result);
     }
 }
