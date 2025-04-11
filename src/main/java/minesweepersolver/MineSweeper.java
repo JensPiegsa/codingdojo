@@ -40,6 +40,8 @@ public class MineSweeper {
                 if (tryToUncoverCell(board, row, col)) {
                     // TODO uncover cell with Game.open(int row, int column)
                     // set the externally retrieved number
+                    int cellValue = Game.open(row, col);
+                    board.set(row, col, cellValue);
                     return true;
                 }
             }
@@ -55,7 +57,7 @@ public class MineSweeper {
             int rows = board.getRows() - 1;
 
             Bounds bounds = new Bounds(0, 0, cols, rows);
-            Position.of(row, col).getNeighbours(bounds);
+            Position.of(row, col).getNeighbours(bounds); // ???
 
             if (nMines == markedMines) {
                 return true;
@@ -69,14 +71,13 @@ public class MineSweeper {
 
             /*
             Ideen:
-            - Eindeutige Mine markieren
+            - Eindeutige Mine markieren <-
             - Zahl gleich Anzahl bekannter benachbarter Minen (isSaturated)
             - Zahl kleiner Anzahl bekannter benachbarter Minen
             - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
             - atLeastOneSaturatedNeighbor
             - Suche nicht-saturierter Zahl deren fehlende Minen der Anzahl unaufgedeckter Nachbarn entspricht
                 -> alle unaufgedeckten Nachbarn als Minen markieren
-            - Aufdecken aller verdeckten Felder, sobald die aufgedeckten Minen der Anzahl der Minen entsprechen
             - Markieren aller verdeckten Felder als Mine,
               sobald die Anzahl der verdeckten Felder der Anzahl der verbliebenen Minen entspricht
 

@@ -53,6 +53,13 @@ class BoardBuilderTest {
 
     }
 
+    @Test @DisplayName("can set Mine at boarder.")
+    void canSetMineAtBoarder() {
+        Board boardCovered = BoardBuilder.ofSizeCovered(1, 1)
+                .withMineAt(0, 0).getCovered();
+        assertThat(boardCovered).isEqualTo(new Board("x"));
+    }
+
 //    @Test @DisplayName("Create uncovered board")
 //    void createUncoveredBoard() {
 //        Board boardUncovered = builderUncovered.getUncovered();
