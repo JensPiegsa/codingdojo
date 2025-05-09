@@ -53,11 +53,15 @@ class BoardBuilderTest {
 
     }
 
-    @Test @DisplayName("can set Mine at boarder.")
-    void canSetMineAtBoarder() {
-        Board boardCovered = BoardBuilder.ofSizeCovered(1, 1)
-                .withMineAt(0, 0).getCovered();
-        assertThat(boardCovered).isEqualTo(new Board("x"));
+    @Test @DisplayName("can set Mine at border.")
+    void canSetMineAtBorder() {
+        BoardBuilder board = BoardBuilder.ofSizeCovered(1, 1)
+                .withMineAt(0, 0);
+        Board boardCovered = board.getCovered();
+        Board boardUncovered = board.getUncovered();
+
+        assertThat(boardCovered).isEqualTo(new Board("?"));
+        assertThat(boardUncovered).isEqualTo(new Board("x"));
     }
 
 //    @Test @DisplayName("Create uncovered board")

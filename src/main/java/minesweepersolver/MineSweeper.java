@@ -34,7 +34,23 @@ public class MineSweeper {
         if (!board.toString().contains(COVERED_CHAR)) {
             return false;
         }
-        
+
+        int remainingHiddenMineCount = getRemainingHiddenMineCount();
+        int remainingCoveredCellCount = getRemainingCoveredCellCount();
+
+        if (remainingHiddenMineCount == remainingCoveredCellCount) {
+            // alles als Mine markieren...
+            for(int row = 0; row < board.getRows(); row++) {
+                for (int col = 0; col < board.getColumns(); col++) {
+                    if (board.get(row, col) == Board.COVERED) {
+                        board.set(row, col, Board.MINE);
+                    }
+                }
+            }
+            return true;
+        }
+
+        // local strategies
         for(int row = 0; row < board.getRows(); row++) {
             for(int col = 0; col < board.getColumns(); col++) {
                 if (tryToUncoverCell(board, row, col)) {
@@ -48,6 +64,10 @@ public class MineSweeper {
         }
 
         throw new NotSolvableException();
+    }
+
+    public int getRemainingCoveredCellCount() {
+        return board.getCoveredCells();
     }
 
     private boolean tryToUncoverCell(Board board, int row, int col) {
@@ -95,6 +115,10 @@ public class MineSweeper {
         return false;
     }
 
+    public int getRemainingHiddenMineCount() {
+        return nMines - board.countMarkedMines();
+    }
+
 }
 
 class NotSolvableException extends Exception {
@@ -106,7 +130,7 @@ class Board {
     public static final String COVERED_CHAR = "?";
     public static final int COVERED = 9;
     private static final String MINE_CHAR = "x";
-    private int MINE = -1;
+    public static int MINE = -1;
     private Bounds bounds;
 
     private int[][] board;
@@ -228,6 +252,18 @@ class Board {
         for (int[] rows : board) {
             for (int cell : rows) {
                 if (cell == MINE) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int getCoveredCells() {
+        int count = 0;
+        for (int[] rows : board) {
+            for (int cell : rows) {
+                if (cell == COVERED) {
                     count++;
                 }
             }

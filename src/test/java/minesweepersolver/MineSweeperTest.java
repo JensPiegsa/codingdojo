@@ -121,4 +121,30 @@ class MineSweeperTest {
         final String solvedBoard = new MineSweeper(initialBoard, 1).solve();
         assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "? ?\\nx 2,   2,   1",
+            "? x\\nx 2,   2,   0"
+    })
+    void canCountRemainingHiddenMines(String boardStr, int mineCount, int expectedCount) {
+        boardStr = boardStr.replace("\\n", "\n");
+        MineSweeper mineSweeper = new MineSweeper(boardStr, mineCount);
+
+        then(mineSweeper.getRemainingHiddenMineCount()).isEqualTo(expectedCount);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "? ?\\nx 2,   2,    2",
+            "? x\\nx 2,   2,    1"
+    })
+    void canCountCoveredCells(String boardStr, int mineCount, int expectedCount) {
+        boardStr = boardStr.replace("\\n", "\n");
+        MineSweeper mineSweeper = new MineSweeper(boardStr, mineCount);
+
+        then(mineSweeper.getRemainingCoveredCellCount()).isEqualTo(expectedCount);
+    }
+
+
 }
