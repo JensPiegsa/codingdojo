@@ -104,7 +104,7 @@ class MineSweeperTest {
             Board boardUncovered = builder.getUncovered();
 
             final String initialBoard = builder.getCovered().toString();
-            final String solvedBoard = new MineSweeper(initialBoard, 2).solve();
+            final String solvedBoard = new MineSweeper(initialBoard, 1).solve();
             assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
         }
     }
@@ -146,5 +146,41 @@ class MineSweeperTest {
         then(mineSweeper.getRemainingCoveredCellCount()).isEqualTo(expectedCount);
     }
 
+    
+    /**
+     *   Input:
+     *   ? 1
+     *   ? 1
+     *   Expected solution:
+     *   ? 
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "? 1\\n? 1,   1"
+    })
+    @DisplayName("can not solve problem.")
+    void canNotSolveProblem(String boardStr, int mineCount) {
+        boardStr = boardStr.replace("\\n", "\n");
+        MineSweeper mineSweeper = new MineSweeper(boardStr, mineCount);
+        final String solvedBoard = mineSweeper.solve();
+        assertThat(solvedBoard).isEqualTo("?");
+    }
 
+    @ParameterizedTest
+    @CsvSource({
+            "? 1\\n? 1,   2, x 1\\nx 1",
+            "? 1 1\\n? 1 x,   1, 0 1 1\\n0 1 x"
+    })
+    @DisplayName("can solve complex problem.")
+    void canSolveComplexProblem(String initialBoard, int mineCount, String expectedSolvedBoard) {
+        initialBoard = initialBoard.replace("\\n", "\n");
+        expectedSolvedBoard = expectedSolvedBoard.replace("\\n", "\n");
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, mineCount);
+
+        final String actualSolvedBoard = mineSweeper.solve();
+
+        assertThat(actualSolvedBoard).isEqualTo(expectedSolvedBoard);
+    }
 }

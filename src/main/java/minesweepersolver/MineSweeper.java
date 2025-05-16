@@ -36,6 +36,19 @@ public class MineSweeper {
         }
 
         int remainingHiddenMineCount = getRemainingHiddenMineCount();
+
+        if (remainingHiddenMineCount == 0) {
+            for(int row = 0; row < board.getRows(); row++) {
+                for (int col = 0; col < board.getColumns(); col++) {
+                    if (board.get(row, col) == Board.COVERED) {
+                        int cellValue = Game.open(row, col);
+                        board.set(row, col, cellValue);
+                    }
+                }
+            }
+            return true;
+        }
+
         int remainingCoveredCellCount = getRemainingCoveredCellCount();
 
         if (remainingHiddenMineCount == remainingCoveredCellCount) {
@@ -79,10 +92,7 @@ public class MineSweeper {
             Bounds bounds = new Bounds(0, 0, cols, rows);
             Position.of(row, col).getNeighbours(bounds); // ???
 
-            if (nMines == markedMines) {
-                return true;
-            }
-
+            // Nachbar 0 -> Feld sicher
             if (board.hasNeighbourValue(new Position(row, col), 0)) {
                 return true;
             }
@@ -91,8 +101,8 @@ public class MineSweeper {
 
             /*
             Ideen:
-            - Eindeutige Mine markieren <-
-            - Zahl gleich Anzahl bekannter benachbarter Minen (isSaturated)
+            - Eindeutige Mine markieren
+            - Zahl gleich Anzahl bekannter benachbarter Minen (isSaturated) <- NEXT TODO
             - Zahl kleiner Anzahl bekannter benachbarter Minen
             - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
             - atLeastOneSaturatedNeighbor
