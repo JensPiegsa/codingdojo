@@ -1,6 +1,7 @@
 package minesweepersolver;
 
 import java.util.Arrays;
+import java.util.PriorityQueue;
 
 import static minesweepersolver.Board.COVERED_CHAR;
 
@@ -17,20 +18,20 @@ public class MineSweeper {
     }
     
     public String solve() {
+        // TODO: Store visits in PriorityQueue
         try {
-            boolean didStep;
+            boolean weContinue;
             do {
                 // Call solver step
-                didStep = solverStep(board);
-            } while (didStep);
-
+                weContinue = endgameStep(board) && earlyGameStep(board);
+            } while (weContinue);
             return board.toString();
         } catch (NotSolvableException e) {
             return "?";
         }
     }
 
-    private boolean solverStep(Board board) throws NotSolvableException {
+    private boolean endgameStep(Board board) {
         if (!board.toString().contains(COVERED_CHAR)) {
             return false;
         }
@@ -46,7 +47,7 @@ public class MineSweeper {
                     }
                 }
             }
-            return true;
+            return false;
         }
 
         int remainingCoveredCellCount = getRemainingCoveredCellCount();
@@ -60,14 +61,16 @@ public class MineSweeper {
                     }
                 }
             }
-            return true;
+            return false;
         }
+        return true;
+    }
 
+    private boolean earlyGameStep(Board board) throws NotSolvableException {
         // local strategies
         for(int row = 0; row < board.getRows(); row++) {
             for(int col = 0; col < board.getColumns(); col++) {
-                if (tryToUncoverCell(board, row, col)) {
-                    // TODO uncover cell with Game.open(int row, int column)
+                if (canUncoverCell(board, row, col)) {
                     // set the externally retrieved number
                     int cellValue = Game.open(row, col);
                     board.set(row, col, cellValue);
@@ -83,7 +86,7 @@ public class MineSweeper {
         return board.getCoveredCells();
     }
 
-    private boolean tryToUncoverCell(Board board, int row, int col) {
+    private boolean canUncoverCell(Board board, int row, int col) {
         int cell = board.get(row, col);
         if (cell == Board.COVERED) {
             int cols = board.getColumns() - 1;
