@@ -11,6 +11,7 @@ public class MineSweeper {
     private final int nMines;
     private int markedMines;
 
+
     public MineSweeper(final String board, final int nMines) {
         this.board = new Board(board);
         this.nMines = nMines;
@@ -130,6 +131,24 @@ public class MineSweeper {
 
     public int getRemainingHiddenMineCount() {
         return nMines - board.countMarkedMines();
+    }
+
+    PriorityQueue<Visit> initQueue() {
+        PriorityQueue<Visit> visits = new PriorityQueue<>();
+
+        for(int row = 0; row < board.getRows(); row++) {
+            for(int col = 0; col < board.getColumns(); col++) {
+
+                Position position = new Position(row, col);
+
+                if (board.isUnknownBorder(position)
+                    || board.isKnownBorder(position)) {
+                    visits.add(new Visit(position));
+                }
+            }
+        }
+
+        return visits;
     }
 
 }
@@ -282,5 +301,27 @@ class Board {
             }
         }
         return count;
+    }
+
+    public boolean hasKnownNeighbour(Position position) {
+        return false;
+    }
+
+    public boolean hasUnknownNeighbour(Position position) {
+        return false;
+    }
+
+    public boolean hasMine(Position position) {
+        return hasMine(position.row(), position.col());
+    }
+
+    boolean isUnknownBorder(Position position) {
+        return get(position) == COVERED
+               && hasKnownNeighbour(position);
+    }
+
+    boolean isKnownBorder(Position position) {
+        return !hasMine(position)
+               && hasUnknownNeighbour(position);
     }
 }

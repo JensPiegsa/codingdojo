@@ -16,6 +16,8 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.PriorityQueue;
+
 /**
  * @author Jens Piegsa
  */
@@ -182,5 +184,76 @@ class MineSweeperTest {
         final String actualSolvedBoard = mineSweeper.solve();
 
         assertThat(actualSolvedBoard).isEqualTo(expectedSolvedBoard);
+    }
+
+    @Test @DisplayName("add priorityQueue")
+    void addPriorityQueue() {
+        String initialBoard = """
+                              ? ? ? ? ? ? ?
+                              ? ? 3 1 ? ? ?
+                              ? x 1 0 ? ? ?
+                              ? ? 1 0 0 1 ?
+                              ? 1 1 1 0 0 ?
+                              ? 1 x 1 0 0 ?
+                              ? ? ? ? ? ? ?
+                              """;
+        /*
+                              ? # # # # ? ?     ? = deep unknown
+                              ? # + + # ? ?     # = unknown border -> queue
+                              ? * + + # # #     + = known border -> queue
+                              # # + + + + #     * = marked mine
+                              # + + v v + #     v = deep known
+                              # + * + + + #
+                              # # # # # # #
+         */
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 5);
+        PriorityQueue<Visit> visits = mineSweeper.initQueue();
+
+        then(visits).map(Visit::getPosition).containsExactlyInAnyOrder(
+                Position.of(0,1),
+                Position.of(0,2),
+                Position.of(0,3),
+                Position.of(0,4),
+
+                Position.of(1,1),
+                Position.of(1,2),
+                Position.of(1,3),
+                Position.of(1,4),
+
+                Position.of(2,2),
+                Position.of(2,3),
+                Position.of(2,4),
+                Position.of(2,5),
+                Position.of(2,6),
+
+                Position.of(3,0),
+                Position.of(3,1),
+                Position.of(3,2),
+                Position.of(3,3),
+                Position.of(3,4),
+                Position.of(3,5),
+                Position.of(3,6),
+
+                Position.of(4,0),
+                Position.of(4,1),
+                Position.of(4,2),
+                Position.of(4,5),
+                Position.of(4,6),
+
+                Position.of(5,0),
+                Position.of(5,1),
+                Position.of(5,3),
+                Position.of(5,4),
+                Position.of(5,5),
+                Position.of(5,6),
+
+                Position.of(6,0),
+                Position.of(6,1),
+                Position.of(6,2),
+                Position.of(6,3),
+                Position.of(6,4),
+                Position.of(6,5),
+                Position.of(6,6)
+                );
     }
 }
