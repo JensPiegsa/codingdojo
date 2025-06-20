@@ -10,6 +10,7 @@ public class MineSweeper {
     private final Board board;
     private final int nMines;
     private int markedMines;
+    private PriorityQueue<Visit> queue;
 
 
     public MineSweeper(final String board, final int nMines) {
@@ -68,36 +69,45 @@ public class MineSweeper {
     }
 
     private boolean earlyGameStep(Board board) throws NotSolvableException {
-        // local strategies
-        for(int row = 0; row < board.getRows(); row++) {
-            for(int col = 0; col < board.getColumns(); col++) {
-                if (canUncoverCell(board, row, col)) {
-                    // set the externally retrieved number
-                    int cellValue = Game.open(row, col);
-                    board.set(row, col, cellValue);
-                    return true;
-                }
-            }
+        if (queue == null) {
+            queue = initQueue();
         }
+        // local strategies
+        if (!queue.isEmpty()) {
+            Visit visit = queue.poll();
 
-        throw new NotSolvableException();
+            Position position = visit.getPosition();
+            // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
+            if (canUncoverCell(board, position)) {
+                // set the externally retrieved number
+                int cellValue = Game.open(position.row(), position.col());
+                board.set(position, cellValue);
+                // TODO add neighbors to queue or update priority, if already in queue
+                return true;
+            }
+
+        } else {
+            throw new NotSolvableException();
+        }
+        return false;
     }
 
     public int getRemainingCoveredCellCount() {
         return board.getCoveredCells();
     }
 
-    private boolean canUncoverCell(Board board, int row, int col) {
-        int cell = board.get(row, col);
+
+    private boolean canUncoverCell(Board board, Position pos) {
+        int cell = board.get(pos);
         if (cell == Board.COVERED) {
             int cols = board.getColumns() - 1;
             int rows = board.getRows() - 1;
 
             Bounds bounds = new Bounds(0, 0, cols, rows);
-            Position.of(row, col).getNeighbours(bounds); // ???
+            pos.getNeighbours(bounds); // ???
 
             // Nachbar 0 -> Feld sicher
-            if (board.hasNeighbourValue(new Position(row, col), 0)) {
+            if (board.hasNeighbourValue(pos, 0)) {
                 return true;
             }
 
@@ -141,9 +151,11 @@ public class MineSweeper {
 
                 Position position = new Position(row, col);
 
-                if (board.isUnknownBorder(position)
-                    || board.isKnownBorder(position)) {
-                    visits.add(new Visit(position));
+                if (board.isUnknownBorder(position)) {
+                    visits.add(new Visit(position, 2));
+                } else if (board.isKnownBorder(position)) {
+                    int priority = board.get(position) == 0 ? 0 : 1;
+                    visits.add(new Visit(position, priority));
                 }
             }
         }
@@ -256,6 +268,10 @@ class Board {
         return board[0].length;
     }
 
+    public void set(Position position, int value) {
+        set(position.row(), position.col(), value);
+    }
+
     public void set(int row, int col, int cellValue) {
         board[row][col] = cellValue;
     }
@@ -303,12 +319,12 @@ class Board {
         return count;
     }
 
-    public boolean hasKnownNeighbour(Position position) {
-        return false;
+    public boolean hasKnownNeighbourNumber(Position position) {
+        return position.getNeighbours(bounds).anyMatch(p -> get(p) != COVERED && get(p) != MINE);
     }
 
     public boolean hasUnknownNeighbour(Position position) {
-        return false;
+        return position.getNeighbours(bounds).anyMatch(p -> get(p) == COVERED);
     }
 
     public boolean hasMine(Position position) {
@@ -317,11 +333,12 @@ class Board {
 
     boolean isUnknownBorder(Position position) {
         return get(position) == COVERED
-               && hasKnownNeighbour(position);
+               && hasKnownNeighbourNumber(position);
     }
 
     boolean isKnownBorder(Position position) {
         return !hasMine(position)
-               && hasUnknownNeighbour(position);
+                && get(position) != COVERED
+                && hasUnknownNeighbour(position);
     }
 }

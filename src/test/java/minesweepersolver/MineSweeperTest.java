@@ -2,19 +2,14 @@ package minesweepersolver;
 
 import static org.assertj.core.api.BDDAssertions.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.PriorityQueue;
 
@@ -255,5 +250,84 @@ class MineSweeperTest {
                 Position.of(6,5),
                 Position.of(6,6)
                 );
+    }
+
+    @Test
+    @DisplayName("can detect if has unknown neighbors")
+    void canDetectIfHasUnknownNeighbors() {
+        String boardString = """
+                0 0 0 0 ?
+                0 1 1 1 0
+                0 1 ? 1 0
+                0 ? ? 1 0
+                0 ? 0 0 0
+                """;
+
+        Board board = new Board(boardString);
+
+        assertThat(board.hasUnknownNeighbour(Position.of(0,0))).isFalse();
+        assertThat(board.hasUnknownNeighbour(Position.of(1,1))).isTrue();
+        assertThat(board.hasUnknownNeighbour(Position.of(0,4))).isFalse();
+        assertThat(board.hasUnknownNeighbour(Position.of(3,1))).isTrue();
+    }
+
+    @Test
+    @DisplayName("can detect if has known neighbors")
+    void canDetectIfHasKnownNeighbors() {
+        String boardString = """
+                0 0 0 ? 0
+                0 1 1 ? ?
+                0 1 ? 1 0
+                ? ? ? 1 0
+                ? ? ? 0 0
+                """;
+
+        Board board = new Board(boardString);
+
+        assertThat(board.hasKnownNeighbourNumber(Position.of(0,0))).isTrue();
+        assertThat(board.hasKnownNeighbourNumber(Position.of(1,1))).isTrue();
+        assertThat(board.hasKnownNeighbourNumber(Position.of(0,4))).isFalse();
+        assertThat(board.hasKnownNeighbourNumber(Position.of(4,1))).isFalse();
+    }
+
+    @Test
+    @DisplayName("can detect if is unknown boarder")
+    void canDetectIfIsUnknownBoarder() {
+        String boardString = """
+                0 0 0 0 ?
+                0 1 1 1 0
+                0 1 ? 1 0
+                0 ? ? ? ?
+                0 ? 0 ? ?
+                """;
+
+        Board board = new Board(boardString);
+
+        assertThat(board.isUnknownBorder(Position.of(0,0))).isFalse();
+        assertThat(board.isUnknownBorder(Position.of(1,1))).isFalse();
+        assertThat(board.isUnknownBorder(Position.of(0,4))).isTrue();
+        assertThat(board.isUnknownBorder(Position.of(3,1))).isTrue();
+        assertThat(board.isUnknownBorder(Position.of(4,4))).isFalse();
+    }
+
+    @Test
+    @DisplayName("can detect if is known boarder")
+    void canDetectIfIsKnownBoarder() {
+        String boardString = """
+                0 0 0 0 ?
+                0 1 ? 1 0
+                0 1 x 1 0
+                0 ? ? ? ?
+                0 ? 0 ? ?
+                """;
+
+        Board board = new Board(boardString);
+
+        assertThat(board.isKnownBorder(Position.of(0,0))).isFalse();
+        assertThat(board.isKnownBorder(Position.of(1,1))).isTrue();
+        assertThat(board.isKnownBorder(Position.of(0,4))).isFalse();
+        assertThat(board.isKnownBorder(Position.of(3,1))).isFalse();
+        assertThat(board.isKnownBorder(Position.of(4,4))).isFalse();
+        assertThat(board.isKnownBorder(Position.of(2,2))).isFalse();
     }
 }
