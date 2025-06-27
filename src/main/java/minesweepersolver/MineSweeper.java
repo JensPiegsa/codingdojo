@@ -20,20 +20,24 @@ public class MineSweeper {
     }
     
     public String solve() {
-        // TODO: Store visits in PriorityQueue
-        try {
-            boolean weContinue;
-            do {
-                // Call solver step
-                weContinue = endgameStep(board) && earlyGameStep(board);
-            } while (weContinue);
-            return board.toString();
-        } catch (NotSolvableException e) {
-            return "?";
-        }
+        do {
+            endgameStep(board);
+            if (board.isSolved()) {
+                return board.toString();
+            }
+
+            earlyGameStep(board);
+            if (isQueueEmpty()) {
+                return "?";
+            }
+        } while (true);
     }
 
-    private boolean endgameStep(Board board) {
+    private boolean isQueueEmpty() {
+        return queue == null || queue.isEmpty();
+    }
+
+    boolean endgameStep(Board board) {
         if (!board.toString().contains(COVERED_CHAR)) {
             return false;
         }
@@ -68,7 +72,7 @@ public class MineSweeper {
         return true;
     }
 
-    private boolean earlyGameStep(Board board) throws NotSolvableException {
+    boolean earlyGameStep(Board board) {
         if (queue == null) {
             queue = initQueue();
         }
@@ -86,8 +90,6 @@ public class MineSweeper {
                 return true;
             }
 
-        } else {
-            throw new NotSolvableException();
         }
         return false;
     }
@@ -340,5 +342,9 @@ class Board {
         return !hasMine(position)
                 && get(position) != COVERED
                 && hasUnknownNeighbour(position);
+    }
+
+    public boolean isSolved() {
+        return getCoveredCells() == 0;
     }
 }

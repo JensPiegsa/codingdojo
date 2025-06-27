@@ -1,8 +1,8 @@
 package minesweepersolver;
 
 import static org.assertj.core.api.BDDAssertions.*;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,9 @@ class MineSweeperTest {
                 "2,2",
                 "0,0","0,4","4,0","4,4"})
 
-    void solveReturnsWithoutMine(final int coveredRow, final int coveredCol) {
+    void solveEndgameStepWithoutMine(final int coveredRow, final int coveredCol) throws NotSolvableException {
+
+
 
         try (MockedStatic<Game> game = Mockito.mockStatic(Game.class)) {
             game.when(() -> Game.open(coveredRow, coveredCol)).thenReturn(0);
@@ -64,8 +66,12 @@ class MineSweeperTest {
             Board boardUncovered = builder.getUncovered();
 
             final String initialBoard = builder.getCovered().toString();
-            final String solvedBoard = new MineSweeper(initialBoard, 2).solve();
+            MineSweeper mineSweeper = new MineSweeper(initialBoard, 0);
+            MineSweeper mineSweeperSpy = spy(mineSweeper);
+            final String solvedBoard = mineSweeperSpy.solve();
             assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
+            verify(mineSweeperSpy, times(0)).earlyGameStep(any());
+            verify(mineSweeperSpy, times(1)).endgameStep(any());
         }
     }
 
