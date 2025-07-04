@@ -1,7 +1,6 @@
 package minesweepersolver;
 
 import static org.assertj.core.api.BDDAssertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -53,7 +53,7 @@ class MineSweeperTest {
                 "2,2",
                 "0,0","0,4","4,0","4,4"})
 
-    void solveEndgameStepWithoutMine(final int coveredRow, final int coveredCol) throws NotSolvableException {
+    void solveTryToSolveEndgameWithoutMine(final int coveredRow, final int coveredCol) throws NotSolvableException {
 
 
 
@@ -70,8 +70,8 @@ class MineSweeperTest {
             MineSweeper mineSweeperSpy = spy(mineSweeper);
             final String solvedBoard = mineSweeperSpy.solve();
             assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
-            verify(mineSweeperSpy, times(0)).earlyGameStep(any());
-            verify(mineSweeperSpy, times(1)).endgameStep(any());
+            verify(mineSweeperSpy, times(0)).earlyGameVisit();
+            verify(mineSweeperSpy, times(1)).tryToSolveEndgame();
         }
     }
 
@@ -336,4 +336,57 @@ class MineSweeperTest {
         assertThat(board.isKnownBorder(Position.of(4,4))).isFalse();
         assertThat(board.isKnownBorder(Position.of(2,2))).isFalse();
     }
+
+    @Test
+    @DisplayName("can uncover neighbors when all mines saturated")
+    void canUncoverNeighborsWhenAllMineSaturated() {
+        String initialBoard = """
+                              0 0 ? 0
+                              0 x 1 ?
+                              0 0 0 ?
+                              """;
+
+        String expectedSolvedBoard = """
+                              0 0 0 0
+                              0 x 1 0
+                              0 0 0 0
+                              """;
+
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), 1));
+        mineSweeper.queue = new PriorityQueue<>(visits);
+
+        mineSweeper.earlyGameVisit();
+
+        assertThat(mineSweeper.isSolved()).isTrue();
+    }
+
+    @Test
+    @DisplayName("can mark mine when all mines saturated")
+    void canMarkMineWhenAllMineSaturated() {
+        String initialBoard = """
+                              0 0 0 0
+                              0 ? 1 0
+                              0 0 0 0
+                              """;
+
+        String expectedSolvedBoard = """
+                              0 0 0 0
+                              0 x 1 0
+                              0 0 0 0
+                              """;
+
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), 1));
+        mineSweeper.queue = new PriorityQueue<>(visits);
+
+        mineSweeper.earlyGameVisit();
+
+        assertThat(mineSweeper.isSolved()).isTrue();
+    }
+
 }

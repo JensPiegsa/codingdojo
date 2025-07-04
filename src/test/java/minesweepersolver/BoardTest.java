@@ -74,10 +74,8 @@ class BoardTest {
     @Test @DisplayName("Can count mines for given point.")
     void canCountMines() {
         Board board = new Board("1 x\n? 1");
-        int row = 1;
-        int column = 0;
 
-        int minesCount = board.countMinesAroundFor(row,column);
+        int minesCount = board.countMinesAroundFor(new Position(1, 0));
 
         assertThat(minesCount).isEqualTo(1);
     }
