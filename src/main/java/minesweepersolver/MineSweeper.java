@@ -5,6 +5,7 @@ import java.util.PriorityQueue;
 import java.util.stream.Stream;
 
 import static minesweepersolver.Board.COVERED_CHAR;
+import static minesweepersolver.Board.MINE;
 
 public class MineSweeper {
 
@@ -99,9 +100,15 @@ public class MineSweeper {
                 int countedMines = board.countMinesAroundFor(position);
 
                 if (numberOfNeighboringMines == countedMines) {
-                    board.getUnmarkedCoveredCells(position).forEach(this::open);
+                    board.getUnmarkedCoveredCells(position).forEach(this::open); // TODO queue each + right neighbours
                 }
 
+                int numberOfCoveredNeighbours = board.countCoveredNeighbours(position);
+                if (numberOfNeighboringMines - countedMines == numberOfCoveredNeighbours) {
+                    board.getUnmarkedCoveredCells(position).forEach(p -> board.set(p, MINE));
+                    // TODO add neighbours of each mine - actual position - known mines
+
+                }
                 // can uncover neighbors?
 
                 // TODO take into account: multiple numbers put constraints on common covered neighbors
@@ -378,5 +385,12 @@ class Board {
 
     public Stream<Position> getUnmarkedCoveredCells(Position position) {
         return position.getNeighbours(bounds).filter(this::isCovered);
+    }
+
+    /**
+     * without mines
+     */
+    public int countCoveredNeighbours(Position position) {
+        return countValuesAroundFor(position.row(), position.col(), COVERED);
     }
 }

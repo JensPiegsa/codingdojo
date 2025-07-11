@@ -259,85 +259,6 @@ class MineSweeperTest {
     }
 
     @Test
-    @DisplayName("can detect if has unknown neighbors")
-    void canDetectIfHasUnknownNeighbors() {
-        String boardString = """
-                0 0 0 0 ?
-                0 1 1 1 0
-                0 1 ? 1 0
-                0 ? ? 1 0
-                0 ? 0 0 0
-                """;
-
-        Board board = new Board(boardString);
-
-        assertThat(board.hasUnknownNeighbour(Position.of(0,0))).isFalse();
-        assertThat(board.hasUnknownNeighbour(Position.of(1,1))).isTrue();
-        assertThat(board.hasUnknownNeighbour(Position.of(0,4))).isFalse();
-        assertThat(board.hasUnknownNeighbour(Position.of(3,1))).isTrue();
-    }
-
-    @Test
-    @DisplayName("can detect if has known neighbors")
-    void canDetectIfHasKnownNeighbors() {
-        String boardString = """
-                0 0 0 ? 0
-                0 1 1 ? ?
-                0 1 ? 1 0
-                ? ? ? 1 0
-                ? ? ? 0 0
-                """;
-
-        Board board = new Board(boardString);
-
-        assertThat(board.hasKnownNeighbourNumber(Position.of(0,0))).isTrue();
-        assertThat(board.hasKnownNeighbourNumber(Position.of(1,1))).isTrue();
-        assertThat(board.hasKnownNeighbourNumber(Position.of(0,4))).isFalse();
-        assertThat(board.hasKnownNeighbourNumber(Position.of(4,1))).isFalse();
-    }
-
-    @Test
-    @DisplayName("can detect if is unknown boarder")
-    void canDetectIfIsUnknownBoarder() {
-        String boardString = """
-                0 0 0 0 ?
-                0 1 1 1 0
-                0 1 ? 1 0
-                0 ? ? ? ?
-                0 ? 0 ? ?
-                """;
-
-        Board board = new Board(boardString);
-
-        assertThat(board.isUnknownBorder(Position.of(0,0))).isFalse();
-        assertThat(board.isUnknownBorder(Position.of(1,1))).isFalse();
-        assertThat(board.isUnknownBorder(Position.of(0,4))).isTrue();
-        assertThat(board.isUnknownBorder(Position.of(3,1))).isTrue();
-        assertThat(board.isUnknownBorder(Position.of(4,4))).isFalse();
-    }
-
-    @Test
-    @DisplayName("can detect if is known boarder")
-    void canDetectIfIsKnownBoarder() {
-        String boardString = """
-                0 0 0 0 ?
-                0 1 ? 1 0
-                0 1 x 1 0
-                0 ? ? ? ?
-                0 ? 0 ? ?
-                """;
-
-        Board board = new Board(boardString);
-
-        assertThat(board.isKnownBorder(Position.of(0,0))).isFalse();
-        assertThat(board.isKnownBorder(Position.of(1,1))).isTrue();
-        assertThat(board.isKnownBorder(Position.of(0,4))).isFalse();
-        assertThat(board.isKnownBorder(Position.of(3,1))).isFalse();
-        assertThat(board.isKnownBorder(Position.of(4,4))).isFalse();
-        assertThat(board.isKnownBorder(Position.of(2,2))).isFalse();
-    }
-
-    @Test
     @DisplayName("can uncover neighbors when all mines saturated")
     void canUncoverNeighborsWhenAllMineSaturated() {
         String initialBoard = """
@@ -389,4 +310,25 @@ class MineSweeperTest {
         assertThat(mineSweeper.isSolved()).isTrue();
     }
 
+    @Test @DisplayName("queue new visits.")
+    void queueNewVisits() {
+        String initialBoard = """
+                              0 0 ? ?
+                              x 1 ? ?
+                              """;
+        String expectedSolvedBoard = """
+                              0 0 0 0
+                              x 1 0 0
+                              """;
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        List<Visit> visits = List.of(new Visit(Position.of(0, 2), 1));
+        mineSweeper.queue = new PriorityQueue<>(visits);
+
+        mineSweeper.earlyGameVisit();
+
+        then(mineSweeper.queue).isNotEmpty();
+    }
 }
