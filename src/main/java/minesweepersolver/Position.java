@@ -1,5 +1,6 @@
 package minesweepersolver;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public record Position(int row, int col) {
@@ -18,5 +19,17 @@ public record Position(int row, int col) {
                 Position.of(row + 1, col),
                 Position.of(row + 1, col + 1))
                 .filter(bounds::isInside);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return row == position.row && col == position.col;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
     }
 }

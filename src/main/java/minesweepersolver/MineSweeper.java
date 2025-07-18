@@ -52,7 +52,7 @@ public class MineSweeper {
         if (remainingHiddenMineCount == 0) {
             for(int row = 0; row < board.getRows(); row++) {
                 for (int col = 0; col < board.getColumns(); col++) {
-                    if (board.get(row, col) == Board.COVERED) {
+                    if (board.getCellValue(row, col) == Board.COVERED) {
                         Position position = new Position(row, col);
                         open(position);
                     }
@@ -67,7 +67,7 @@ public class MineSweeper {
             // alles als Mine markieren...
             for(int row = 0; row < board.getRows(); row++) {
                 for (int col = 0; col < board.getColumns(); col++) {
-                    if (board.get(row, col) == Board.COVERED) {
+                    if (board.getCellValue(row, col) == Board.COVERED) {
                         board.set(row, col, Board.MINE);
                     }
                 }
@@ -89,14 +89,14 @@ public class MineSweeper {
             boolean isCovered = board.isCovered(position);
             // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
             if (isCovered) {
-                if (canUncoverCell(board, position)) {
+                if (canUncoverCell(position)) {
                     // set the externally retrieved number
                     open(position);
                     // TODO add neighbors to queue or update priority, if already in queue
                     return true;
                 }
             } else {
-                int numberOfNeighboringMines = board.get(position);
+                int numberOfNeighboringMines = board.getCellValue(position);
                 int countedMines = board.countMinesAroundFor(position);
 
                 if (numberOfNeighboringMines == countedMines) {
@@ -122,6 +122,9 @@ public class MineSweeper {
 
     private void open(Position position) {
         int cellValue = Game.open(position.row(), position.col());
+        Stream<Position> neighbours = position.getNeighbours(board.getBounds());
+        neighbours.filter(board::isCovered)
+                .forEach(neighbour -> queue.add(new Visit(neighbour, 2)));
         board.set(position, cellValue);
     }
 
@@ -130,8 +133,8 @@ public class MineSweeper {
     }
 
 
-    private boolean canUncoverCell(Board board, Position pos) {
-        int cell = board.get(pos);
+    boolean canUncoverCell(Position pos) {
+        int cell = board.getCellValue(pos);
         if (cell == Board.COVERED) {
             int cols = board.getColumns() - 1;
             int rows = board.getRows() - 1;
@@ -142,7 +145,10 @@ public class MineSweeper {
             // Nachbar 0 -> Feld sicher
             if (board.hasNeighbourValue(pos, 0)) {
                 return true;
+            } else if (board.hasSaturatedNeighbour(pos)) {
+                return true;
             }
+
 
             // TODO: all other solution strategies
 
@@ -186,7 +192,7 @@ public class MineSweeper {
                 if (board.isUnknownBorder(position)) {
                     visits.add(new Visit(position, 2));
                 } else if (board.isKnownBorder(position)) {
-                    int priority = board.get(position) == 0 ? 0 : 1;
+                    int priority = board.getCellValue(position) == 0 ? 0 : 1;
                     visits.add(new Visit(position, priority));
                 }
             }
@@ -275,12 +281,12 @@ class Board {
         return stringBuilder.toString();
     }
 
-    public int get(int row, int column) {
+    public int getCellValue(int row, int column) {
         return board[row][column];
     }
 
-    public int get(Position position) {
-        return get(position.row(), position.col());
+    public int getCellValue(Position position) {
+        return getCellValue(position.row(), position.col());
     }
 
     @Override
@@ -309,13 +315,13 @@ class Board {
 
     public int countValuesAroundFor(int row, int col, int value) {
         return (int) new Position(row, col).getNeighbours(bounds)
-                .filter(p -> get(p) == value)
+                .filter(p -> getCellValue(p) == value)
                 .count();
     }
 
     public boolean hasNeighbourValue(Position position, int value) {
         return position.getNeighbours(bounds)
-                .anyMatch(p -> get(p) == value);
+                .anyMatch(p -> getCellValue(p) == value);
     }
 
     public int countMarkedMines() {
@@ -376,7 +382,7 @@ class Board {
     }
 
     public boolean isCovered(Position position) {
-        return get(position) == COVERED;
+        return getCellValue(position) == COVERED;
     }
 
     public int countMinesAroundFor(Position position) {
@@ -392,5 +398,21 @@ class Board {
      */
     public int countCoveredNeighbours(Position position) {
         return countValuesAroundFor(position.row(), position.col(), COVERED);
+    }
+
+    public Bounds getBounds() {
+        return bounds;
+    }
+
+    public boolean hasSaturatedNeighbour(Position position) {
+        return position.getNeighbours(bounds)
+                .anyMatch(this::isSaturated);
+    }
+
+    private boolean isSaturated(Position position) {
+        if (isCovered(position)) {
+            return false;
+        }
+        return getCellValue(position) == countMinesAroundFor(position);
     }
 }

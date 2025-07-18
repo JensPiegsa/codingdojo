@@ -181,6 +181,7 @@ class MineSweeperTest {
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
         MineSweeper mineSweeper = new MineSweeper(initialBoard, mineCount);
+        mineSweeper.queue = new PriorityQueue<>();
 
         final String actualSolvedBoard = mineSweeper.solve();
 
@@ -329,6 +330,22 @@ class MineSweeperTest {
 
         mineSweeper.earlyGameVisit();
 
-        then(mineSweeper.queue).isNotEmpty();
+        then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
+                new Visit(Position.of(0, 3), 2),
+                new Visit(Position.of(1, 2), 2),
+                new Visit(Position.of(1, 3), 2)
+        );
+    }
+
+    @Test @DisplayName("early game strategie 42.")
+    void earlyGameStrategie42() {
+        String initialBoard = """
+                              1 1 ? ?
+                              x 1 ? ?
+                              """;
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+        boolean result = mineSweeper.canUncoverCell(Position.of(0, 2));
+
+        then(result).isTrue();
     }
 }

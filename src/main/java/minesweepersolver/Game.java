@@ -24,7 +24,7 @@ public class Game {
         if (currentBoard.hasMine(row, column)) {
             throw new IllegalStateException("Mine hit at [" + row + ", " + column + "]");
         } else {
-            return fullyUncoveredBoard.get(row, column);
+            return fullyUncoveredBoard.getCellValue(row, column);
         }
     }
 }
