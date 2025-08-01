@@ -35,4 +35,12 @@ public class Visit implements Comparable<Visit> {
     public int hashCode() {
         return Objects.hash(position, priority);
     }
+
+    @Override
+    public String toString() {
+        return "Visit{" +
+               "position=" + position +
+               ", priority=" + priority +
+               '}';
+    }
 }

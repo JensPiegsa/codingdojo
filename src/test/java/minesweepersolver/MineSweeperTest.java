@@ -314,11 +314,11 @@ class MineSweeperTest {
     @Test @DisplayName("queue new visits.")
     void queueNewVisits() {
         String initialBoard = """
-                              0 0 ? ?
+                              1 1 ? ?
                               x 1 ? ?
                               """;
         String expectedSolvedBoard = """
-                              0 0 0 0
+                              1 1 0 0
                               x 1 0 0
                               """;
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
@@ -333,19 +333,11 @@ class MineSweeperTest {
         then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
                 new Visit(Position.of(0, 3), 2),
                 new Visit(Position.of(1, 2), 2),
-                new Visit(Position.of(1, 3), 2)
+                new Visit(Position.of(1, 3), 2),
+                new Visit(Position.of(0, 1), 10),
+                new Visit(Position.of(1, 1), 10)
         );
     }
 
-    @Test @DisplayName("early game strategie 42.")
-    void earlyGameStrategie42() {
-        String initialBoard = """
-                              1 1 ? ?
-                              x 1 ? ?
-                              """;
-        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
-        boolean result = mineSweeper.canUncoverCell(Position.of(0, 2));
 
-        then(result).isTrue();
-    }
 }

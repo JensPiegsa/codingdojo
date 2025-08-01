@@ -89,12 +89,42 @@ public class MineSweeper {
             boolean isCovered = board.isCovered(position);
             // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
             if (isCovered) {
-                if (canUncoverCell(position)) {
+                int priority = 10;
+                board.getSaturatedNeighbours(position)
+                        .forEach(neighbour -> {
+                            int cellValue = board.getCellValue(neighbour);
+
+                            queue.add(new Visit(neighbour, priority));});
                     // set the externally retrieved number
                     open(position);
                     // TODO add neighbors to queue or update priority, if already in queue
                     return true;
-                }
+
+
+
+                // TODO: all other solution strategies
+
+            /*
+            Ideen:
+            - Eindeutige Mine markieren
+            - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
+            - atLeastOneSaturatedNeighbor
+            - Suche nicht-saturierter Zahl deren fehlende Minen der Anzahl unaufgedeckter Nachbarn entspricht
+                -> alle unaufgedeckten Nachbarn als Minen markieren
+            - Markieren aller verdeckten Felder als Mine,
+              sobald die Anzahl der verdeckten Felder der Anzahl der verbliebenen Minen entspricht
+
+            - Zusätzliche Datenstruktur zur Speicherung der Anzahl der nicht saturierten Nachbarn
+            - Queue zur Speicherung der nächsten zu bearbeitenden Felder
+            (satisfiedNumberWithCoveredFieldsList & satisfiedNumberWithKnownNeighborsList)
+
+     *   0 0 0 0 0
+     *   0 1 1 1 0
+     *   0 1 * 1 0
+     *   0 1 1 1 0
+     *   0 0 0 0 0
+             */
+
             } else {
                 int numberOfNeighboringMines = board.getCellValue(position);
                 int countedMines = board.countMinesAroundFor(position);
@@ -132,50 +162,6 @@ public class MineSweeper {
         return board.getCoveredCells();
     }
 
-
-    boolean canUncoverCell(Position pos) {
-        int cell = board.getCellValue(pos);
-        if (cell == Board.COVERED) {
-            int cols = board.getColumns() - 1;
-            int rows = board.getRows() - 1;
-
-            Bounds bounds = new Bounds(0, 0, cols, rows);
-            pos.getNeighbours(bounds); // ???
-
-            // Nachbar 0 -> Feld sicher
-            if (board.hasNeighbourValue(pos, 0)) {
-                return true;
-            } else if (board.hasSaturatedNeighbour(pos)) {
-                return true;
-            }
-
-
-            // TODO: all other solution strategies
-
-            /*
-            Ideen:
-            - Eindeutige Mine markieren
-            - Zahl gleich Anzahl bekannter benachbarter Minen (isSaturated) <- NEXT TODO
-            - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
-            - atLeastOneSaturatedNeighbor
-            - Suche nicht-saturierter Zahl deren fehlende Minen der Anzahl unaufgedeckter Nachbarn entspricht
-                -> alle unaufgedeckten Nachbarn als Minen markieren
-            - Markieren aller verdeckten Felder als Mine,
-              sobald die Anzahl der verdeckten Felder der Anzahl der verbliebenen Minen entspricht
-
-            - Zusätzliche Datenstruktur zur Speicherung der Anzahl der nicht saturierten Nachbarn
-            - Queue zur Speicherung der nächsten zu bearbeitenden Felder
-            (satisfiedNumberWithCoveredFieldsList & satisfiedNumberWithKnownNeighborsList)
-
-     *   0 0 0 0 0
-     *   0 1 1 1 0
-     *   0 1 * 1 0
-     *   0 1 1 1 0
-     *   0 0 0 0 0
-             */
-        }
-        return false;
-    }
 
     public int getRemainingHiddenMineCount() {
         return nMines - board.countMarkedMines();
@@ -404,15 +390,23 @@ class Board {
         return bounds;
     }
 
-    public boolean hasSaturatedNeighbour(Position position) {
+    public Stream<Position> getSaturatedNeighbours(Position position) {
         return position.getNeighbours(bounds)
-                .anyMatch(this::isSaturated);
+                .filter(this::isSaturated);
     }
 
     private boolean isSaturated(Position position) {
         if (isCovered(position)) {
             return false;
         }
-        return getCellValue(position) == countMinesAroundFor(position);
+        if (isZero(position)) {
+            return true;
+        }
+        int cellValue = getCellValue(position);
+        return cellValue == countMinesAroundFor(position);
+    }
+
+    public boolean isZero(Position pos) {
+        return getCellValue(pos) == 0;
     }
 }

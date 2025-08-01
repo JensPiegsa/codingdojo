@@ -218,4 +218,36 @@ class BoardTest {
 
         then(result).isEqualTo(1);
     }
+
+    @Test @DisplayName("early game strategie 42.")
+    void earlyGameStrategie42() {
+        String initialBoard = """
+                              1 1 ? ?
+                              x 1 ? ?
+                              """;
+        Board board = new Board(initialBoard);
+
+        Position pos = Position.of(0, 2);
+
+        then(board.getSaturatedNeighbours(pos))
+                .containsExactlyInAnyOrder(
+                        Position.of(0, 1),
+                        Position.of(1,1));
+    }
+
+    @Test @DisplayName("board can check for zero cell value (positive).")
+    void boardCanCheckForZeroCellValuePositive() {
+        Board board = new Board("0");
+        Position pos = Position.of(0, 0);
+
+        then(board.isZero(pos)).isTrue();
+    }
+
+    @Test @DisplayName("board can check for zero cell value (negative).")
+    void boardCanCheckForZeroCellValueNegative() {
+        Board board = new Board("x");
+        Position pos = Position.of(0, 0);
+
+        then(board.isZero(pos)).isFalse();
+    }
 }
