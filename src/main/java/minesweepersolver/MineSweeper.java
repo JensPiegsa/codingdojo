@@ -9,6 +9,7 @@ import static minesweepersolver.Board.MINE;
 
 public class MineSweeper {
 
+    public static final String UNSOLVABLE = "?";
     private final Board board;
     private final int nMines;
     private int markedMines;
@@ -29,11 +30,12 @@ public class MineSweeper {
             }
 
             earlyGameVisit();
-            if (board.isSolved()) {
+            isSolved = board.isSolved();
+            if (isSolved) {
                 return board.toString();
             }
             if (isQueueEmpty()) {
-                return "?";
+                return UNSOLVABLE;
             }
         } while (true);
     }
@@ -91,15 +93,10 @@ public class MineSweeper {
             if (isCovered) {
                 int priority = 10;
                 board.getSaturatedNeighbours(position)
-                        .forEach(neighbour -> {
-                            int cellValue = board.getCellValue(neighbour);
-
-                            queue.add(new Visit(neighbour, priority));});
-                    // set the externally retrieved number
-                    open(position);
-                    // TODO add neighbors to queue or update priority, if already in queue
-                    return true;
-
+                        .forEach(neighbour -> queue.add(new Visit(neighbour, priority)));
+                // set the externally retrieved number
+                // TODO add neighbors to queue or update priority, if already in queue
+                return true;
 
 
                 // TODO: all other solution strategies
@@ -189,6 +186,10 @@ public class MineSweeper {
 
     public boolean isSolved() {
         return board.isSolved();
+    }
+
+    Board getBoard() {
+        return board;
     }
 }
 

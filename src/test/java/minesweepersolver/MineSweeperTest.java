@@ -3,6 +3,7 @@ package minesweepersolver;
 import static org.assertj.core.api.BDDAssertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,6 +19,11 @@ import java.util.PriorityQueue;
  */
 @DisplayName("A MineSweeper")
 class MineSweeperTest {
+
+    @AfterEach
+    void tearDown() {
+        Game.clear();
+    }
 
     @Test
     void solveReturnsInitiallyFullySolvedBoard() {
@@ -331,12 +337,43 @@ class MineSweeperTest {
         mineSweeper.earlyGameVisit();
 
         then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 3), 2),
-                new Visit(Position.of(1, 2), 2),
-                new Visit(Position.of(1, 3), 2),
                 new Visit(Position.of(0, 1), 10),
                 new Visit(Position.of(1, 1), 10)
         );
+    }
+
+    @Test @DisplayName("open covered fields around saturated field and add new visits.")
+    void openCoveredFieldsAroundSaturatedFieldAndAddNewVisits() {
+        String initialBoard = """
+                              1 1 ? ?
+                              x 1 ? ?
+                              """;
+        String expectedSolvedBoard = """
+                              1 1 0 0
+                              x 1 0 0
+                              """;
+        String expectedBoardAfterEarlyGameVisit = """
+                              1 1 0 ?
+                              x 1 0 ?
+                              """;
+
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        List<Visit> visits = List.of(new Visit(Position.of(0, 1), 1));
+        mineSweeper.queue = new PriorityQueue<>(visits);
+
+        mineSweeper.earlyGameVisit();
+
+        then(mineSweeper.getBoard().toString())
+                .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);
+
+        then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
+                new Visit(Position.of(0, 2), 2),
+                new Visit(Position.of(1, 2), 2)
+        );
+
     }
 
 
