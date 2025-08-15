@@ -91,9 +91,9 @@ public class MineSweeper {
             boolean isCovered = board.isCovered(position);
             // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
             if (isCovered) {
-                int priority = 10;
+                Strategy strategy = Strategy.SATURATED_NEIGHBOUR;
                 board.getSaturatedNeighbours(position)
-                        .forEach(neighbour -> queue.add(new Visit(neighbour, priority)));
+                        .forEach(neighbour -> queue.add(new Visit(neighbour, strategy)));
                 // set the externally retrieved number
                 // TODO add neighbors to queue or update priority, if already in queue
                 return true;
@@ -151,7 +151,10 @@ public class MineSweeper {
         int cellValue = Game.open(position.row(), position.col());
         Stream<Position> neighbours = position.getNeighbours(board.getBounds());
         neighbours.filter(board::isCovered)
-                .forEach(neighbour -> queue.add(new Visit(neighbour, 2)));
+                .forEach(neighbour -> queue.add(
+                        new Visit(neighbour, cellValue == 0 ?
+                                Strategy.SATURATED_NEIGHBOUR :
+                                Strategy.UNKNOWN_BORDER)));
         board.set(position, cellValue);
     }
 
@@ -173,10 +176,10 @@ public class MineSweeper {
                 Position position = new Position(row, col);
 
                 if (board.isUnknownBorder(position)) {
-                    visits.add(new Visit(position, 2));
+                    visits.add(new Visit(position, Strategy.UNKNOWN_BORDER));
                 } else if (board.isKnownBorder(position)) {
-                    int priority = board.getCellValue(position) == 0 ? 0 : 1;
-                    visits.add(new Visit(position, priority));
+//                    int priority = board.getCellValue(position) == 0 ? 0 : 1;
+                    visits.add(new Visit(position, Strategy.KNOWN_BORDER));
                 }
             }
         }

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -283,7 +285,7 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(1, 2), 1));
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER));
         mineSweeper.queue = new PriorityQueue<>(visits);
 
         mineSweeper.earlyGameVisit();
@@ -309,7 +311,7 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(1, 2), 1));
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER));
         mineSweeper.queue = new PriorityQueue<>(visits);
 
         mineSweeper.earlyGameVisit();
@@ -331,19 +333,21 @@ class MineSweeperTest {
 
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(0, 2), 1));
+        List<Visit> visits = List.of(new Visit(Position.of(0, 2), Strategy.UNKNOWN_BORDER));
         mineSweeper.queue = new PriorityQueue<>(visits);
 
         mineSweeper.earlyGameVisit();
 
         then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 1), 10),
-                new Visit(Position.of(1, 1), 10)
+                new Visit(Position.of(0, 1), Strategy.SATURATED),
+                new Visit(Position.of(1, 1), Strategy.SATURATED)
         );
     }
 
-    @Test @DisplayName("open covered fields around saturated field and add new visits.")
-    void openCoveredFieldsAroundSaturatedFieldAndAddNewVisits() {
+    @ParameterizedTest
+    @EnumSource(value = Strategy.class, names = {"SATURATED","KNOWN_BORDER"})
+    @DisplayName("open covered fields around saturated field and add new visits.")
+    void openCoveredFieldsAroundSaturatedFieldAndAddNewVisits(Strategy strategy) {
         String initialBoard = """
                               1 1 ? ?
                               x 1 ? ?
@@ -361,7 +365,7 @@ class MineSweeperTest {
 
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(0, 1), 1));
+        List<Visit> visits = List.of(new Visit(Position.of(0, 1), strategy));
         mineSweeper.queue = new PriorityQueue<>(visits);
 
         mineSweeper.earlyGameVisit();
@@ -370,11 +374,14 @@ class MineSweeperTest {
                 .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);
 
         then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 2), 2),
-                new Visit(Position.of(1, 2), 2)
+                new Visit(Position.of(0, 2), Strategy.KNOWN_BORDER),
+                new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER),
+                new Visit(Position.of(0, 3), Strategy.SATURATED_NEIGHBOUR),
+                new Visit(Position.of(1, 3), Strategy.SATURATED_NEIGHBOUR)
         );
 
     }
+
 
 
 }
