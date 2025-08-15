@@ -7,11 +7,11 @@ import java.util.Objects;
 public class Visit implements Comparable<Visit> {
 
     private final Position position;
-    private final int priority;
+    private final Strategy strategy;
 
-    public Visit(Position position, int priority) {
+    public Visit(Position position, Strategy strategy) {
         this.position = position;
-        this.priority = priority;
+        this.strategy = strategy;
     }
 
     public Position getPosition() {
@@ -21,26 +21,27 @@ public class Visit implements Comparable<Visit> {
 
     @Override
     public int compareTo(@NotNull Visit o) {
-        return Integer.compare(priority, o.priority);
+        return Integer.compare(strategy.getPriority(), o.strategy.getPriority());
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Visit visit = (Visit) o;
-        return priority == visit.priority && Objects.equals(position, visit.position);
+        return strategy.getPriority() == visit.strategy.getPriority()
+                && Objects.equals(position, visit.position);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, priority);
+        return Objects.hash(position, strategy.getPriority());
     }
 
     @Override
     public String toString() {
         return "Visit{" +
                "position=" + position +
-               ", priority=" + priority +
+               ", strategy=" + strategy +
                '}';
     }
 }
