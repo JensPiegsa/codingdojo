@@ -13,7 +13,7 @@ public class MineSweeper {
     private final Board board;
     private final int nMines;
     private int markedMines;
-    PriorityQueue<Visit> queue;
+    VisitQueue queue;
 
 
     public MineSweeper(final String board, final int nMines) {
@@ -91,6 +91,7 @@ public class MineSweeper {
             boolean isCovered = board.isCovered(position);
             // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
             if (isCovered) {
+                // TODO shouldn't saturated fields be visited directly?
                 Strategy strategy = Strategy.SATURATED_NEIGHBOUR;
                 board.getSaturatedNeighbours(position)
                         .forEach(neighbour -> queue.add(new Visit(neighbour, strategy)));
@@ -127,12 +128,12 @@ public class MineSweeper {
                 int countedMines = board.countMinesAroundFor(position);
 
                 if (numberOfNeighboringMines == countedMines) {
-                    board.getUnmarkedCoveredCells(position).forEach(this::open); // TODO queue each + right neighbours
+                    board.getUnmarkedCoveredNeighborCells(position).forEach(this::open); // TODO queue each + right neighbours
                 }
 
                 int numberOfCoveredNeighbours = board.countCoveredNeighbours(position);
                 if (numberOfNeighboringMines - countedMines == numberOfCoveredNeighbours) {
-                    board.getUnmarkedCoveredCells(position).forEach(p -> board.set(p, MINE));
+                    board.getUnmarkedCoveredNeighborCells(position).forEach(p -> board.set(p, MINE));
                     // TODO add neighbours of each mine - actual position - known mines
 
                 }
@@ -167,8 +168,8 @@ public class MineSweeper {
         return nMines - board.countMarkedMines();
     }
 
-    PriorityQueue<Visit> initQueue() {
-        PriorityQueue<Visit> visits = new PriorityQueue<>();
+    VisitQueue initQueue() {
+        VisitQueue visits = new VisitQueue();
 
         for(int row = 0; row < board.getRows(); row++) {
             for(int col = 0; col < board.getColumns(); col++) {
@@ -379,7 +380,7 @@ class Board {
         return countValuesAroundFor(position.row(), position.col(), MINE);
     }
 
-    public Stream<Position> getUnmarkedCoveredCells(Position position) {
+    public Stream<Position> getUnmarkedCoveredNeighborCells(Position position) {
         return position.getNeighbours(bounds).filter(this::isCovered);
     }
 

@@ -189,7 +189,7 @@ class MineSweeperTest {
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
         MineSweeper mineSweeper = new MineSweeper(initialBoard, mineCount);
-        mineSweeper.queue = new PriorityQueue<>();
+        mineSweeper.queue = new VisitQueue();
 
         final String actualSolvedBoard = mineSweeper.solve();
 
@@ -217,9 +217,10 @@ class MineSweeperTest {
                               # # # # # # #
          */
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 5);
-        PriorityQueue<Visit> visits = mineSweeper.initQueue();
+        VisitQueue visits = mineSweeper.initQueue();
 
-        then(visits).map(Visit::getPosition).containsExactlyInAnyOrder(
+        // TODO: do we need covered border fields initially
+        then(visits.toIterable()).map(Visit::getPosition).containsExactlyInAnyOrder(
                 Position.of(0,1),
                 Position.of(0,2),
                 Position.of(0,3),
@@ -286,7 +287,7 @@ class MineSweeperTest {
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
         List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER));
-        mineSweeper.queue = new PriorityQueue<>(visits);
+        mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.earlyGameVisit();
 
@@ -312,7 +313,7 @@ class MineSweeperTest {
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
         List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER));
-        mineSweeper.queue = new PriorityQueue<>(visits);
+        mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.earlyGameVisit();
 
@@ -334,11 +335,11 @@ class MineSweeperTest {
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
         List<Visit> visits = List.of(new Visit(Position.of(0, 2), Strategy.UNKNOWN_BORDER));
-        mineSweeper.queue = new PriorityQueue<>(visits);
+        mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.earlyGameVisit();
 
-        then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
+        then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
                 new Visit(Position.of(0, 1), Strategy.SATURATED),
                 new Visit(Position.of(1, 1), Strategy.SATURATED)
         );
@@ -366,14 +367,14 @@ class MineSweeperTest {
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
         List<Visit> visits = List.of(new Visit(Position.of(0, 1), strategy));
-        mineSweeper.queue = new PriorityQueue<>(visits);
+        mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.earlyGameVisit();
 
         then(mineSweeper.getBoard().toString())
                 .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);
 
-        then(mineSweeper.queue).isNotEmpty().containsExactlyInAnyOrder(
+        then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
                 new Visit(Position.of(0, 2), Strategy.KNOWN_BORDER),
                 new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER),
                 new Visit(Position.of(0, 3), Strategy.SATURATED_NEIGHBOUR),

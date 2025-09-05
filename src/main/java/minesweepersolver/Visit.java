@@ -21,7 +21,7 @@ public class Visit implements Comparable<Visit> {
 
     @Override
     public int compareTo(@NotNull Visit o) {
-        return Integer.compare(strategy.getPriority(), o.strategy.getPriority());
+        return Integer.compare(o.strategy.getPriority(), strategy.getPriority());
     }
 
     @Override
