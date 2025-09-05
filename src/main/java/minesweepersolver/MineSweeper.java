@@ -23,6 +23,9 @@ public class MineSweeper {
     }
     
     public String solve() {
+        if (queue == null) {
+            queue = initQueue();
+        }
         do {
             boolean isSolved = tryToSolveEndgame();
             if (isSolved) {
@@ -79,10 +82,8 @@ public class MineSweeper {
         return false;
     }
 
+    // local viewpoint
     boolean earlyGameVisit() {
-        if (queue == null) {
-            queue = initQueue();
-        }
         // local strategies
         if (!queue.isEmpty()) {
             Visit visit = queue.poll();
@@ -135,8 +136,9 @@ public class MineSweeper {
                 if (numberOfNeighboringMines - countedMines == numberOfCoveredNeighbours) {
                     board.getUnmarkedCoveredNeighborCells(position).forEach(p -> board.set(p, MINE));
                     // TODO add neighbours of each mine - actual position - known mines
-
                 }
+
+
                 // can uncover neighbors?
 
                 // TODO take into account: multiple numbers put constraints on common covered neighbors
@@ -156,6 +158,7 @@ public class MineSweeper {
                         new Visit(neighbour, cellValue == 0 ?
                                 Strategy.SATURATED_NEIGHBOUR :
                                 Strategy.UNKNOWN_BORDER)));
+        queue.remove(position);
         board.set(position, cellValue);
     }
 
@@ -179,8 +182,6 @@ public class MineSweeper {
                 if (board.isUnknownBorder(position)) {
                     visits.add(new Visit(position, Strategy.UNKNOWN_BORDER));
                 } else if (board.isKnownBorder(position)) {
-//                    int priority = board.getCellValue(position) == 0 ? 0 : 1;
-                    visits.add(new Visit(position, Strategy.KNOWN_BORDER));
                 }
             }
         }

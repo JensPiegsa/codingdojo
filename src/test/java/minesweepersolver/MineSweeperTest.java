@@ -219,7 +219,6 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 5);
         VisitQueue visits = mineSweeper.initQueue();
 
-        // TODO: do we need covered border fields initially
         then(visits.toIterable()).map(Visit::getPosition).containsExactlyInAnyOrder(
                 Position.of(0,1),
                 Position.of(0,2),
@@ -227,35 +226,20 @@ class MineSweeperTest {
                 Position.of(0,4),
 
                 Position.of(1,1),
-                Position.of(1,2),
-                Position.of(1,3),
                 Position.of(1,4),
 
-                Position.of(2,2),
-                Position.of(2,3),
                 Position.of(2,4),
                 Position.of(2,5),
                 Position.of(2,6),
 
                 Position.of(3,0),
                 Position.of(3,1),
-                Position.of(3,2),
-                Position.of(3,3),
-                Position.of(3,4),
-                Position.of(3,5),
                 Position.of(3,6),
 
                 Position.of(4,0),
-                Position.of(4,1),
-                Position.of(4,2),
-                Position.of(4,5),
                 Position.of(4,6),
 
                 Position.of(5,0),
-                Position.of(5,1),
-                Position.of(5,3),
-                Position.of(5,4),
-                Position.of(5,5),
                 Position.of(5,6),
 
                 Position.of(6,0),
@@ -286,7 +270,7 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER));
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.SATURATED));
         mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.earlyGameVisit();
@@ -312,7 +296,8 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER));
+        // TODO calculate that position (1,2) is unsaturated for one mine -> mine on actual pos(1,1)
+        List<Visit> visits = List.of(new Visit(Position.of(1, 1), Strategy.UNKNOWN_BORDER));
         mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.earlyGameVisit();
@@ -346,7 +331,7 @@ class MineSweeperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Strategy.class, names = {"SATURATED","KNOWN_BORDER"})
+    @EnumSource(value = Strategy.class, names = {"SATURATED"})
     @DisplayName("open covered fields around saturated field and add new visits.")
     void openCoveredFieldsAroundSaturatedFieldAndAddNewVisits(Strategy strategy) {
         String initialBoard = """
@@ -375,8 +360,6 @@ class MineSweeperTest {
                 .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);
 
         then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 2), Strategy.KNOWN_BORDER),
-                new Visit(Position.of(1, 2), Strategy.KNOWN_BORDER),
                 new Visit(Position.of(0, 3), Strategy.SATURATED_NEIGHBOUR),
                 new Visit(Position.of(1, 3), Strategy.SATURATED_NEIGHBOUR)
         );

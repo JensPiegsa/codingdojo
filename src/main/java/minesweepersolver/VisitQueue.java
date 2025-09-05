@@ -20,7 +20,7 @@ public class VisitQueue {
                 lowPrioDuplicates.add(qVisit);
             }
         }
-        lowPrioDuplicates.forEach(queue::remove);
+        queue.removeAll(lowPrioDuplicates);
         queue.add(visit);
     }
 
@@ -34,5 +34,15 @@ public class VisitQueue {
 
     public Iterable<Visit> toIterable() {
         return Collections.unmodifiableCollection(queue);
+    }
+
+    public void remove(Position position) {
+        List<Visit> toRemove = new ArrayList<>();
+        for (Visit qVisit : queue) {
+            if (qVisit.getPosition().equals(position)) {
+                toRemove.add(qVisit);
+            }
+        }
+        queue.removeAll(toRemove);
     }
 }

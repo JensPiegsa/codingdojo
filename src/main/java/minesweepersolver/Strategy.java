@@ -6,7 +6,6 @@ public enum Strategy {
     /**
      *  high priority -> handle first
      */
-    KNOWN_BORDER(1, "known inner border (uncovered)"),
     UNKNOWN_BORDER(1, "unknown border (covered)"),
     SATURATED(10, "neighbours can be uncovered because of this saturated field (covered)"),
     SATURATED_NEIGHBOUR(10, "field can be uncovered because of saturated neighbour (covered)"),

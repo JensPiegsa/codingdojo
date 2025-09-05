@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VisitQueueTest {
@@ -11,7 +12,7 @@ class VisitQueueTest {
     @DisplayName("added Visit can be polled.")
     void addedVisitCanBePolled() {
         VisitQueue visitQueue = new VisitQueue();
-        Visit visit = new Visit(new Position(0, 0), Strategy.KNOWN_BORDER);
+        Visit visit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
         visitQueue.add(visit);
 
         Visit polldedVisit = visitQueue.poll();
@@ -23,7 +24,7 @@ class VisitQueueTest {
     void replacesLowPriorityVisitWithHighPriorityVisit() {
 
         VisitQueue visitQueue = new VisitQueue();
-        Visit visit = new Visit(new Position(0, 0), Strategy.KNOWN_BORDER);
+        Visit visit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
         Visit prioVisit = new Visit(new Position(0, 0), Strategy.SATURATED);
         visitQueue.add(visit);
         visitQueue.add(prioVisit);
@@ -38,7 +39,7 @@ class VisitQueueTest {
     void priorityVisitWillBePolledFirst() {
 
         VisitQueue visitQueue = new VisitQueue();
-        Visit visit = new Visit(new Position(1, 0), Strategy.KNOWN_BORDER);
+        Visit visit = new Visit(new Position(1, 0), Strategy.UNKNOWN_BORDER);
         Visit prioVisit = new Visit(new Position(0, 0), Strategy.SATURATED);
         visitQueue.add(visit);
         visitQueue.add(prioVisit);
@@ -54,13 +55,35 @@ class VisitQueueTest {
     void addingSamePriorityVisitKeepsQueueUnaffected() {
 
         VisitQueue visitQueue = new VisitQueue();
-        Visit visit = new Visit(new Position(0, 0), Strategy.KNOWN_BORDER);
-        Visit equalVisit = new Visit(new Position(0, 0), Strategy.KNOWN_BORDER);
+        Visit visit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
+        Visit equalVisit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
         visitQueue.add(visit);
         visitQueue.add(equalVisit);
 
         Visit polldedVisit = visitQueue.poll();
         assertThat(polldedVisit).isEqualTo(equalVisit);
         assertThat(visitQueue.isEmpty()).isTrue();
+    }
+
+    @Test @DisplayName("remove visit on Position.")
+    void removeVisitOnPosition() {
+        VisitQueue visitQueue = new VisitQueue();
+
+        visitQueue.remove(new Position(0, 0));
+
+        then(visitQueue.toIterable()).isEmpty();
+
+        Visit visit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
+        visitQueue.add(visit);
+
+        then(visitQueue.toIterable()).containsExactly(visit);
+
+        visitQueue.remove(new Position(1, 0));
+
+        then(visitQueue.toIterable()).containsExactly(visit);
+
+        visitQueue.remove(new Position(0, 0));
+
+        then(visitQueue.toIterable()).isEmpty();
     }
 }
