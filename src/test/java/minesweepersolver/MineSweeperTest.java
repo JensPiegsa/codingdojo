@@ -9,12 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * @author Jens Piegsa
@@ -78,8 +76,8 @@ class MineSweeperTest {
             MineSweeper mineSweeperSpy = spy(mineSweeper);
             final String solvedBoard = mineSweeperSpy.solve();
             assertThat(solvedBoard).isEqualTo(boardUncovered.toString());
-            verify(mineSweeperSpy, times(0)).earlyGameVisit();
-            verify(mineSweeperSpy, times(1)).tryToSolveEndgame();
+            verify(mineSweeperSpy, times(0)).runLocalSolver();
+            verify(mineSweeperSpy, times(1)).tryToRunGlobalSolver();
         }
     }
 
@@ -273,7 +271,29 @@ class MineSweeperTest {
         List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.SATURATED));
         mineSweeper.queue = new VisitQueue(visits);
 
-        mineSweeper.earlyGameVisit();
+        mineSweeper.runLocalSolver();
+
+        assertThat(mineSweeper.isSolved()).isTrue();
+    }
+
+    @Test
+    @DisplayName("can mark mine when local mines saturated")
+    void canMarkMineWhenLocalMineSaturated() {
+        String initialBoard = """
+                              ? 1
+                              """;
+
+        String expectedSolvedBoard = """
+                              x 1 
+                              """;
+
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        List<Visit> visits = List.of(new Visit(Position.of(0, 0), Strategy.UNKNOWN_BORDER));
+        mineSweeper.queue = new VisitQueue(visits);
+
+        mineSweeper.runLocalSolver();
 
         assertThat(mineSweeper.isSolved()).isTrue();
     }
@@ -282,26 +302,22 @@ class MineSweeperTest {
     @DisplayName("can mark mine when all mines saturated")
     void canMarkMineWhenAllMineSaturated() {
         String initialBoard = """
-                              0 0 0 0
-                              0 ? 1 0
-                              0 0 0 0
+                              ?
                               """;
 
         String expectedSolvedBoard = """
-                              0 0 0 0
-                              0 x 1 0
-                              0 0 0 0
+                              x
                               """;
 
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        // TODO calculate that position (1,2) is unsaturated for one mine -> mine on actual pos(1,1)
-        List<Visit> visits = List.of(new Visit(Position.of(1, 1), Strategy.UNKNOWN_BORDER));
+        List<Visit> visits = List.of(new Visit(Position.of(0, 0), Strategy.UNKNOWN_BORDER));
         mineSweeper.queue = new VisitQueue(visits);
 
-        mineSweeper.earlyGameVisit();
+        boolean globallySolved = mineSweeper.tryToRunGlobalSolver();
 
+        assertThat(globallySolved).isTrue();
         assertThat(mineSweeper.isSolved()).isTrue();
     }
 
@@ -322,7 +338,7 @@ class MineSweeperTest {
         List<Visit> visits = List.of(new Visit(Position.of(0, 2), Strategy.UNKNOWN_BORDER));
         mineSweeper.queue = new VisitQueue(visits);
 
-        mineSweeper.earlyGameVisit();
+        mineSweeper.runLocalSolver();
 
         then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
                 new Visit(Position.of(0, 1), Strategy.SATURATED),
@@ -354,7 +370,7 @@ class MineSweeperTest {
         List<Visit> visits = List.of(new Visit(Position.of(0, 1), strategy));
         mineSweeper.queue = new VisitQueue(visits);
 
-        mineSweeper.earlyGameVisit();
+        mineSweeper.runLocalSolver();
 
         then(mineSweeper.getBoard().toString())
                 .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);

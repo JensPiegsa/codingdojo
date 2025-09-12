@@ -1,7 +1,6 @@
 package minesweepersolver;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
 import java.util.stream.Stream;
 
 import static minesweepersolver.Board.COVERED_CHAR;
@@ -27,12 +26,12 @@ public class MineSweeper {
             queue = initQueue();
         }
         do {
-            boolean isSolved = tryToSolveEndgame();
+            boolean isSolved = tryToRunGlobalSolver();
             if (isSolved) {
                 return board.toString();
             }
 
-            earlyGameVisit();
+            runLocalSolver();
             isSolved = board.isSolved();
             if (isSolved) {
                 return board.toString();
@@ -47,7 +46,7 @@ public class MineSweeper {
         return queue == null || queue.isEmpty();
     }
 
-    boolean tryToSolveEndgame() {
+    boolean tryToRunGlobalSolver() {
         if (!board.toString().contains(COVERED_CHAR)) {
             return true;
         }
@@ -83,7 +82,7 @@ public class MineSweeper {
     }
 
     // local viewpoint
-    boolean earlyGameVisit() {
+    void runLocalSolver() {
         // local strategies
         if (!queue.isEmpty()) {
             Visit visit = queue.poll();
@@ -91,20 +90,7 @@ public class MineSweeper {
             Position position = visit.getPosition();
             boolean isCovered = board.isCovered(position);
             // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
-            if (isCovered) {
-                // TODO shouldn't saturated fields be visited directly?
-                Strategy strategy = Strategy.SATURATED_NEIGHBOUR;
-                board.getSaturatedNeighbours(position)
-                        .forEach(neighbour -> queue.add(new Visit(neighbour, strategy)));
-                // set the externally retrieved number
-                // TODO add neighbors to queue or update priority, if already in queue
-                return true;
-
-
-                // TODO: all other solution strategies
-
-            /*
-            Ideen:
+            /*  Ideen:
             - Eindeutige Mine markieren
             - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
             - atLeastOneSaturatedNeighbor
@@ -123,31 +109,44 @@ public class MineSweeper {
      *   0 1 1 1 0
      *   0 0 0 0 0
              */
-
+            if (isCovered) {
+                solveLocalWhenCovered(position);
             } else {
-                int numberOfNeighboringMines = board.getCellValue(position);
-                int countedMines = board.countMinesAroundFor(position);
-
-                if (numberOfNeighboringMines == countedMines) {
-                    board.getUnmarkedCoveredNeighborCells(position).forEach(this::open); // TODO queue each + right neighbours
-                }
-
-                int numberOfCoveredNeighbours = board.countCoveredNeighbours(position);
-                if (numberOfNeighboringMines - countedMines == numberOfCoveredNeighbours) {
-                    board.getUnmarkedCoveredNeighborCells(position).forEach(p -> board.set(p, MINE));
-                    // TODO add neighbours of each mine - actual position - known mines
-                }
-
-
-                // can uncover neighbors?
-
-                // TODO take into account: multiple numbers put constraints on common covered neighbors
-
+                solveLocalWhenUncovered(position);
             }
             // TODO after uncovering: put neighbors to queue
-
         }
-        return false;
+    }
+
+    private void solveLocalWhenUncovered(Position position) {
+        int numberOfNeighboringMines = board.getCellValue(position);
+        int countedMines = board.countMinesAroundFor(position);
+
+        if (numberOfNeighboringMines == countedMines) {
+            board.getUnmarkedCoveredNeighborCells(position).forEach(this::open); // TODO queue each + right neighbours
+        }
+
+        int numberOfCoveredNeighbours = board.countCoveredNeighbours(position);
+        if (numberOfNeighboringMines - countedMines == numberOfCoveredNeighbours) {
+            board.getUnmarkedCoveredNeighborCells(position).forEach(p -> board.set(p, MINE));
+            // TODO add neighbours of each mine - actual position - known mines
+        }
+
+
+        // can uncover neighbors?
+
+        // TODO take into account: multiple numbers put constraints on common covered neighbors
+    }
+
+    private boolean solveLocalWhenCovered(Position position) {
+        // TODO shouldn't saturated fields be visited directly?
+        Strategy strategy = Strategy.SATURATED_NEIGHBOUR;
+        int numberOfVisitsBefore = queue.size();
+        board.getSaturatedNeighbours(position)
+                .forEach(neighbour -> queue.add(new Visit(neighbour, strategy)));
+        // set the externally retrieved number
+        // TODO add neighbors to queue or update priority, if already in queue
+        return queue.size() != numberOfVisitsBefore;
     }
 
     private void open(Position position) {

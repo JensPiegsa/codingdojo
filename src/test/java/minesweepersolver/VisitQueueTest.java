@@ -86,4 +86,25 @@ class VisitQueueTest {
 
         then(visitQueue.toIterable()).isEmpty();
     }
+
+    @Test @DisplayName("can return size.")
+    void canReturnSize() {
+        VisitQueue visitQueue = new VisitQueue();
+
+        int queueSizeBefore = visitQueue.size();
+
+        Visit visitOne = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
+        visitQueue.add(visitOne);
+
+        int queueSizeInBetween = visitQueue.size();
+
+        Visit visitTwo = new Visit(new Position(1, 1), Strategy.UNKNOWN_BORDER);
+        visitQueue.add(visitTwo);
+
+        int queueSizeAfter = visitQueue.size();
+
+        assertThat(queueSizeBefore).isEqualTo(0);
+        assertThat(queueSizeInBetween).isEqualTo(1);
+        assertThat(queueSizeAfter).isEqualTo(2);
+    }
 }

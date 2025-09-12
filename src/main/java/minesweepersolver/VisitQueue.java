@@ -45,4 +45,8 @@ public class VisitQueue {
         }
         queue.removeAll(toRemove);
     }
+
+    public int size() {
+        return queue.size();
+    }
 }
