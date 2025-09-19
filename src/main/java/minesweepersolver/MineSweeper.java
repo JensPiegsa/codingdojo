@@ -1,5 +1,6 @@
 package minesweepersolver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -152,12 +153,14 @@ public class MineSweeper {
     private void open(Position position) {
         int cellValue = Game.open(position.row(), position.col());
         Stream<Position> neighbours = position.getNeighbours(board.getBounds());
-        neighbours.filter(board::isCovered)
-                .forEach(neighbour -> queue.add(
-                        new Visit(neighbour, cellValue == 0 ?
-                                Strategy.SATURATED_NEIGHBOUR :
-                                Strategy.UNKNOWN_BORDER)));
         queue.remove(position);
+        if (cellValue == 0) {
+            neighbours.filter(board::isCovered)
+                    .forEach(neighbour -> queue.add(
+                            new Visit(neighbour, Strategy.OPEN)));
+        } else {
+            queue.add(new Visit(position, Strategy.CHECK_SATURATION));
+        }
         board.set(position, cellValue);
     }
 

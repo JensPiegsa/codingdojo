@@ -268,7 +268,7 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.SATURATED));
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.OPEN));
         mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.runLocalSolver();
@@ -341,13 +341,13 @@ class MineSweeperTest {
         mineSweeper.runLocalSolver();
 
         then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 1), Strategy.SATURATED),
-                new Visit(Position.of(1, 1), Strategy.SATURATED)
+                new Visit(Position.of(0, 1), Strategy.OPEN),
+                new Visit(Position.of(1, 1), Strategy.OPEN)
         );
     }
 
     @ParameterizedTest
-    @EnumSource(value = Strategy.class, names = {"SATURATED"})
+    @EnumSource(value = Strategy.class, names = {"OPEN"})
     @DisplayName("open covered fields around saturated field and add new visits.")
     void openCoveredFieldsAroundSaturatedFieldAndAddNewVisits(Strategy strategy) {
         String initialBoard = """

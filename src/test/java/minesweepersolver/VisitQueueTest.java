@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.jupiter.api.Assertions.*;
 
 class VisitQueueTest {
     @Test
@@ -25,7 +24,7 @@ class VisitQueueTest {
 
         VisitQueue visitQueue = new VisitQueue();
         Visit visit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
-        Visit prioVisit = new Visit(new Position(0, 0), Strategy.SATURATED);
+        Visit prioVisit = new Visit(new Position(0, 0), Strategy.OPEN);
         visitQueue.add(visit);
         visitQueue.add(prioVisit);
 
@@ -40,7 +39,7 @@ class VisitQueueTest {
 
         VisitQueue visitQueue = new VisitQueue();
         Visit visit = new Visit(new Position(1, 0), Strategy.UNKNOWN_BORDER);
-        Visit prioVisit = new Visit(new Position(0, 0), Strategy.SATURATED);
+        Visit prioVisit = new Visit(new Position(0, 0), Strategy.OPEN);
         visitQueue.add(visit);
         visitQueue.add(prioVisit);
 

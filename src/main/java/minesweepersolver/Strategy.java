@@ -7,9 +7,9 @@ public enum Strategy {
      *  high priority -> handle first
      */
     UNKNOWN_BORDER(1, "unknown border (covered)"),
-    SATURATED(10, "neighbours can be uncovered because of this saturated field (covered)"),
+    CHECK_SATURATION(5, "check saturation (uncovered)"),
     SATURATED_NEIGHBOUR(10, "field can be uncovered because of saturated neighbour (covered)"),
-    ;
+    OPEN(1000, "neighbours can be uncovered because of this saturated field (covered)");
 
     private int priority;
     private String description;
