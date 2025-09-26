@@ -277,8 +277,8 @@ class MineSweeperTest {
     }
 
     @Test
-    @DisplayName("can mark mine when local mines saturated")
-    void canMarkMineWhenLocalMineSaturated() {
+    @DisplayName("can mark mine when all covered fields require mines")
+    void canMarkMineWhenAllCoveredFieldsRequireMines() {
         String initialBoard = """
                               ? 1
                               """;
@@ -290,7 +290,7 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(0, 0), Strategy.UNKNOWN_BORDER));
+        List<Visit> visits = List.of(new Visit(Position.of(0, 1), Strategy.UNKNOWN_BORDER));
         mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.runLocalSolver();
@@ -341,8 +341,8 @@ class MineSweeperTest {
         mineSweeper.runLocalSolver();
 
         then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 1), Strategy.OPEN),
-                new Visit(Position.of(1, 1), Strategy.OPEN)
+                new Visit(Position.of(0, 1), Strategy.SATURATED_NEIGHBOUR),
+                new Visit(Position.of(1, 1), Strategy.SATURATED_NEIGHBOUR)
         );
     }
 
@@ -376,12 +376,44 @@ class MineSweeperTest {
                 .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);
 
         then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 3), Strategy.SATURATED_NEIGHBOUR),
-                new Visit(Position.of(1, 3), Strategy.SATURATED_NEIGHBOUR)
+                new Visit(Position.of(0, 3), Strategy.OPEN),
+                new Visit(Position.of(1, 3), Strategy.OPEN)
         );
 
     }
 
+    @Test @DisplayName("apply open strategie from visit.")
+    void applyOpenStrategieFromVisit() {
+        String initialBoard = """
+                              1 1 ? ?
+                              x 1 ? ?
+                              """;
+        String expectedSolvedBoard = """
+                              1 1 0 0
+                              x 1 0 0
+                              """;
+        String expectedBoardAfterLocalGameVisit = """
+                              1 1 0 ?
+                              x 1 ? ?
+                              """;
 
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+
+        Game.newGame(initialBoard);
+        Game.read(expectedSolvedBoard);
+        List<Visit> visits = List.of(new Visit(Position.of(0, 2), Strategy.OPEN));
+        mineSweeper.queue = new VisitQueue(visits);
+
+        mineSweeper.runLocalSolver();
+
+        then(mineSweeper.getBoard().toString())
+                .isEqualToIgnoringNewLines(expectedBoardAfterLocalGameVisit);
+
+        then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
+                new Visit(Position.of(0, 3), Strategy.OPEN),
+                new Visit(Position.of(1, 2), Strategy.OPEN),
+                new Visit(Position.of(1, 3), Strategy.OPEN)
+        );
+    }
 
 }

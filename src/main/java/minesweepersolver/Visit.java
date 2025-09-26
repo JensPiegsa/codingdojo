@@ -18,6 +18,9 @@ public class Visit implements Comparable<Visit> {
         return position;
     }
 
+    public Strategy getStrategy() {
+        return strategy;
+    }
 
     @Override
     public int compareTo(@NotNull Visit o) {
