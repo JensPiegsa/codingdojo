@@ -15,9 +15,14 @@ public class VisitQueue {
     public void add(Visit visit) {
         List<Visit> lowPrioDuplicates = new ArrayList<>();
         for (Visit qVisit : queue) {
-            if (qVisit.getPosition().equals(visit.getPosition())
-            && qVisit.compareTo(visit) >= 0) {
-                lowPrioDuplicates.add(qVisit);
+            if (qVisit.getPosition().equals(visit.getPosition())) {
+
+                if (qVisit.compareTo(visit) < 0) {
+                    return;
+                }
+                if (qVisit.compareTo(visit) >= 0) {
+                    lowPrioDuplicates.add(qVisit);
+                }
             }
         }
         queue.removeAll(lowPrioDuplicates);

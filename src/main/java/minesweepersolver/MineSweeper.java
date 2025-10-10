@@ -1,18 +1,32 @@
 package minesweepersolver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static minesweepersolver.Board.COVERED_CHAR;
 import static minesweepersolver.Board.MINE;
 
+// TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
+            /*  Ideen:
+            - Eindeutige Mine markieren
+            - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
+            - atLeastOneSaturatedNeighbor
+            - Suche nicht-saturierter Zahl deren fehlende Minen der Anzahl unaufgedeckter Nachbarn entspricht
+                -> alle unaufgedeckten Nachbarn als Minen markieren
+            - Markieren aller verdeckten Felder als Mine,
+              sobald die Anzahl der verdeckten Felder der Anzahl der verbliebenen Minen entspricht
+
+            - Zusätzliche Datenstruktur zur Speicherung der Anzahl der nicht saturierten Nachbarn
+            - Queue zur Speicherung der nächsten zu bearbeitenden Felder
+            (satisfiedNumberWithCoveredFieldsList & satisfiedNumberWithKnownNeighborsList)
+             */
+
 public class MineSweeper {
 
     public static final String UNSOLVABLE = "?";
     private final Board board;
     private final int nMines;
-    private int markedMines;
+    private int markedMines; // TODO use and update this
     VisitQueue queue;
 
 
@@ -91,39 +105,18 @@ public class MineSweeper {
             Position position = visit.getPosition();
 
             if (strategy == Strategy.OPEN) {
-                this.open(position); // <- FIXME start here
+                this.open(position);
                 board.getUnmarkedCoveredNeighborCells(position)
                         .forEach(p -> queue.add(new Visit(p, Strategy.UNKNOWN_BORDER)));
                 return;
             }
 
             boolean isCovered = board.isCovered(position);
-            // TODO are we on a covered field or on an uncovered field? -> canUncoverNeighbors()
-            /*  Ideen:
-            - Eindeutige Mine markieren
-            - Optimierungsmöglichkeiten für große minenlose zusammenhängende Flächen
-            - atLeastOneSaturatedNeighbor
-            - Suche nicht-saturierter Zahl deren fehlende Minen der Anzahl unaufgedeckter Nachbarn entspricht
-                -> alle unaufgedeckten Nachbarn als Minen markieren
-            - Markieren aller verdeckten Felder als Mine,
-              sobald die Anzahl der verdeckten Felder der Anzahl der verbliebenen Minen entspricht
-
-            - Zusätzliche Datenstruktur zur Speicherung der Anzahl der nicht saturierten Nachbarn
-            - Queue zur Speicherung der nächsten zu bearbeitenden Felder
-            (satisfiedNumberWithCoveredFieldsList & satisfiedNumberWithKnownNeighborsList)
-
-     *   0 0 0 0 0
-     *   0 1 1 1 0
-     *   0 1 * 1 0
-     *   0 1 1 1 0
-     *   0 0 0 0 0
-             */
             if (isCovered) {
-                solveLocalWhenCovered(position);
+                solveLocalWhenCovered(position); // UNKNOWN_BOARDER
             } else {
-                solveLocalWhenUncovered(position);
+                solveLocalWhenUncovered(position); // CHECK_SATURATION, SATURATED_NEIGHBOUR
             }
-            // TODO after uncovering: put neighbors to queue
         }
     }
 
@@ -151,7 +144,9 @@ public class MineSweeper {
 
     private void openNeighboursIfSaturated(Position position, int numberOfNeighboringMines, int countedMines) {
         if (numberOfNeighboringMines == countedMines) {
-            board.getUnmarkedCoveredNeighborCells(position).forEach(this::open); // TODO queue each + right neighbours
+            board.getUnmarkedCoveredNeighborCells(position).forEach(
+                    pos -> queue.add(new Visit(pos, Strategy.OPEN))
+            );
         }
     }
 
@@ -213,6 +208,10 @@ public class MineSweeper {
 
     Board getBoard() {
         return board;
+    }
+
+    public int getMarkedMineCount() {
+        return markedMines;
     }
 }
 

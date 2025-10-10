@@ -268,12 +268,16 @@ class MineSweeperTest {
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
         Game.newGame(initialBoard);
         Game.read(expectedSolvedBoard);
-        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.OPEN));
+        List<Visit> visits = List.of(new Visit(Position.of(1, 2), Strategy.CHECK_SATURATION));
         mineSweeper.queue = new VisitQueue(visits);
 
         mineSweeper.runLocalSolver();
 
-        assertThat(mineSweeper.isSolved()).isTrue();
+        assertThat(mineSweeper.queue.toIterable()).containsExactlyInAnyOrder(
+                new Visit(Position.of(0,2), Strategy.OPEN),
+                new Visit(Position.of(1,3), Strategy.OPEN),
+                new Visit(Position.of(2,3), Strategy.OPEN)
+        );
     }
 
     @Test
@@ -347,7 +351,7 @@ class MineSweeperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Strategy.class, names = {"OPEN"})
+    @EnumSource(value = Strategy.class, names = {"CHECK_SATURATION"})
     @DisplayName("open covered fields around saturated field and add new visits.")
     void openCoveredFieldsAroundSaturatedFieldAndAddNewVisits(Strategy strategy) {
         String initialBoard = """
@@ -359,8 +363,8 @@ class MineSweeperTest {
                               x 1 0 0
                               """;
         String expectedBoardAfterEarlyGameVisit = """
-                              1 1 0 ?
-                              x 1 0 ?
+                              1 1 ? ?
+                              x 1 ? ?
                               """;
 
         MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
@@ -376,8 +380,8 @@ class MineSweeperTest {
                 .isEqualToIgnoringNewLines(expectedBoardAfterEarlyGameVisit);
 
         then(mineSweeper.queue.toIterable()).isNotEmpty().containsExactlyInAnyOrder(
-                new Visit(Position.of(0, 3), Strategy.OPEN),
-                new Visit(Position.of(1, 3), Strategy.OPEN)
+                new Visit(Position.of(0, 2), Strategy.OPEN),
+                new Visit(Position.of(1, 2), Strategy.OPEN)
         );
 
     }
@@ -416,4 +420,31 @@ class MineSweeperTest {
         );
     }
 
+    @Test @DisplayName("increase markedMine counter when new mine found.")
+    void increaseMarkedMineCounterWhenNewMineFound() {
+        String initialBoard = """
+                              1 1 ? ?
+                              x 1 ? ?
+                              """;
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+        mineSweeper.getBoard().set(0, 3, Board.MINE);
+
+        int newMines = mineSweeper.getMarkedMineCount();
+
+        assertThat(newMines).isEqualTo(2);
+    }
+
+    @Test @DisplayName("increase markedMine counter when new mine found 2.")
+    void increaseMarkedMineCounterWhenNewMineFound2() {
+        String initialBoard = """
+                              1 1 ? ?
+                              x 1 ? ?
+                              """;
+        MineSweeper mineSweeper = new MineSweeper(initialBoard, 1);
+        mineSweeper.getBoard().set(Position.of(0, 3), Board.MINE);
+
+        int newMines = mineSweeper.getMarkedMineCount();
+
+        assertThat(newMines).isEqualTo(2);
+    }
 }

@@ -106,4 +106,17 @@ class VisitQueueTest {
         assertThat(queueSizeInBetween).isEqualTo(1);
         assertThat(queueSizeAfter).isEqualTo(2);
     }
+
+    @Test @DisplayName("dont add visit if higher priority visit exists.")
+    void dontAddVisitIfHigherPriorityVisitExists() {
+        VisitQueue visitQueue = new VisitQueue();
+        Visit visit = new Visit(new Position(0, 0), Strategy.UNKNOWN_BORDER);
+        Visit prioVisit = new Visit(new Position(0, 0), Strategy.OPEN);
+        visitQueue.add(prioVisit);
+        visitQueue.add(visit);
+
+        Visit polldedVisit = visitQueue.poll();
+        assertThat(polldedVisit).isSameAs(prioVisit);
+        assertThat(visitQueue.isEmpty()).isTrue();
+    }
 }
