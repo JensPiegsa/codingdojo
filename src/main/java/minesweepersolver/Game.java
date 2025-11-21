@@ -6,6 +6,12 @@ public class Game {
     private static Board currentBoard;
     private static Board fullyUncoveredBoard;
 
+    public static void clear() {
+        currentBoard = null;
+        fullyUncoveredBoard = null;
+        gameMap = null;
+    }
+
     public static void newGame(String gameMap) {
         Game.gameMap = gameMap;
         currentBoard = new Board(gameMap);
@@ -24,7 +30,7 @@ public class Game {
         if (currentBoard.hasMine(row, column)) {
             throw new IllegalStateException("Mine hit at [" + row + ", " + column + "]");
         } else {
-            return fullyUncoveredBoard.get(row, column);
+            return fullyUncoveredBoard.getCellValue(row, column);
         }
     }
 }

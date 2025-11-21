@@ -1,0 +1,28 @@
+package minesweepersolver;
+
+
+public enum Strategy {
+
+    /**
+     *  high priority -> handle first
+     */
+    UNKNOWN_BORDER(1, "unknown border (covered)"),
+    CHECK_SATURATION(5, "check saturation (uncovered)"),
+    SATURATED_NEIGHBOUR(10, "field can be uncovered because of saturated neighbour (covered)"),
+    OPEN(1000, "neighbours can be uncovered because of this saturated field (covered)");
+
+    private int priority;
+    private String description;
+
+    Strategy(int priority, String description) {
+        this.priority = priority;
+        this.description = description;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+    public String getDescription() {
+        return description;
+    }
+}
