@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class PersonTest {
     @Test
-    public void the_correct_numbers_are_counted() {
+    public void the_correct_numbers_are_counted() throws InterruptedException {
         Counter counter = new Counter();
         ThreadedCounting.countInThreads(counter);
 
@@ -23,7 +23,7 @@ public class PersonTest {
     }
 
     @Test
-    public void the_correct_numbers_are_counted_in_sequence() {
+    public void the_correct_numbers_are_counted_in_sequence() throws InterruptedException {
         Counter counter = new Counter();
         ThreadedCounting.countInThreads(counter);
 
@@ -37,7 +37,7 @@ public class PersonTest {
     }
 
     @Test
-    public void three_threads_are_used() {
+    public void three_threads_are_used() throws InterruptedException {
         Counter counter = new Counter();
         ThreadedCounting.countInThreads(counter);
 
@@ -46,7 +46,7 @@ public class PersonTest {
     }
 
     @Test
-    public void numbers_are_in_the_correct_threads() {
+    public void numbers_are_in_the_correct_threads() throws InterruptedException {
         Counter counter = new Counter();
         ThreadedCounting.countInThreads(counter);
 
