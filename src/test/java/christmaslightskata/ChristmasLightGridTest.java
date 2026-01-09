@@ -18,7 +18,7 @@ class ChristmasLightGridTest {
 
         for (int x = 0; x <= 999; x++) {
             for (int y = 0; y <= 999; y++) {
-                then(christmasLightGrid.isLightOn(x, y)).isFalse();
+                then(christmasLightGrid.isLightOn(new Point(x, y))).isFalse();
             }
         }
     }
@@ -36,11 +36,11 @@ class ChristmasLightGridTest {
         ChristmasLightGrid christmasLightGrid = new ChristmasLightGrid();
 
         //when
-        christmasLightGrid.turnLightOn(1, 2, 2, 2);
+        christmasLightGrid.turnLightOn(Rectangle.between(new Point(1, 2), new Point(2, 2)));
 
         //then
-        then(christmasLightGrid.isLightOn(1, 2)).isTrue();
-        then(christmasLightGrid.isLightOn(2, 2)).isTrue();
+        then(christmasLightGrid.isLightOn(new Point(1, 2))).isTrue();
+        then(christmasLightGrid.isLightOn(new Point(2, 2))).isTrue();
     }
 
     // FIXME test is kind of weak -> rebuild
@@ -57,13 +57,53 @@ class ChristmasLightGridTest {
         ChristmasLightGrid christmasLightGrid = new ChristmasLightGrid();
 
         //when
-        christmasLightGrid.turnLightOn(1, 2, 2, 2);
+        christmasLightGrid.turnLightOn(Rectangle.between(new Point(1, 2), new Point(2, 2)));
 
         //then
-        then(christmasLightGrid.isLightOn(0, 0)).isFalse();
+        then(christmasLightGrid.isLightOn(new Point(0, 0))).isFalse();
+    }
+
+    @Test
+    @DisplayName("can toggle lights.")
+    void canToggleLights() {
+
+        //   0 1 2
+        // 0 . . .
+        // 1 . . 0
+        // 2 . . 0
+
+        // given
+        ChristmasLightGrid christmasLightGrid = new ChristmasLightGrid();
+
+        //when
+        christmasLightGrid.toggleLight(Rectangle.between(new Point(1, 2), new Point(2, 2)));
+
+        //then
+        then(christmasLightGrid.isLightOn(new Point(1, 2))).isTrue();
+        then(christmasLightGrid.isLightOn(new Point(2, 2))).isTrue();
+    }
+
+    @Test
+    @DisplayName("can toggle lights twice.")
+    void canToggleLightsTwice() {
+
+        //   0 1 2
+        // 0 . . .
+        // 1 . . 0
+        // 2 . . 0
+
+        // given
+        ChristmasLightGrid christmasLightGrid = new ChristmasLightGrid();
+
+        //when
+        christmasLightGrid.toggleLight(Rectangle.between(new Point(1, 2), new Point(2, 2)));
+        christmasLightGrid.toggleLight(Rectangle.between(new Point(1, 2), new Point(2, 2)));
+
+        //then
+        then(christmasLightGrid.isLightOn(new Point(1, 2))).isFalse();
+        then(christmasLightGrid.isLightOn(new Point(2, 2))).isFalse();
     }
 
     // more tests:
-    // - can toggle lights
     // - can turn light off
 }
