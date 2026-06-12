@@ -33,10 +33,15 @@ public class FizzBuzzOETest {
                 .skip(1)
                 .skip(0);
 
+        StringBuilder builder = new StringBuilder();
 
-        String result = fizzBuzz.run(10);
+        NLF n = new NLF();
+        String s = n.s();
 
-        then(result).isEqualTo("test");
+        numbers .mapToObj(i -> fizzBuzz.run(i))
+                .forEach(str -> builder.append(str + s));
+
+        then(n.toString()).isEqualTo("test");
     }
 
     // TODO testtest
