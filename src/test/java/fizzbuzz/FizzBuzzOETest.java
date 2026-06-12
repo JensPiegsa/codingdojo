@@ -14,7 +14,7 @@ public class FizzBuzzOETest {
      *  2. Static Factory Method
      *  3. Singleton
      *  4. StringBuilder
-     *  5. Constants & Variables
+     *  5. OK Constants & Variables
      *  6. Code Smells
      *  7. Refactorings
      *  8. L33t 5peak
