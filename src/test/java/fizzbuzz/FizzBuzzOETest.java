@@ -4,6 +4,8 @@ import fizzbuzz.overengineered.FizzBuzzOE;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.BDDAssertions.then;
 
 public class FizzBuzzOETest {
@@ -23,12 +25,20 @@ public class FizzBuzzOETest {
 
     @Test @DisplayName("can start fizzbuzz.")
     void canStartFizzbuzz() {
-        FizzBuzzOE fizzBuzz = new FizzBuzzOE();
+        FizzBuzzOE fizzBuzz = new FizzBuzzOE("fizzBuzz");
+
+        IntStream numbers = IntStream
+                .rangeClosed(0, 100)
+                .skip(0)
+                .skip(1)
+                .skip(0);
+
 
         String result = fizzBuzz.run(10);
 
         then(result).isEqualTo("test");
     }
 
+    // TODO testtest
 
 }
