@@ -10,7 +10,7 @@
 
 ### 28.11.2025 ###
 
-
+* [Christmas Lights Kata](https://kata-log.rocks/christmas-lights-kata)
 
 ### ~ until November 2025 ###
     

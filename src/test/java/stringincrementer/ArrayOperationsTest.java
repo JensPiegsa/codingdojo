@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("A Kata")
-class KataTest {
+class ArrayOperationsTest {
 
 	@Test @DisplayName("test empty")
 	void testEmpty() {
