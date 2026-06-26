@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Comparison 2026</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #e2e8f0;
+            --tag-bg: #f1f5f9;
+            --tag-text: #475569;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-color: #60a5fa;
+            --accent-hover: #93c5fd;
+            --border-color: #334155;
+            --tag-bg: #334155;
+            --tag-text: #cbd5e1;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            transition: var(--transition);
+            padding-bottom: 3rem;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent-color), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .search-sort {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 280px;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        select {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border-color);
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background-color: var(--border-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--tag-bg);
+        }
+
+        main {
+            padding-top: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .tool-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .developer {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .category-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.375rem;
+            background-color: var(--accent-color);
+            color: white;
+            letter-spacing: 0.025em;
+        }
+
+        .pricing-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .features {
+            flex-grow: 1;
+        }
+
+        .features-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .features-list li {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .card-footer {
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .visit-link {
+            text-decoration: none;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: var(--transition);
+        }
+
+        .visit-link:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .search-sort {
+                flex-direction: column;
+            }
+            input[type="text"] {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <h1>AI Tool Directory 2026</h1>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg id="moon-icon" style="display:none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+        <div class="controls">
+            <div class="search-sort">
+                <input type="text" id="search-input" placeholder="Search by name, developer, or features...">
+                <select id="sort-select">
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="category">Category</option>
+                </select>
+            </div>
+            <div class="filters" id="category-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="General">LLM / General</button>
+                <button class="filter-btn" data-category="Coding">Coding</button>
+                <button class="filter-btn" data-category="Image">Image</button>
+                <button class="filter-btn" data-category="Video">Video</button>
+                <button class="filter-btn" data-category="Audio">Audio</button>
+                <button class="filter-btn" data-category="Productivity">Productivity</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="tools-grid" id="tools-grid">
+        <!-- Tools will be injected here -->
+    </div>
+</main>
+
+<footer class="container">
+    <p>&copy; 2026 Interactive AI Comparison Document. Built with HTML5 & CSS3.</p>
+    <p style="margin-top: 0.5rem; font-style: italic;">"Why do programmers prefer dark mode? Because light attracts bugs!" 🐛</p>
+</footer>
+
+<script>
+    const tools = [
+        {
+            name: "ChatGPT",
+            developer: "OpenAI",
+            category: "General",
+            features: ["Multimodal (Vision/Voice)", "Search (Browse with Bing)", "Canvas for writing/coding", "Custom GPTs"],
+            pricing: "Freemium",
+            url: "https://chatgpt.com"
+        },
+        {
+            name: "Claude",
+            developer: "Anthropic",
+            category: "General",
+            features: ["Claude 3.5 Sonnet / 4", "Artifacts for live UI", "Projects with context files", "Strong reasoning"],
+            pricing: "Freemium",
+            url: "https://claude.ai"
+        },
+        {
+            name: "Gemini",
+            developer: "Google",
+            category: "General",
+            features: ["2M+ context window", "Google Workspace integration", "Multimodal (Ultra 1.5/2.0)", "NotebookLM"],
+            pricing: "Freemium",
+            url: "https://gemini.google.com"
+        },
+        {
+            name: "Grok",
+            developer: "xAI",
+            category: "General",
+            features: ["Real-time X integration", "DeeperSearch for live web", "Open-source weights", "Grok Imagine"],
+            pricing: "Paid (X Premium+)",
+            url: "https://x.ai"
+        },
+        {
+            name: "Cursor",
+            developer: "Anysphere",
+            category: "Coding",
+            features: ["Fork of VS Code", "Codebase indexing", "Composer for multi-file edits", "Inline chat"],
+            pricing: "Paid / Free tier",
+            url: "https://cursor.com"
+        },
+        {
+            name: "GitHub Copilot",
+            developer: "Microsoft/GitHub",
+            category: "Coding",
+            features: ["Integrated into major IDEs", "Copilot Chat", "Workspace context", "2k completions/mo free"],
+            pricing: "Freemium",
+            url: "https://github.com/features/copilot"
+        },
+        {
+            name: "Claude Code",
+            developer: "Anthropic",
+            category: "Coding",
+            features: ["CLI agent", "Autonomous debugging", "Doc research agent", "Refactoring focused"],
+            pricing: "Freemium / Paid",
+            url: "https://anthropic.com/claude-code"
+        },
+        {
+            name: "Antigravity",
+            developer: "Google",
+            category: "Coding",
+            features: ["Browser-based IDE", "Autonomous AI agents", "Live package installation", "Test-driven generation"],
+            pricing: "Free (Preview)",
+            url: "https://antigravity.dev"
+        },
+        {
+            name: "OpenCode",
+            developer: "OpenCode Foundation",
+            category: "Coding",
+            features: ["Git safety model", "CLI-first workflow", "Autonomous subagents", "Self-hostable"],
+            pricing: "Open Source",
+            url: "#"
+        },
+        {
+            name: "Midjourney",
+            developer: "Midjourney",
+            category: "Image",
+            features: ["High artistic quality", "V6.1+ models", "Web UI & Discord", "Personalized styles"],
+            pricing: "Paid",
+            url: "https://midjourney.com"
+        },
+        {
+            name: "Leonardo.Ai",
+            developer: "Canva (Leonardo)",
+            category: "Image",
+            features: ["Sketch-to-image", "Daily free tokens", "Commercial use allowed", "Advanced prompt controls"],
+            pricing: "Freemium",
+            url: "https://leonardo.ai"
+        },
+        {
+            name: "Ideogram",
+            developer: "Ideogram AI",
+            category: "Image",
+            features: ["Superior typography", "V2.0 models", "Style reference", "Free daily credits"],
+            pricing: "Freemium",
+            url: "https://ideogram.ai"
+        },
+        {
+            name: "Flux.1",
+            developer: "Black Forest Labs",
+            category: "Image",
+            features: ["Pro/Dev/Schnell models", "State-of-the-art detail", "Open weights available", "Excellent anatomy"],
+            pricing: "Freemium / Open",
+            url: "https://blackforestlabs.ai"
+        },
+        {
+            name: "Sora",
+            developer: "OpenAI",
+            category: "Video",
+            features: ["Highly realistic video", "Consistent characters", "Minute-long generations", "Complex scene physics"],
+            pricing: "Paid (Limited)",
+            url: "https://openai.com/sora"
+        },
+        {
+            name: "Veo 3",
+            developer: "Google DeepMind",
+            category: "Video",
+            features: ["1080p high quality", "Cinematic styles", "Deep scene understanding", "YouTube Shorts integration"],
+            pricing: "Paid / Preview",
+            url: "https://deepmind.google/technologies/veo"
+        },
+        {
+            name: "Runway Gen-3",
+            developer: "Runway",
+            category: "Video",
+            features: ["Alpha Turbo models", "Camera control", "Director mode", "Image-to-Video"],
+            pricing: "Paid",
+            url: "https://runwayml.com"
+        },
+        {
+            name: "Kling AI",
+            developer: "Kuaishou",
+            category: "Video",
+            features: ["Large-scale video generation", "Up to 2 minutes long", "Realistic movement", "Global availability"],
+            pricing: "Freemium",
+            url: "https://klingai.com"
+        },
+        {
+            name: "ElevenLabs",
+            developer: "ElevenLabs",
+            category: "Audio",
+            features: ["Ultra-realistic speech", "Voice cloning", "Dubbing Studio", "Sound effects gen"],
+            pricing: "Freemium",
+            url: "https://elevenlabs.io"
+        },
+        {
+            name: "Suno AI",
+            developer: "Suno",
+            category: "Audio",
+            features: ["Full song generation", "V4 models", "Custom genres", "Audio input upload"],
+            pricing: "Freemium",
+            url: "https://suno.com"
+        },
+        {
+            name: "Udio",
+            developer: "Udio",
+            category: "Audio",
+            features: ["High fidelity music", "Vocals/Instruments", "Remix feature", "Long-form tracks"],
+            pricing: "Freemium",
+            url: "https://udio.com"
+        },
+        {
+            name: "Notion AI",
+            developer: "Notion",
+            category: "Productivity",
+            features: ["Document writing/editing", "Workspace-wide Q&A", "Summarization", "Translation"],
+            pricing: "Paid add-on",
+            url: "https://notion.so"
+        },
+        {
+            name: "Lindy",
+            developer: "Lindy",
+            category: "Productivity",
+            features: ["AI employees", "2500+ integrations", "Workflow automation", "HIPAA/SOC2 compliant"],
+            pricing: "Paid",
+            url: "https://lindy.ai"
+        },
+        {
+            name: "Jasper",
+            developer: "Jasper",
+            category: "Productivity",
+            features: ["Marketing copy", "Brand voice memory", "Campaign generation", "Multi-language support"],
+            pricing: "Paid",
+            url: "https://jasper.ai"
+        },
+        {
+            name: "Obviously AI",
+            developer: "Obviously AI",
+            category: "Productivity",
+            features: ["No-code predictive ML", "CSV data modeling", "Feature importance", "Live predictions"],
+            pricing: "Paid",
+            url: "https://obviously.ai"
+        }
+    ];
+
+    const grid = document.getElementById('tools-grid');
+    const searchInput = document.getElementById('search-input');
+    const sortSelect = document.getElementById('sort-select');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const themeToggle = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+
+    let currentFilter = 'all';
+    let currentSearch = '';
+    let currentSort = 'name-asc';
+
+    function renderTools() {
+        let filtered = tools.filter(tool => {
+            const matchesCategory = currentFilter === 'all' || tool.category === currentFilter;
+            const searchTerm = currentSearch.toLowerCase();
+            const matchesSearch = tool.name.toLowerCase().includes(searchTerm) || 
+                                  tool.developer.toLowerCase().includes(searchTerm) ||
+                                  tool.features.some(f => f.toLowerCase().includes(searchTerm)) ||
+                                  tool.category.toLowerCase().includes(searchTerm);
+            return matchesCategory && matchesSearch;
+        });
+
+        filtered.sort((a, b) => {
+            if (currentSort === 'name-asc') return a.name.localeCompare(b.name);
+            if (currentSort === 'name-desc') return b.name.localeCompare(a.name);
+            if (currentSort === 'category') return a.category.localeCompare(b.category) || a.name.localeCompare(b.name);
+            return 0;
+        });
+
+        grid.innerHTML = '';
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div class="no-results">No AI tools found matching your criteria.</div>';
+            return;
+        }
+
+        filtered.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <div class="developer">${tool.developer}</div>
+                        <div class="tool-name">${tool.name}</div>
+                    </div>
+                    <span class="category-badge">${tool.category}</span>
+                </div>
+                <div class="features">
+                    <ul class="features-list">
+                        ${tool.features.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <span class="pricing-tag">${tool.pricing}</span>
+                    <a href="${tool.url}" target="_blank" class="visit-link">
+                        Visit Site
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Search event
+    searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value;
+        renderTools();
+    });
+
+    // Sort event
+    sortSelect.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        renderTools();
+    });
+
+    // Filter events
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.category;
+            renderTools();
+        });
+    });
+
+    // Theme Toggle
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcons(newTheme);
+    });
+
+    function updateThemeIcons(theme) {
+        if (theme === 'dark') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+    }
+
+    // Initialize Theme
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcons(savedTheme);
+
+    // Initial Render
+    renderTools();
+</script>
+
+</body>
+</html>

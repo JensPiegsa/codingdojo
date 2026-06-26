@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools Comparison &mdash; Interactive Overview</title>
+<style>
+  :root {
+    --bg: #0f1220;
+    --bg-soft: #171b2e;
+    --card: #1d2238;
+    --card-hover: #252b48;
+    --border: #2c3354;
+    --text: #e7e9f3;
+    --muted: #a3a9c9;
+    --accent: #6c8cff;
+    --accent-2: #21d4a8;
+    --warn: #ffb454;
+    --danger: #ff6b81;
+    --chip: #2a3152;
+    --shadow: 0 8px 30px rgba(0,0,0,.35);
+    --radius: 14px;
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f6fb;
+    --bg-soft: #ffffff;
+    --card: #ffffff;
+    --card-hover: #f0f3ff;
+    --border: #dde3f0;
+    --text: #1b2030;
+    --muted: #5a637e;
+    --accent: #3c5bd6;
+    --accent-2: #0fa37f;
+    --warn: #c9791a;
+    --danger: #d63950;
+    --chip: #eef1fb;
+    --shadow: 0 8px 30px rgba(20,30,60,.10);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, rgba(108,140,255,.18), transparent 60%),
+                radial-gradient(1000px 500px at -10% 10%, rgba(33,212,168,.12), transparent 55%),
+                var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  header.hero {
+    padding: 48px 24px 28px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  header.hero h1 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    margin: 0 0 10px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header.hero p {
+    color: var(--muted);
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+  }
+  .meta-line {
+    margin-top: 14px;
+    font-size: .85rem;
+    color: var(--muted);
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 80px; }
+
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 26px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+  }
+  .search-wrap { flex: 1 1 280px; position: relative; }
+  .search-wrap input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--text);
+    font-size: 1rem;
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap::before {
+    content: "🔍";
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    opacity: .6;
+    font-size: .95rem;
+  }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-btn {
+    border: 1px solid var(--border);
+    background: var(--chip);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: .88rem;
+    transition: .18s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { background: var(--card-hover); }
+  .filter-btn.active {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fff;
+    border-color: transparent;
+  }
+  .right-controls { display: flex; gap: 8px; align-items: center; }
+  .toggle-btn {
+    border: 1px solid var(--border);
+    background: var(--chip);
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: .85rem;
+  }
+  .toggle-btn:hover { background: var(--card-hover); }
+
+  .stats {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    margin-bottom: 22px; color: var(--muted); font-size: .9rem;
+  }
+  .stats b { color: var(--text); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform .15s, border-color .15s, background .15s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--accent); background: var(--card-hover); }
+  .card-head { display: flex; align-items: center; gap: 12px; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 11px;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 1.1rem; color: #fff;
+    flex-shrink: 0;
+  }
+  .card h3 { margin: 0; font-size: 1.12rem; }
+  .vendor { color: var(--muted); font-size: .82rem; }
+  .cat-chip {
+    margin-left: auto;
+    font-size: .72rem;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--chip);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .desc { color: var(--muted); font-size: .92rem; flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: .72rem; padding: 3px 8px; border-radius: 6px;
+    background: var(--chip); color: var(--text);
+  }
+  .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: .82rem; }
+  .spec { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; }
+  .spec span { display: block; color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; }
+  .spec b { font-weight: 600; }
+  .price-free { color: var(--accent-2); }
+  .price-paid { color: var(--warn); }
+  .card-foot { display: flex; align-items: center; justify-content: space-between; }
+  .rating { font-size: .85rem; color: var(--warn); }
+  .visit {
+    text-decoration: none;
+    font-size: .82rem;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: .15s;
+  }
+  .visit:hover { background: var(--accent); color: #fff; }
+
+  .empty {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+    display: none;
+  }
+  .empty.show { display: block; }
+
+  footer {
+    text-align: center; color: var(--muted); font-size: .82rem;
+    padding: 30px 20px 50px; border-top: 1px solid var(--border);
+    max-width: 1200px; margin: 0 auto;
+  }
+  footer a { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .controls { position: static; }
+    .specs { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <h1>AI Tools Comparison</h1>
+    <p>An interactive, structured overview of the most widely used AI tools across chat, coding, image, video, audio, search and productivity. Filter by category, search by name, and compare key facts side by side.</p>
+    <div class="meta-line">Snapshot generated 2026-06-26 &middot; Figures are approximate and change frequently &mdash; always verify on the vendor site.</div>
+  </header>
+
+  <div class="container">
+    <div class="controls">
+      <div class="search-wrap">
+        <input type="text" id="search" placeholder="Search tools, vendors, tags…" autocomplete="off" aria-label="Search">
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="right-controls">
+        <button class="toggle-btn" id="sortBtn" title="Cycle sort order">↕ Sort: Name</button>
+        <button class="toggle-btn" id="themeBtn" title="Toggle light/dark">🌓 Theme</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div><b id="visibleCount">0</b> tools shown</div>
+      <div><b id="totalCount">0</b> total</div>
+      <div><b id="catCount">0</b> categories</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty">No tools match your search or filter. Try clearing the filters.</div>
+  </div>
+
+  <footer>
+    Built as a single self-contained HTML5 + CSS3 file. No external dependencies, no tracking.<br>
+    Data is community-knowledge based and provided for comparison purposes only.
+  </footer>
+
+<script>
+const TOOLS = [
+  { name:"ChatGPT", vendor:"OpenAI", cat:"Chat / Assistant", color:"#10a37f",
+    desc:"General-purpose conversational AI with reasoning, tools, voice, image input and a large plugin/GPT ecosystem.",
+    tags:["LLM","Reasoning","Multimodal","Voice"], model:"GPT-4o / o-series", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.7, url:"https://chat.openai.com" },
+  { name:"Claude", vendor:"Anthropic", cat:"Chat / Assistant", color:"#d97757",
+    desc:"Conversational assistant known for long context, careful reasoning, writing quality and the Artifacts workspace.",
+    tags:["LLM","Long context","Coding","Safety"], model:"Claude Opus / Sonnet", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.7, url:"https://claude.ai" },
+  { name:"Gemini", vendor:"Google", cat:"Chat / Assistant", color:"#4285f4",
+    desc:"Google's multimodal assistant deeply integrated with Workspace, Search and Android, with very large context windows.",
+    tags:["LLM","Multimodal","Workspace","Search"], model:"Gemini 2.x", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.5, url:"https://gemini.google.com" },
+  { name:"Copilot", vendor:"Microsoft", cat:"Chat / Assistant", color:"#0078d4",
+    desc:"AI assistant embedded across Windows, Edge and Microsoft 365 apps, powered by frontier models plus web grounding.",
+    tags:["LLM","Office","Windows","Web"], model:"GPT-4 class", price:"Freemium", priceFree:true,
+    api:"Partial", rating:4.3, url:"https://copilot.microsoft.com" },
+  { name:"Llama", vendor:"Meta", cat:"Open Models", color:"#7b61ff",
+    desc:"Open-weight LLM family that can be self-hosted and fine-tuned, popular as a foundation for custom AI products.",
+    tags:["Open weights","Self-host","Fine-tune"], model:"Llama 3.x", price:"Free / OSS", priceFree:true,
+    api:"Self-host", rating:4.4, url:"https://llama.meta.com" },
+  { name:"Mistral", vendor:"Mistral AI", cat:"Open Models", color:"#ff7000",
+    desc:"Efficient open and commercial European models plus the Le Chat assistant, strong on price/performance.",
+    tags:["Open weights","Efficient","EU"], model:"Mistral / Mixtral", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.3, url:"https://mistral.ai" },
+  { name:"DeepSeek", vendor:"DeepSeek", cat:"Open Models", color:"#4d6bfe",
+    desc:"Cost-efficient reasoning and coding models with open weights that rival larger proprietary systems on benchmarks.",
+    tags:["Reasoning","Open weights","Low cost"], model:"DeepSeek R1 / V3", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.4, url:"https://deepseek.com" },
+  { name:"GitHub Copilot", vendor:"GitHub / Microsoft", cat:"Coding", color:"#24292f",
+    desc:"AI pair programmer offering inline completions, chat and agents directly inside major IDEs.",
+    tags:["Code completion","IDE","Chat"], model:"Multi-model", price:"Paid", priceFree:false,
+    api:"No", rating:4.5, url:"https://github.com/features/copilot" },
+  { name:"Cursor", vendor:"Anysphere", cat:"Coding", color:"#000000",
+    desc:"AI-first code editor (VS Code fork) with deep codebase understanding, multi-file edits and agent mode.",
+    tags:["Editor","Agent","Refactor"], model:"Multi-model", price:"Freemium", priceFree:true,
+    api:"No", rating:4.6, url:"https://cursor.com" },
+  { name:"Junie", vendor:"JetBrains", cat:"Coding", color:"#ff318c",
+    desc:"Autonomous coding agent inside JetBrains IDEs that plans, edits and verifies multi-step development tasks.",
+    tags:["Agent","IDE","Autonomous"], model:"Multi-model", price:"Freemium", priceFree:true,
+    api:"No", rating:4.5, url:"https://jetbrains.com/junie" },
+  { name:"Windsurf", vendor:"Codeium", cat:"Coding", color:"#09b6a2",
+    desc:"Agentic IDE with the Cascade flow for context-aware, multi-step coding across an entire repository.",
+    tags:["Agent","Editor","Flow"], model:"Multi-model", price:"Freemium", priceFree:true,
+    api:"No", rating:4.4, url:"https://windsurf.com" },
+  { name:"Midjourney", vendor:"Midjourney", cat:"Image", color:"#1f6feb",
+    desc:"High-end text-to-image generator celebrated for artistic, photorealistic and stylized visuals.",
+    tags:["Text-to-image","Art","Photoreal"], model:"MJ v6+", price:"Paid", priceFree:false,
+    api:"No", rating:4.6, url:"https://midjourney.com" },
+  { name:"DALL·E", vendor:"OpenAI", cat:"Image", color:"#10a37f",
+    desc:"Text-to-image model integrated into ChatGPT, strong at instruction following and text rendering.",
+    tags:["Text-to-image","In ChatGPT"], model:"DALL·E 3", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.3, url:"https://openai.com/dall-e-3" },
+  { name:"Stable Diffusion", vendor:"Stability AI", cat:"Image", color:"#a855f7",
+    desc:"Open-weight image generation models that can run locally and power a vast ecosystem of tools and fine-tunes.",
+    tags:["Open weights","Self-host","Customizable"], model:"SD3 / SDXL", price:"Free / OSS", priceFree:true,
+    api:"Yes", rating:4.4, url:"https://stability.ai" },
+  { name:"Sora", vendor:"OpenAI", cat:"Video", color:"#10a37f",
+    desc:"Text-to-video model generating high-fidelity, coherent clips from prompts and reference images.",
+    tags:["Text-to-video","Generative"], model:"Sora", price:"Paid", priceFree:false,
+    api:"Partial", rating:4.3, url:"https://openai.com/sora" },
+  { name:"Runway", vendor:"Runway", cat:"Video", color:"#00ffa3",
+    desc:"Creative suite for AI video generation, editing and visual effects used in professional production.",
+    tags:["Video","VFX","Editing"], model:"Gen-3 / Gen-4", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.4, url:"https://runwayml.com" },
+  { name:"ElevenLabs", vendor:"ElevenLabs", cat:"Audio / Voice", color:"#5436da",
+    desc:"Realistic text-to-speech, voice cloning and dubbing across dozens of languages.",
+    tags:["TTS","Voice clone","Dubbing"], model:"Multilingual v2", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.6, url:"https://elevenlabs.io" },
+  { name:"Suno", vendor:"Suno", cat:"Audio / Voice", color:"#f43f5e",
+    desc:"Generates complete songs with vocals and instrumentation from a short text prompt.",
+    tags:["Music","Vocals","Generative"], model:"Suno v4", price:"Freemium", priceFree:true,
+    api:"Partial", rating:4.4, url:"https://suno.com" },
+  { name:"Whisper", vendor:"OpenAI", cat:"Audio / Voice", color:"#10a37f",
+    desc:"Open-source automatic speech recognition model with strong multilingual transcription and translation.",
+    tags:["ASR","Transcription","Open weights"], model:"Whisper v3", price:"Free / OSS", priceFree:true,
+    api:"Yes", rating:4.5, url:"https://openai.com/research/whisper" },
+  { name:"Perplexity", vendor:"Perplexity AI", cat:"Search / Research", color:"#20b8cd",
+    desc:"AI answer engine that combines live web search with cited, conversational responses.",
+    tags:["Search","Citations","Research"], model:"Multi-model", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.5, url:"https://perplexity.ai" },
+  { name:"NotebookLM", vendor:"Google", cat:"Search / Research", color:"#4285f4",
+    desc:"Research assistant grounded in your own documents, with summaries, Q&A and audio overviews.",
+    tags:["Grounded","Docs","Audio"], model:"Gemini", price:"Free", priceFree:true,
+    api:"No", rating:4.4, url:"https://notebooklm.google.com" },
+  { name:"Grok", vendor:"xAI", cat:"Chat / Assistant", color:"#000000",
+    desc:"Conversational AI integrated with X (Twitter), with real-time data access and a casual tone.",
+    tags:["LLM","Real-time","Social"], model:"Grok 3", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.1, url:"https://grok.x.ai" },
+  { name:"Hugging Face", vendor:"Hugging Face", cat:"Platforms / MLOps", color:"#ffcc4d",
+    desc:"Hub hosting hundreds of thousands of open models, datasets and demos plus inference and training tools.",
+    tags:["Hub","Open models","Inference"], model:"Many", price:"Freemium", priceFree:true,
+    api:"Yes", rating:4.7, url:"https://huggingface.co" },
+  { name:"LangChain", vendor:"LangChain", cat:"Platforms / MLOps", color:"#1c3c3c",
+    desc:"Framework for building LLM-powered applications, agents and retrieval pipelines with observability via LangSmith.",
+    tags:["Framework","Agents","RAG"], model:"Model-agnostic", price:"Freemium", priceFree:true,
+    api:"SDK", rating:4.2, url:"https://langchain.com" },
+  { name:"Notion AI", vendor:"Notion", cat:"Productivity", color:"#000000",
+    desc:"Writing, summarizing and Q&A features built into the Notion workspace for notes and knowledge bases.",
+    tags:["Writing","Workspace","Summaries"], model:"Multi-model", price:"Paid add-on", priceFree:false,
+    api:"No", rating:4.2, url:"https://notion.so/product/ai" },
+  { name:"Gamma", vendor:"Gamma", cat:"Productivity", color:"#a259ff",
+    desc:"Generates polished presentations, documents and webpages from prompts or outlines.",
+    tags:["Slides","Docs","Design"], model:"Multi-model", price:"Freemium", priceFree:true,
+    api:"No", rating:4.3, url:"https://gamma.app" }
+];
+
+const grid = document.getElementById('grid');
+const filtersEl = document.getElementById('filters');
+const searchEl = document.getElementById('search');
+const emptyEl = document.getElementById('empty');
+const visibleCountEl = document.getElementById('visibleCount');
+const totalCountEl = document.getElementById('totalCount');
+const catCountEl = document.getElementById('catCount');
+const sortBtn = document.getElementById('sortBtn');
+const themeBtn = document.getElementById('themeBtn');
+
+let activeCat = 'All';
+let query = '';
+const sortModes = ['Name', 'Rating', 'Vendor'];
+let sortIdx = 0;
+
+const categories = ['All', ...Array.from(new Set(TOOLS.map(t => t.cat)))];
+
+function initials(name){
+  return name.replace(/[^A-Za-z0-9 ]/g,'').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+
+function buildFilters(){
+  categories.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'filter-btn' + (cat === activeCat ? ' active' : '');
+    b.textContent = cat;
+    b.onclick = () => { activeCat = cat; document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); render(); };
+    filtersEl.appendChild(b);
+  });
+}
+
+function sortTools(list){
+  const mode = sortModes[sortIdx];
+  return [...list].sort((a,b)=>{
+    if(mode==='Rating') return b.rating - a.rating;
+    if(mode==='Vendor') return a.vendor.localeCompare(b.vendor);
+    return a.name.localeCompare(b.name);
+  });
+}
+
+function cardHTML(t){
+  const priceClass = t.priceFree ? 'price-free' : 'price-paid';
+  const stars = '★'.repeat(Math.round(t.rating)) + '☆'.repeat(5 - Math.round(t.rating));
+  return `
+  <article class="card">
+    <div class="card-head">
+      <div class="logo" style="background:${t.color}">${initials(t.name)}</div>
+      <div>
+        <h3>${t.name}</h3>
+        <div class="vendor">${t.vendor}</div>
+      </div>
+      <div class="cat-chip">${t.cat}</div>
+    </div>
+    <div class="desc">${t.desc}</div>
+    <div class="tags">${t.tags.map(tag=>`<span class="tag">${tag}</span>`).join('')}</div>
+    <div class="specs">
+      <div class="spec"><span>Model</span><b>${t.model}</b></div>
+      <div class="spec"><span>Pricing</span><b class="${priceClass}">${t.price}</b></div>
+      <div class="spec"><span>API</span><b>${t.api}</b></div>
+      <div class="spec"><span>Rating</span><b class="rating">${t.rating.toFixed(1)}</b></div>
+    </div>
+    <div class="card-foot">
+      <div class="rating" title="${t.rating} of 5">${stars}</div>
+      <a class="visit" href="${t.url}" target="_blank" rel="noopener">Visit ↗</a>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const q = query.trim().toLowerCase();
+  let list = TOOLS.filter(t => {
+    const catOk = activeCat === 'All' || t.cat === activeCat;
+    const text = (t.name + ' ' + t.vendor + ' ' + t.cat + ' ' + t.tags.join(' ') + ' ' + t.desc).toLowerCase();
+    const qOk = !q || text.includes(q);
+    return catOk && qOk;
+  });
+  list = sortTools(list);
+  grid.innerHTML = list.map(cardHTML).join('');
+  emptyEl.classList.toggle('show', list.length === 0);
+  visibleCountEl.textContent = list.length;
+  totalCountEl.textContent = TOOLS.length;
+  catCountEl.textContent = categories.length - 1;
+}
+
+searchEl.addEventListener('input', e => { query = e.target.value; render(); });
+sortBtn.addEventListener('click', () => {
+  sortIdx = (sortIdx + 1) % sortModes.length;
+  sortBtn.textContent = '↕ Sort: ' + sortModes[sortIdx];
+  render();
+});
+themeBtn.addEventListener('click', () => {
+  const root = document.documentElement;
+  root.setAttribute('data-theme', root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+});
+
+buildFilters();
+render();
+</script>
+</body>
+</html>
