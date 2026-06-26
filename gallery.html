@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier Galerie – Gemälde</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: #fffdf8;
+      --ink: #2b2622;
+      --muted: #7a716a;
+      --accent: #a6772e;
+      --accent-dark: #7d5821;
+      --paypal: #0070ba;
+      --paypal-dark: #003087;
+      --shadow: 0 8px 24px rgba(43, 38, 34, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* ---- Sprach-Umschalter ---- */
+    .lang-switch {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.4rem;
+      padding: 0.6rem 1.5rem;
+      background: rgba(244, 241, 234, 0.9);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid #e2dacb;
+    }
+
+    .lang-switch button {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent-dark);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .lang-switch button[aria-pressed="true"] {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ---- Kopfbereich ---- */
+    header {
+      text-align: center;
+      padding: 3.5rem 1.5rem 3rem;
+      background: linear-gradient(180deg, #efe9dc, var(--bg));
+      border-bottom: 1px solid #e2dacb;
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      margin: 0 0 0.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    header p {
+      max-width: 36rem;
+      margin: 0 auto;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ---- Galerie-Raster ---- */
+    main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    figure {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    figure:hover,
+    figure:focus-within {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 32px rgba(43, 38, 34, 0.2);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    figcaption {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 1rem 1.25rem 1.5rem;
+    }
+
+    figcaption .title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0 0 0.25rem;
+    }
+
+    figcaption .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-style: italic;
+      margin: 0 0 0.5rem;
+    }
+
+    figcaption .price {
+      color: var(--accent-dark);
+      font-weight: bold;
+      margin: 0 0 1rem;
+    }
+
+    /* ---- Aktions-Buttons pro Bild ---- */
+    .actions {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-decoration: none;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent-dark);
+      border: 1px solid var(--accent);
+    }
+    .btn-secondary:hover { background: #f0e6d2; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid #d8cfc0;
+    }
+    .btn-ghost:hover { background: #efe9dc; color: var(--ink); }
+
+    /* ---- Spenden-Bereich ---- */
+    .donate {
+      margin: 4rem auto 0;
+      max-width: 560px;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid #e2dacb;
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .donate h2 { margin-top: 0; }
+    .donate p { color: var(--muted); }
+
+    .paypal-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      padding: 0.85rem 1.8rem;
+      background: var(--paypal);
+      color: #fff;
+      text-decoration: none;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-weight: bold;
+      border-radius: 999px;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .paypal-btn:hover { background: var(--paypal-dark); }
+    .paypal-btn:active { transform: scale(0.97); }
+    .paypal-btn svg { width: 22px; height: 22px; }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Sprach-Umschalter ===== -->
+  <nav class="lang-switch" aria-label="Sprache / Language">
+    <button type="button" data-lang="de" aria-pressed="true">Deutsch</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+  </nav>
+
+  <header>
+    <h1 data-i18n="title">Atelier Galerie</h1>
+    <p data-i18n="subtitle">Eine Sammlung handgemalter Originale – Öl, Acryl und Aquarell.
+       Tauchen Sie ein in Farbe, Licht und Stille.</p>
+  </header>
+
+  <main>
+    <section class="gallery" aria-label="Gemälde-Galerie">
+      <!-- Bild 1 -->
+      <figure>
+        <img src="https://picsum.photos/seed/painting1/600/450" alt="Abstrakte Komposition in warmen Tönen">
+        <figcaption>
+          <p class="title" data-i18n="art1.title">Morgenröte</p>
+          <p class="meta"><span data-i18n="medium.oil">Öl auf Leinwand</span> · 80 × 60 cm · 2024</p>
+          <p class="price"><span data-i18n="original">Original</span>: 450 €</p>
+          <div class="actions">
+            <a class="btn btn-primary" data-i18n="buyOriginal"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=450.00&item_name=Original%20Morgenr%C3%B6te"
+               target="_blank" rel="noopener noreferrer">Original kaufen</a>
+            <a class="btn btn-secondary" data-i18n="buyPrint"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=29.00&item_name=Reproduktion%20A4%20Morgenr%C3%B6te"
+               target="_blank" rel="noopener noreferrer">Reproduktion A4 · 29 €</a>
+            <a class="btn btn-ghost" data-i18n="contact"
+               href="mailto:atelier@example.com?subject=Anfrage:%20Morgenr%C3%B6te">Kontaktieren</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <!-- Bild 2 -->
+      <figure>
+        <img src="https://picsum.photos/seed/painting2/600/450" alt="Landschaft mit Bergen">
+        <figcaption>
+          <p class="title" data-i18n="art2.title">Stille Höhen</p>
+          <p class="meta"><span data-i18n="medium.acrylic">Acryl auf Leinwand</span> · 100 × 70 cm · 2023</p>
+          <p class="price"><span data-i18n="original">Original</span>: 620 €</p>
+          <div class="actions">
+            <a class="btn btn-primary" data-i18n="buyOriginal"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=620.00&item_name=Original%20Stille%20H%C3%B6hen"
+               target="_blank" rel="noopener noreferrer">Original kaufen</a>
+            <a class="btn btn-secondary" data-i18n="buyPrint"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=29.00&item_name=Reproduktion%20A4%20Stille%20H%C3%B6hen"
+               target="_blank" rel="noopener noreferrer">Reproduktion A4 · 29 €</a>
+            <a class="btn btn-ghost" data-i18n="contact"
+               href="mailto:atelier@example.com?subject=Anfrage:%20Stille%20H%C3%B6hen">Kontaktieren</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <!-- Bild 3 -->
+      <figure>
+        <img src="https://picsum.photos/seed/painting3/600/450" alt="Blumenstillleben">
+        <figcaption>
+          <p class="title" data-i18n="art3.title">Sommerblüte</p>
+          <p class="meta"><span data-i18n="medium.watercolor">Aquarell auf Papier</span> · 40 × 30 cm · 2024</p>
+          <p class="price"><span data-i18n="original">Original</span>: 220 €</p>
+          <div class="actions">
+            <a class="btn btn-primary" data-i18n="buyOriginal"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=220.00&item_name=Original%20Sommerbl%C3%BCte"
+               target="_blank" rel="noopener noreferrer">Original kaufen</a>
+            <a class="btn btn-secondary" data-i18n="buyPrint"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=29.00&item_name=Reproduktion%20A4%20Sommerbl%C3%BCte"
+               target="_blank" rel="noopener noreferrer">Reproduktion A4 · 29 €</a>
+            <a class="btn btn-ghost" data-i18n="contact"
+               href="mailto:atelier@example.com?subject=Anfrage:%20Sommerbl%C3%BCte">Kontaktieren</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <!-- Bild 4 -->
+      <figure>
+        <img src="https://picsum.photos/seed/painting4/600/450" alt="Meereslandschaft bei Sonnenuntergang">
+        <figcaption>
+          <p class="title" data-i18n="art4.title">Abendmeer</p>
+          <p class="meta"><span data-i18n="medium.oil">Öl auf Leinwand</span> · 90 × 60 cm · 2022</p>
+          <p class="price"><span data-i18n="original">Original</span>: 540 €</p>
+          <div class="actions">
+            <a class="btn btn-primary" data-i18n="buyOriginal"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=540.00&item_name=Original%20Abendmeer"
+               target="_blank" rel="noopener noreferrer">Original kaufen</a>
+            <a class="btn btn-secondary" data-i18n="buyPrint"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=29.00&item_name=Reproduktion%20A4%20Abendmeer"
+               target="_blank" rel="noopener noreferrer">Reproduktion A4 · 29 €</a>
+            <a class="btn btn-ghost" data-i18n="contact"
+               href="mailto:atelier@example.com?subject=Anfrage:%20Abendmeer">Kontaktieren</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <!-- Bild 5 -->
+      <figure>
+        <img src="https://picsum.photos/seed/painting5/600/450" alt="Porträt einer Frau">
+        <figcaption>
+          <p class="title" data-i18n="art5.title">Im Profil</p>
+          <p class="meta"><span data-i18n="medium.acrylicWood">Acryl auf Holz</span> · 50 × 50 cm · 2023</p>
+          <p class="price"><span data-i18n="original">Original</span>: 390 €</p>
+          <div class="actions">
+            <a class="btn btn-primary" data-i18n="buyOriginal"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=390.00&item_name=Original%20Im%20Profil"
+               target="_blank" rel="noopener noreferrer">Original kaufen</a>
+            <a class="btn btn-secondary" data-i18n="buyPrint"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=29.00&item_name=Reproduktion%20A4%20Im%20Profil"
+               target="_blank" rel="noopener noreferrer">Reproduktion A4 · 29 €</a>
+            <a class="btn btn-ghost" data-i18n="contact"
+               href="mailto:atelier@example.com?subject=Anfrage:%20Im%20Profil">Kontaktieren</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <!-- Bild 6 -->
+      <figure>
+        <img src="https://picsum.photos/seed/painting6/600/450" alt="Stadtansicht im Regen">
+        <figcaption>
+          <p class="title" data-i18n="art6.title">Regennacht</p>
+          <p class="meta"><span data-i18n="medium.oil">Öl auf Leinwand</span> · 70 × 100 cm · 2024</p>
+          <p class="price"><span data-i18n="original">Original</span>: 680 €</p>
+          <div class="actions">
+            <a class="btn btn-primary" data-i18n="buyOriginal"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=680.00&item_name=Original%20Regennacht"
+               target="_blank" rel="noopener noreferrer">Original kaufen</a>
+            <a class="btn btn-secondary" data-i18n="buyPrint"
+               href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-email@example.com&currency_code=EUR&amount=29.00&item_name=Reproduktion%20A4%20Regennacht"
+               target="_blank" rel="noopener noreferrer">Reproduktion A4 · 29 €</a>
+            <a class="btn btn-ghost" data-i18n="contact"
+               href="mailto:atelier@example.com?subject=Anfrage:%20Regennacht">Kontaktieren</a>
+          </div>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="donate" aria-label="Spenden">
+      <h2 data-i18n="donateTitle">Unterstützen Sie das Atelier</h2>
+      <p data-i18n="donateText">Gefällt Ihnen die Sammlung? Mit einer kleinen Spende helfen Sie,
+         neue Werke und Materialien zu finanzieren. Vielen Dank!</p>
+      <!-- PayPal-Spenden-Link: "your-email@example.com" durch eigene PayPal-Adresse ersetzen -->
+      <a class="paypal-btn" data-i18n="donateBtn"
+         href="https://www.paypal.com/donate?business=your-email@example.com&currency_code=EUR&item_name=Spende%20Atelier%20Galerie"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7.3 21.3H4.6c-.3 0-.5-.3-.4-.6L7 3.4c.1-.4.4-.6.8-.6h6.5c2.9 0 5 1.6 4.7 4.6-.4 3.7-3 5.4-6.4 5.4H9.9c-.4 0-.7.3-.8.6l-1 6.5c0 .5-.4.8-.8.8z"/>
+        </svg>
+        <span>Mit PayPal spenden</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p data-i18n="footer">© 2026 Atelier Galerie · Alle Werke sind urheberrechtlich geschützt.</p>
+  </footer>
+
+  <script>
+    // ===== Übersetzungen =====
+    const translations = {
+      de: {
+        title: "Atelier Galerie",
+        subtitle: "Eine Sammlung handgemalter Originale – Öl, Acryl und Aquarell. Tauchen Sie ein in Farbe, Licht und Stille.",
+        original: "Original",
+        buyOriginal: "Original kaufen",
+        buyPrint: "Reproduktion A4 · 29 €",
+        contact: "Kontaktieren",
+        "medium.oil": "Öl auf Leinwand",
+        "medium.acrylic": "Acryl auf Leinwand",
+        "medium.acrylicWood": "Acryl auf Holz",
+        "medium.watercolor": "Aquarell auf Papier",
+        "art1.title": "Morgenröte",
+        "art2.title": "Stille Höhen",
+        "art3.title": "Sommerblüte",
+        "art4.title": "Abendmeer",
+        "art5.title": "Im Profil",
+        "art6.title": "Regennacht",
+        donateTitle: "Unterstützen Sie das Atelier",
+        donateText: "Gefällt Ihnen die Sammlung? Mit einer kleinen Spende helfen Sie, neue Werke und Materialien zu finanzieren. Vielen Dank!",
+        donateBtn: "Mit PayPal spenden",
+        footer: "© 2026 Atelier Galerie · Alle Werke sind urheberrechtlich geschützt."
+      },
+      en: {
+        title: "Atelier Gallery",
+        subtitle: "A collection of hand-painted originals – oil, acrylic and watercolour. Immerse yourself in colour, light and stillness.",
+        original: "Original",
+        buyOriginal: "Buy original",
+        buyPrint: "A4 reproduction · €29",
+        contact: "Contact",
+        "medium.oil": "Oil on canvas",
+        "medium.acrylic": "Acrylic on canvas",
+        "medium.acrylicWood": "Acrylic on wood",
+        "medium.watercolor": "Watercolour on paper",
+        "art1.title": "Dawn Glow",
+        "art2.title": "Silent Heights",
+        "art3.title": "Summer Bloom",
+        "art4.title": "Evening Sea",
+        "art5.title": "In Profile",
+        "art6.title": "Rainy Night",
+        donateTitle: "Support the Atelier",
+        donateText: "Enjoying the collection? A small donation helps fund new works and materials. Thank you!",
+        donateBtn: "Donate with PayPal",
+        footer: "© 2026 Atelier Gallery · All works are protected by copyright."
+      }
+    };
+
+    function setLanguage(lang) {
+      const dict = translations[lang];
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key] === undefined) return;
+        // Buttons mit Icon (PayPal) haben einen <span> für den Text
+        const span = el.querySelector("span");
+        if (span) {
+          span.textContent = dict[key];
+        } else {
+          el.textContent = dict[key];
+        }
+      });
+      document.querySelectorAll(".lang-switch button").forEach(btn => {
+        btn.setAttribute("aria-pressed", btn.dataset.lang === lang ? "true" : "false");
+      });
+    }
+
+    document.querySelectorAll(".lang-switch button").forEach(btn => {
+      btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+    });
+  </script>
+</body>
+</html>
