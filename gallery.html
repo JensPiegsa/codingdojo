@@ -17,6 +17,17 @@
       --shadow: 0 8px 24px rgba(43, 38, 34, 0.12);
     }
 
+    /* ---- Dark Mode ---- */
+    :root[data-theme="dark"] {
+      --bg: #1c1a17;
+      --surface: #26231f;
+      --ink: #ece6dc;
+      --muted: #a59c90;
+      --accent: #d4a14e;
+      --accent-dark: #b9863a;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
     * { box-sizing: border-box; }
 
     body {
@@ -25,6 +36,7 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* ---- Sprach-Umschalter ---- */
